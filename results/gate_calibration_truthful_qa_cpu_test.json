@@ -1,0 +1,18 @@
+{
+  "dataset": "truthful_qa",
+  "model_name": "cpu_test",
+  "hf_repo": "sshleifer/tiny-gpt2",
+  "revision": "5f91d94bd9cd7190a9f3216ff93cd1dd95f2c7be",
+  "quantization": "none",
+  "quantile": 0.9,
+  "decoding": {
+    "do_sample": false,
+    "max_new_tokens": 20
+  },
+  "n_calibration_examples": 327,
+  "threshold": 0.9999636137421175,
+  "calibration_source": "cpu_test:sshleifer/tiny-gpt2@5f91d94bd9cd7190a9f3216ff93cd1dd95f2c7be",
+  "mean_calibration_entropy": 0.9999633203852286,
+  "min_calibration_entropy": 0.9999628516769775,
+  "max_calibration_entropy": 0.9999649969123718
+}

@@ -1,0 +1,10 @@
+# Entropy-gating policy config. quantile is the fraction of calibration-split
+# per-example entropy values below which generation is NOT routed to the symbolic
+# stream — i.e. the gate fires on the top (1 - quantile) most uncertain examples.
+quantile: 0.9
+
+# Decoding config held constant across all conditions within an experiment
+# (CLAUDE.md constraint #3). Entropy characterization runs use greedy decoding.
+decoding:
+  do_sample: false
+  max_new_tokens: 20

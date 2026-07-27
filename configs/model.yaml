@@ -1,0 +1,22 @@
+# Model identity is config-driven — nothing hard-codes Llama-3 or Mistral (CLAUDE.md's
+# CPU-testable rule). `active` selects which entry below is used; swap it to switch
+# environments, never edit source to change model identity.
+active: cpu_test
+
+models:
+  cpu_test:
+    hf_repo: sshleifer/tiny-gpt2
+    revision: 5f91d94bd9cd7190a9f3216ff93cd1dd95f2c7be
+    quantization: none  # tiny model, fp32 — quantization scheme is irrelevant at this size
+
+  # GPU-environment entries — not runnable locally. Revisions must be pinned before
+  # first use there, per CLAUDE.md's model-revision-pinning constraint.
+  llama3:
+    hf_repo: meta-llama/Meta-Llama-3-8B
+    revision: null  # TODO: pin before any GPU run
+    quantization: null  # TODO: decide and hold constant across all conditions
+
+  mistral:
+    hf_repo: mistralai/Mistral-7B-v0.1
+    revision: null  # TODO: pin before any GPU run
+    quantization: null  # TODO: must match the llama3 entry's scheme exactly
