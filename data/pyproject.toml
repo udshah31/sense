@@ -1,0 +1,21 @@
+[project]
+name = "sense-data"
+version = "0.1.0"
+description = "Fixed calibration/development/test split index lists and loaders for SENSE."
+requires-python = ">=3.13.5"
+dependencies = []
+
+[dependency-groups]
+dev = [
+    "pytest==8.3.5",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/sense_data"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
