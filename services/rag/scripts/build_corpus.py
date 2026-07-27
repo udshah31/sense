@@ -9,6 +9,7 @@ Run by hand: `uv run python scripts/build_corpus.py`.
 
 import json
 import sys
+import time
 from pathlib import Path
 
 import httpx
@@ -24,21 +25,29 @@ SPLIT_PATH = REPO_ROOT / "data" / "splits" / "truthful_qa.json"
 def fetch_passage(question: str, client: httpx.Client) -> dict | None:
     """Search Wikipedia for `question`, return the top hit's {title, text}
     intro extract, or None if nothing resolved."""
-    response = client.get(
-        WIKIPEDIA_API_URL,
-        params={
-            "action": "query",
-            "format": "json",
-            "generator": "search",
-            "gsrsearch": question,
-            "gsrlimit": 1,
-            "prop": "extracts",
-            "exintro": 1,
-            "explaintext": 1,
-        },
-        headers=REQUEST_HEADERS,
-    )
-    response.raise_for_status()
+    for attempt in range(6):
+        response = client.get(
+            WIKIPEDIA_API_URL,
+            params={
+                "action": "query",
+                "format": "json",
+                "generator": "search",
+                "gsrsearch": question,
+                "gsrlimit": 1,
+                "prop": "extracts",
+                "exintro": 1,
+                "explaintext": 1,
+            },
+            headers=REQUEST_HEADERS,
+        )
+        if response.status_code == 429:
+            wait = float(response.headers.get("retry-after", 2 * (attempt + 1)))
+            time.sleep(wait)
+            continue
+        response.raise_for_status()
+        break
+    else:
+        response.raise_for_status()
     pages = response.json().get("query", {}).get("pages", {})
     if not pages:
         return None
@@ -61,6 +70,7 @@ def build_corpus(questions: list[str], client: httpx.Client) -> list[dict]:
             print(f"skipping question with no Wikipedia hit: {question!r}", file=sys.stderr)
             continue
         passages.append(passage)
+        time.sleep(0.2)
     return passages
 
 
@@ -73,7 +83,11 @@ def main() -> None:
     splits = load_splits(SPLIT_PATH)
     questions = [examples[i].question for i in splits.test]
 
-    with httpx.Client(timeout=10.0) as client:
+    # Force IPv4: this network environment's IPv6 route to Wikipedia's edge is
+    # rate-limited far more aggressively than IPv4 (confirmed via curl -6 vs -4),
+    # which otherwise causes long 429/retry-after stalls or an eventual raise.
+    transport = httpx.HTTPTransport(local_address="0.0.0.0")
+    with httpx.Client(timeout=10.0, transport=transport) as client:
         passages = build_corpus(questions, client)
 
     CORPUS_PATH.parent.mkdir(parents=True, exist_ok=True)
