@@ -1,0 +1,28 @@
+[project]
+name = "sense-symbolic"
+version = "0.1.0"
+description = "Symbolic verification backend: SPARQL endpoint against Wikidata, behind a stable HTTP contract."
+requires-python = ">=3.13.5"
+dependencies = [
+    "fastapi==0.115.12",
+    "uvicorn==0.34.0",
+    "httpx==0.28.1",
+]
+
+[dependency-groups]
+dev = [
+    "pytest==8.3.5",
+    "pytest-asyncio==0.25.3",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/sense_symbolic"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+asyncio_mode = "auto"
+asyncio_default_fixture_loop_scope = "function"
