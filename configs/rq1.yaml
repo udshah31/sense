@@ -1,0 +1,11 @@
+# RQ1 — does a fixed entropy-gating threshold, calibrated on one model, transfer to
+# a model from a different family? source_model/target_model are keys into
+# configs/model.yaml. On the GPU environment this becomes source: llama3,
+# target: mistral (or vice versa); cpu_test / cpu_test_transfer_target lets the
+# identical code path run on CPU.
+source_model: cpu_test
+target_model: cpu_test_transfer_target
+
+# Transfer is evaluated on the development split, never test — test is touched once,
+# at the end, for the numbers that go in the paper (CLAUDE.md's data split discipline).
+eval_split: development

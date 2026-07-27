@@ -9,6 +9,17 @@ models:
     revision: 5f91d94bd9cd7190a9f3216ff93cd1dd95f2c7be
     quantization: none  # tiny model, fp32 — quantization scheme is irrelevant at this size
 
+  # A second CPU-testable model from a different family (GPT-NeoX, not GPT-2), with a
+  # different tokenizer and a much smaller vocab (1024 vs 50257). Exists so the RQ1
+  # fixed-threshold-transfer harness (experiments/transfer_threshold_truthful_qa.py)
+  # can be exercised on CPU: it stands in for "a model from a different family" the
+  # same way llama3/mistral do on the GPU environment, exercising the raw-entropy-
+  # isn't-comparable-across-tokenizers constraint (CLAUDE.md #4) without needing a GPU.
+  cpu_test_transfer_target:
+    hf_repo: hf-internal-testing/tiny-random-GPTNeoXForCausalLM
+    revision: f417fcb49b46298ae7c01308ff33bfeadc104bd3
+    quantization: none
+
   # GPU-environment entries — not runnable locally. Revisions must be pinned before
   # first use there, per CLAUDE.md's model-revision-pinning constraint.
   llama3:
