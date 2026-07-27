@@ -67,7 +67,7 @@ Config-driven, following the `rq3.yaml` pattern — no parameters hard-coded
 into the experiment script:
 
 ```yaml
-model: tiny_gpt2       # key into configs/model.yaml, same as rq3.yaml
+model: cpu_test       # key into configs/model.yaml, same as rq3.yaml
 top_k: 3
 corpus_path: data/rag_corpus/passages.json
 eval_split: test
