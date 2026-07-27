@@ -19,3 +19,9 @@ uv run pytest
 from calibration-split entropies, leakage-checked against `sense_data.splits`) or
 `set_threshold()` (an already-fit threshold, e.g. transferred from another model for
 the RQ1 fixed-threshold-transfer experiment).
+
+`truncated_entropy.py` bounds true token entropy from a truncated top-k logprob
+response (the vLLM/OpenAI-compatible serving path). `tests/test_truncated_entropy.py`
+is the required correctness check that the exact in-process value (via `sense-neural`,
+a test-only dependency — the orchestrator never imports it at runtime) falls within
+those bounds.

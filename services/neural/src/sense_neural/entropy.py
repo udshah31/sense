@@ -12,6 +12,15 @@ import torch
 from transformers import LogitsProcessor
 
 
+def exact_token_entropy(scores: torch.FloatTensor) -> float:
+    """Exact Shannon entropy (nats) of the next-token distribution given full-vocab
+    logits. Used as ground truth against the orchestrator's truncated top-k estimate.
+    """
+    log_probs = torch.log_softmax(scores.float(), dim=-1)
+    probs = log_probs.exp()
+    return -(probs * log_probs).sum(dim=-1).item()
+
+
 class TokenEntropyMonitor(LogitsProcessor):
     """Records normalized Shannon entropy of the next-token distribution at each step.
 
@@ -26,12 +35,8 @@ class TokenEntropyMonitor(LogitsProcessor):
         self.entropies: list[float] = []
 
     def __call__(self, input_ids: torch.LongTensor, scores: torch.FloatTensor) -> torch.FloatTensor:
-        log_probs = torch.log_softmax(scores.float(), dim=-1)
-        probs = log_probs.exp()
-        # Shannon entropy H = -sum(p * log p), computed per batch row; batch size 1
-        # is assumed for the single-sequence generation this monitor targets.
-        raw_entropy = -(probs * log_probs).sum(dim=-1)
-        normalized = (raw_entropy / self._log_vocab_size).item()
+        raw_entropy = exact_token_entropy(scores)
+        normalized = raw_entropy / self._log_vocab_size
         self.entropies.append(normalized)
         return scores
 

@@ -9,10 +9,15 @@ dependencies = [
 
 [tool.uv.sources]
 sense-data = { path = "../../data", editable = true }
+sense-neural = { path = "../neural", editable = true }
 
 [dependency-groups]
 dev = [
     "pytest==8.3.5",
+    # test-only: the orchestrator never imports sense-neural at runtime (it talks to
+    # it over HTTP); this is here solely for the truncated-vs-exact entropy bounds
+    # correctness test, which needs an in-process exact value as ground truth.
+    "sense-neural",
 ]
 
 [build-system]
