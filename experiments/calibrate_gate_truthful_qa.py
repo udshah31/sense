@@ -13,25 +13,16 @@ llama3/mistral on the GPU environment runs the identical code path.
 """
 
 import json
-from pathlib import Path
 
-import yaml
-from transformers import AutoModelForCausalLM, AutoTokenizer
-
+from _common import RESULTS_DIR, SPLIT_PATH, calibration_entropies, load_model, load_yaml_config
 from sense_data.splits import load_splits
 from sense_data.truthful_qa import load_truthful_qa
-from sense_neural.entropy import TokenEntropyMonitor
 from sense_orchestrator.gate import GatePolicy
-
-REPO_ROOT = Path(__file__).parent.parent
-CONFIGS_DIR = REPO_ROOT / "configs"
-SPLIT_PATH = REPO_ROOT / "data" / "splits" / "truthful_qa.json"
-RESULTS_DIR = REPO_ROOT / "results"
 
 
 def load_config() -> dict:
-    model_cfg = yaml.safe_load((CONFIGS_DIR / "model.yaml").read_text())
-    gate_cfg = yaml.safe_load((CONFIGS_DIR / "gate.yaml").read_text())
+    model_cfg = load_yaml_config("model.yaml")
+    gate_cfg = load_yaml_config("gate.yaml")
     active = model_cfg["active"]
     return {
         "model": model_cfg["models"][active],
@@ -40,42 +31,20 @@ def load_config() -> dict:
     }
 
 
-def mean_calibration_entropy(model, tokenizer, question: str, decoding_cfg: dict) -> float:
-    monitor = TokenEntropyMonitor(vocab_size=tokenizer.vocab_size)
-    inputs = tokenizer(question, return_tensors="pt")
-    model.generate(
-        **inputs,
-        max_new_tokens=decoding_cfg["max_new_tokens"],
-        do_sample=decoding_cfg["do_sample"],
-        logits_processor=[monitor],
-    )
-    return sum(monitor.entropies) / len(monitor.entropies)
-
-
 def run() -> dict:
     config = load_config()
     model_cfg = config["model"]
 
-    if not model_cfg.get("revision"):
-        raise ValueError(
-            f"model '{config['model_name']}' has no pinned revision — "
-            "CLAUDE.md requires pinning before any run"
-        )
-
-    tokenizer = AutoTokenizer.from_pretrained(model_cfg["hf_repo"], revision=model_cfg["revision"])
-    model = AutoModelForCausalLM.from_pretrained(model_cfg["hf_repo"], revision=model_cfg["revision"])
+    model, tokenizer = load_model(model_cfg)
 
     examples = load_truthful_qa()
     splits = load_splits(SPLIT_PATH)
 
-    calibration_entropies = []
-    for index in splits.calibration:
-        entropy = mean_calibration_entropy(model, tokenizer, examples[index].question, config["gate"]["decoding"])
-        calibration_entropies.append(entropy)
+    entropies = calibration_entropies(model, tokenizer, examples, splits.calibration, config["gate"]["decoding"])
 
     gate = GatePolicy()
     threshold = gate.calibrate(
-        calibration_entropies=calibration_entropies,
+        calibration_entropies=entropies,
         calibration_indices=splits.calibration,
         splits=splits,
         quantile=config["gate"]["quantile"],
@@ -93,9 +62,9 @@ def run() -> dict:
         "n_calibration_examples": len(splits.calibration),
         "threshold": threshold,
         "calibration_source": gate.calibration_source,
-        "mean_calibration_entropy": sum(calibration_entropies) / len(calibration_entropies),
-        "min_calibration_entropy": min(calibration_entropies),
-        "max_calibration_entropy": max(calibration_entropies),
+        "mean_calibration_entropy": sum(entropies) / len(entropies),
+        "min_calibration_entropy": min(entropies),
+        "max_calibration_entropy": max(entropies),
     }
 
     RESULTS_DIR.mkdir(exist_ok=True)

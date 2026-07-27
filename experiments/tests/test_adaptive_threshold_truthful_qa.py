@@ -1,11 +1,12 @@
-"""Integration test for the RQ1 transfer harness, on a small subset for speed —
-transfer_threshold_truthful_qa.py itself runs the full committed splits.
+"""Integration test for the RQ2 adaptive-threshold harness, on a small subset for
+speed — adaptive_threshold_truthful_qa.py itself runs the full committed splits.
 """
 
 import pytest
 from transformers import AutoModelForCausalLM, AutoTokenizer
 
 from _common import calibration_entropies
+from adaptive_threshold_truthful_qa import routing_rate
 from sense_data.splits import generate_splits
 from sense_data.truthful_qa import load_truthful_qa
 from sense_orchestrator.gate import GatePolicy
@@ -31,11 +32,10 @@ def small_splits():
     return generate_splits(n=len(examples), calibration_frac=0.02, development_frac=0.02, test_frac=0.96, seed=0)
 
 
-def test_transfer_harness_runs_end_to_end(source, target, small_splits):
+def test_adaptive_gate_calibrates_independently_of_fixed_gate(source, target, small_splits):
     source_model, source_tokenizer = source
     target_model, target_tokenizer = target
     examples = load_truthful_qa()
-
     cal_subset = small_splits.calibration[:5]
     dev_subset = small_splits.development[:5]
 
@@ -49,45 +49,38 @@ def test_transfer_harness_runs_end_to_end(source, target, small_splits):
         source="source",
     )
 
+    fixed_gate = GatePolicy()
+    fixed_gate.set_threshold(source_threshold, source="transferred-from-source")
+
     target_entropies = calibration_entropies(target_model, target_tokenizer, examples, cal_subset, DECODING_CFG)
-    target_native_gate = GatePolicy()
-    target_native_gate.calibrate(
+    adaptive_gate = GatePolicy()
+    adaptive_threshold = adaptive_gate.calibrate(
         calibration_entropies=target_entropies,
         calibration_indices=cal_subset,
         splits=small_splits,
         quantile=0.9,
-        source="target",
+        source="adaptive-target",
     )
 
-    transferred_gate = GatePolicy()
-    transferred_gate.set_threshold(source_threshold, source="transferred-from-source")
+    # The two thresholds are fit independently and needn't match unless the two
+    # models happen to share an entropy distribution (they don't — different
+    # families, different vocab sizes).
+    assert adaptive_gate.calibration_source == "adaptive-target"
+    assert fixed_gate.calibration_source == "transferred-from-source"
 
     eval_entropies = calibration_entropies(target_model, target_tokenizer, examples, dev_subset, DECODING_CFG)
+    fixed_rate = routing_rate(fixed_gate, eval_entropies)
+    adaptive_rate = routing_rate(adaptive_gate, eval_entropies)
 
-    transferred_decisions = [transferred_gate.decide(h) for h in eval_entropies]
-    native_decisions = [target_native_gate.decide(h) for h in eval_entropies]
-
-    assert len(transferred_decisions) == len(dev_subset)
-    assert all(isinstance(d, bool) for d in transferred_decisions)
-    assert all(isinstance(d, bool) for d in native_decisions)
-    assert transferred_gate.calibration_source == "transferred-from-source"
+    assert 0.0 <= fixed_rate <= 1.0
+    assert 0.0 <= adaptive_rate <= 1.0
+    # Sanity: an adaptive gate calibrated on the target's own entropies uses the
+    # target's own threshold, not the source's.
+    assert adaptive_threshold != source_threshold
 
 
-def test_transferred_threshold_equals_source_native_threshold(source, small_splits):
-    source_model, source_tokenizer = source
-    examples = load_truthful_qa()
-    cal_subset = small_splits.calibration[:5]
-
-    entropies = calibration_entropies(source_model, source_tokenizer, examples, cal_subset, DECODING_CFG)
-    source_gate = GatePolicy()
-    threshold = source_gate.calibrate(
-        calibration_entropies=entropies,
-        calibration_indices=cal_subset,
-        splits=small_splits,
-        quantile=0.9,
-        source="source",
-    )
-
-    transferred_gate = GatePolicy()
-    transferred_gate.set_threshold(threshold, source="transferred-from-source")
-    assert transferred_gate.threshold == threshold
+def test_routing_rate_helper_matches_manual_count():
+    gate = GatePolicy()
+    gate.set_threshold(0.5, source="test")
+    entropies = [0.1, 0.6, 0.9, 0.2, 0.5]
+    assert routing_rate(gate, entropies) == 3 / 5

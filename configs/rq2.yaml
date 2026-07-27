@@ -1,0 +1,12 @@
+# RQ2 — does a self-adaptive threshold (recalibrated on the target model's own
+# calibration data) preserve routing quality on held-out data where a fixed
+# (transferred) threshold does not?
+#
+# "Routing quality preserved" is operationalized as: how close the routing rate on
+# held-out data lands to the quantile's own target rate (1 - quantile), which is
+# what the threshold was calibrated to produce. A gate whose held-out routing rate
+# tracks its intended rate is behaving as calibrated; one that doesn't has failed to
+# transfer, whether or not that gap is due to a genuinely worse model fit.
+source_model: cpu_test
+target_model: cpu_test_transfer_target
+eval_split: development

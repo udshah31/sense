@@ -6,7 +6,7 @@ split.
 import pytest
 from transformers import AutoModelForCausalLM, AutoTokenizer
 
-from calibrate_gate_truthful_qa import mean_calibration_entropy
+from _common import mean_calibration_entropy
 from sense_data.splits import assert_no_test_leakage, generate_splits
 from sense_data.truthful_qa import load_truthful_qa
 from sense_orchestrator.gate import GatePolicy

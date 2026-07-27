@@ -16,43 +16,19 @@ touched once, at the end, for the reported numbers).
 """
 
 import json
-from pathlib import Path
 
-import yaml
-from transformers import AutoModelForCausalLM, AutoTokenizer
-
-from calibrate_gate_truthful_qa import mean_calibration_entropy
+from _common import RESULTS_DIR, SPLIT_PATH, calibration_entropies, load_model, load_yaml_config
 from sense_data.splits import load_splits
 from sense_data.truthful_qa import load_truthful_qa
 from sense_orchestrator.gate import GatePolicy
 
-REPO_ROOT = Path(__file__).parent.parent
-CONFIGS_DIR = REPO_ROOT / "configs"
-SPLIT_PATH = REPO_ROOT / "data" / "splits" / "truthful_qa.json"
-RESULTS_DIR = REPO_ROOT / "results"
-
 
 def load_config() -> dict:
-    model_cfg = yaml.safe_load((CONFIGS_DIR / "model.yaml").read_text())
-    gate_cfg = yaml.safe_load((CONFIGS_DIR / "gate.yaml").read_text())
-    rq1_cfg = yaml.safe_load((CONFIGS_DIR / "rq1.yaml").read_text())
     return {
-        "models": model_cfg["models"],
-        "gate": gate_cfg,
-        "rq1": rq1_cfg,
+        "models": load_yaml_config("model.yaml")["models"],
+        "gate": load_yaml_config("gate.yaml"),
+        "rq1": load_yaml_config("rq1.yaml"),
     }
-
-
-def load_model(model_cfg: dict):
-    if not model_cfg.get("revision"):
-        raise ValueError(f"model '{model_cfg['hf_repo']}' has no pinned revision")
-    tokenizer = AutoTokenizer.from_pretrained(model_cfg["hf_repo"], revision=model_cfg["revision"])
-    model = AutoModelForCausalLM.from_pretrained(model_cfg["hf_repo"], revision=model_cfg["revision"])
-    return model, tokenizer
-
-
-def calibration_entropies(model, tokenizer, examples, indices, decoding_cfg) -> list[float]:
-    return [mean_calibration_entropy(model, tokenizer, examples[i].question, decoding_cfg) for i in indices]
 
 
 def run() -> dict:

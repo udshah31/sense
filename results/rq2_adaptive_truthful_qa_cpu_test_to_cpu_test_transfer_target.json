@@ -1,0 +1,28 @@
+{
+  "research_question": "RQ2",
+  "dataset": "truthful_qa",
+  "eval_split": "development",
+  "n_eval_examples": 163,
+  "quantile": 0.9,
+  "expected_routing_rate": 0.09999999999999998,
+  "decoding": {
+    "do_sample": false,
+    "max_new_tokens": 20
+  },
+  "source_model": {
+    "name": "cpu_test",
+    "hf_repo": "sshleifer/tiny-gpt2",
+    "revision": "5f91d94bd9cd7190a9f3216ff93cd1dd95f2c7be"
+  },
+  "target_model": {
+    "name": "cpu_test_transfer_target",
+    "hf_repo": "hf-internal-testing/tiny-random-GPTNeoXForCausalLM",
+    "revision": "f417fcb49b46298ae7c01308ff33bfeadc104bd3"
+  },
+  "fixed_threshold": 0.9999636137421175,
+  "fixed_dev_routing_rate": 0.0,
+  "fixed_calibration_fidelity_gap": 0.09999999999999998,
+  "adaptive_threshold": 0.9991193442582437,
+  "adaptive_dev_routing_rate": 0.13496932515337423,
+  "adaptive_calibration_fidelity_gap": 0.03496932515337425
+}

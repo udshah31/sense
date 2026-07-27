@@ -40,6 +40,25 @@ uv run python transfer_threshold_truthful_qa.py
 
 Writes `../results/rq1_transfer_truthful_qa_<source>_to_<target>.json`.
 
+## adaptive_threshold_truthful_qa.py
+
+RQ2 harness: does a self-adaptive threshold — recalibrated on the target model's own
+calibration data — preserve routing quality on held-out data where a fixed
+(transferred) threshold does not? Operationalized as calibration fidelity: a
+threshold at quantile q should route ~(1 - q) of held-out examples if it's
+generalizing correctly. Compares that gap for the fixed gate (source's threshold
+applied unmodified — same as RQ1's transferred gate) against the adaptive gate
+(recalibrated on the target's own calibration split), both evaluated on the same
+development split. Reuses `_common.py`'s shared model/entropy plumbing so all three
+conditions (source, fixed, adaptive) run under identical data and decoding config.
+Model pair and eval split come from `../configs/rq2.yaml`.
+
+```
+uv run python adaptive_threshold_truthful_qa.py
+```
+
+Writes `../results/rq2_adaptive_truthful_qa_<source>_to_<target>.json`.
+
 ## Tests
 
 ```
