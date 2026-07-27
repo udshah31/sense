@@ -239,6 +239,12 @@ annotate-only merge-back). All four required correctness checks pass. All three
 research question harnesses (`experiments/`) run end-to-end on real data: RQ1
 (fixed-threshold transfer), RQ2 (self-adaptive threshold), RQ3 (accuracy-latency
 trade-off — factuality scored via a placeholder lexical-containment metric,
-`eval/src/sense_eval/factuality.py`, not the eventual judge). Not yet built: RAG
-baseline, Llama-3/Mistral runs on GPU (the current results are pipeline-mechanics
-validation on untrained tiny models, not scientific findings).
+`eval/src/sense_eval/factuality.py`, not the eventual judge). A RAG comparison
+baseline (`services/rag`, FAISS + all-MiniLM-L6-v2 over a committed, curated
+Wikipedia passage corpus tied to the TruthfulQA test questions) also ran
+end-to-end on the full 327-example test split (`experiments/rag_baseline_truthful_qa.py`,
+315/327 passages resolved, `factuality_accuracy_proxy` scored via the same
+lexical-containment placeholder, accuracy-only — no latency instrumentation, per
+CLAUDE.md's design decisions). Not yet built: Llama-3/Mistral runs on GPU (the
+current results are pipeline-mechanics validation on untrained tiny models, not
+scientific findings).

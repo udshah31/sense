@@ -18,7 +18,10 @@ uncalibrated), truncated-vs-exact entropy bounds, a symbolic backend (SPARQL aga
 Wikidata), and the gate-to-symbolic router (annotate-only). All three research
 questions have working harnesses on real data: RQ1 (fixed-threshold transfer), RQ2
 (self-adaptive threshold), RQ3 (accuracy-latency trade-off, with a placeholder
-factuality metric). Not yet built: RAG baseline, real (non-tiny) model runs on GPU.
+factuality metric). The RAG comparison baseline (FAISS + all-MiniLM-L6-v2 over a
+committed Wikipedia passage corpus) also ran end-to-end on the full 327-example
+TruthfulQA test split, with the same tiny-gpt2 caveat as the RQ harnesses. Not yet
+built: real (non-tiny) model runs on GPU.
 
 ## Layout
 

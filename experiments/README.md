@@ -82,6 +82,29 @@ uv run python rq3_accuracy_latency_truthful_qa.py
 
 Writes `../results/rq3_accuracy_latency_truthful_qa_<model_name>.json`.
 
+## rag_baseline_truthful_qa.py
+
+RAG comparison baseline (CLAUDE.md's Phase-0 design decisions): retrieve-then-generate
+accuracy on TruthfulQA, using FAISS + all-MiniLM-L6-v2 retrieval over a committed,
+pre-built Wikipedia passage corpus (`services/rag/scripts/build_corpus.py`, subset
+tied to the TruthfulQA question set) instead of the entropy gate. Accuracy-only — no
+latency instrumentation and no gate/symbolic interaction, deliberately, per CLAUDE.md
+("a comparison baseline, not the contribution — capped effort on purpose"). For each
+example in the eval split, retrieves the top-`k` passages, prepends them as context,
+and generates greedily under the same model and decoding config as RQ1-RQ3. Model,
+`top_k`, corpus path, and eval split come from `../configs/rag.yaml`; unlike the RQ
+harnesses this runs against the **test** split, since it isn't fitting any threshold
+and has nothing to leak. Reports a `factuality_accuracy_proxy` — this uses the same
+lexical-containment placeholder metric as RQ3 (`eval/src/sense_eval/factuality.py`,
+see its README), not a paper-grade judge, so the number is a pipeline sanity check,
+not a reportable accuracy figure.
+
+```
+uv run python rag_baseline_truthful_qa.py
+```
+
+Writes `../results/rag_baseline_truthful_qa_<model_name>.json`.
+
 ## Tests
 
 ```
