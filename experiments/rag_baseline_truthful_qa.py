@@ -45,6 +45,16 @@ async def run_experiment(config: dict) -> dict:
     model, tokenizer = load_model(model_cfg)
     index = PassageIndex.from_file(REPO_ROOT / config["rag"]["corpus_path"])
 
+    # tokenizer.model_max_length can report a placeholder (e.g. 1e30) for models
+    # without an explicit config value; fall back to the model's real position
+    # embedding limit in that case.
+    model_max_length = tokenizer.model_max_length
+    if model_max_length is None or model_max_length > 1_000_000:
+        model_max_length = model.config.n_positions
+
+    # Truncate from the left (context) so the question, appended last, survives.
+    tokenizer.truncation_side = "left"
+
     examples = load_truthful_qa()
     splits = load_splits(SPLIT_PATH)
     all_eval_indices = getattr(splits, config["rag"]["eval_split"])
@@ -63,7 +73,12 @@ async def run_experiment(config: dict) -> dict:
         passages = retrieve(index, example.question, k=top_k)
         prompt = build_prompt(passages, example.question)
 
-        inputs = tokenizer(prompt, return_tensors="pt")
+        inputs = tokenizer(
+            prompt,
+            return_tensors="pt",
+            truncation=True,
+            max_length=model_max_length - decoding_cfg["max_new_tokens"],
+        )
         output_ids = model.generate(
             **inputs,
             max_new_tokens=decoding_cfg["max_new_tokens"],
