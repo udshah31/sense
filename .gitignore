@@ -8,11 +8,6 @@ __pycache__/
 venv/
 *.egg-info/
 
-# node
-node_modules/
-dist/
-*.tsbuildinfo
-
 # data / results (large, not committed)
 data/**/*.jsonl
 data/**/*.parquet
