@@ -1,0 +1,25 @@
+# secrets
+.env
+
+# python
+__pycache__/
+*.pyc
+.venv/
+venv/
+*.egg-info/
+
+# node
+node_modules/
+dist/
+*.tsbuildinfo
+
+# data / results (large, not committed)
+data/**/*.jsonl
+data/**/*.parquet
+results/**/*.jsonl
+results/**/*.parquet
+!data/**/.gitkeep
+!results/**/.gitkeep
+
+# os
+.DS_Store

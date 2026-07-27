@@ -1,0 +1,1 @@
+Symbolic backend — OPEN DECISION, pending advisor input (KG-Trie constrained decoding, SPARQL endpoint, logical constraint checker, or structured verifier). Build against a stable HTTP contract; provide a stub implementation clearly marked as such until decided.
