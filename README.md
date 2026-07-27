@@ -10,26 +10,29 @@ See `CLAUDE.md` for full project context, architecture, and constraints.
 
 ## Status
 
-Phase 0. Design decisions committed (see `CLAUDE.md`); core correctness-critical
-pieces implemented and tested against a tiny CPU model: token entropy monitor
-(no-op-on-generation verified), calibration/development/test split machinery
-(leakage-guarded), entropy-gating policy (refuses to run uncalibrated), and
-truncated-vs-exact entropy bounds. Symbolic backend, benchmark data, and RAG
-baseline not yet built.
+Phase 0. Design decisions committed (see `CLAUDE.md`). Working end-to-end on a tiny
+CPU model against real TruthfulQA data: token entropy monitor (no-op verified),
+generation latency instrumentation (TTFT, inter-token), calibration/development/test
+split machinery (leakage-guarded), entropy-gating policy (refuses to run
+uncalibrated), truncated-vs-exact entropy bounds, a symbolic backend (SPARQL against
+Wikidata), and the gate-to-symbolic router (annotate-only). All three research
+questions have working harnesses on real data: RQ1 (fixed-threshold transfer), RQ2
+(self-adaptive threshold), RQ3 (accuracy-latency trade-off, with a placeholder
+factuality metric). Not yet built: RAG baseline, real (non-tiny) model runs on GPU.
 
 ## Layout
 
 ```
 sense/
-├── configs/                  # YAML: model, thresholds, dataset, splits
+├── configs/                  # YAML: model, thresholds, dataset, splits, RQ configs
 ├── services/
-│   ├── neural/               # Python: model loading, LogitsProcessor, entropy, probes
-│   ├── symbolic/             # symbolic backend: SPARQL endpoint against Wikidata (not yet built)
-│   └── orchestrator/         # Python: gate policy, routing, instrumentation
-├── experiments/              # one script per table/figure in the paper
-├── eval/                     # metrics: factuality + latency
-├── data/                     # loaders and split index files (no large datasets)
-└── results/                  # logged runs, metrics, plots
+│   ├── neural/                # Python: model loading, entropy monitor, latency
+│   ├── symbolic/               # Python: SPARQL/Wikidata verification backend
+│   └── orchestrator/          # Python: gate policy, routing, instrumentation
+├── experiments/               # one script per table/figure in the paper (RQ1-3 harnesses)
+├── eval/                      # metrics: factuality (placeholder) + latency
+├── data/                      # loaders and committed split index files
+└── results/                   # logged runs, metrics
 ```
 
 ## Setup

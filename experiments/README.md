@@ -59,6 +59,29 @@ uv run python adaptive_threshold_truthful_qa.py
 
 Writes `../results/rq2_adaptive_truthful_qa_<source>_to_<target>.json`.
 
+## rq3_accuracy_latency_truthful_qa.py
+
+RQ3 harness: what accuracy-latency trade-off does routing introduce? Starts the real
+symbolic backend (`services/symbolic`) as a live local server, then for each
+development-split example generates twice under identical greedy decoding — once
+ungated, once gated (entropy monitor + gate + symbolic round-trip on routed
+examples) — and asserts the two texts are byte-identical, since merge-back is
+annotate-only (CLAUDE.md's design decisions) and must never change output. Reports
+routing rate, per-stage latency (ungated/gated generation, gate evaluation, symbolic
+round-trip when routed), and a factuality proxy score (`eval/`'s lexical-containment
+placeholder — see its README; not a paper-grade judge). The symbolic round-trip uses
+a fixed, always-resolvable probe triple (`../configs/rq3.yaml`) rather than one
+derived from the question — there's no free-text-to-triple extractor yet, so this
+measures real round-trip cost against the real backend, not a factuality check of
+the question itself. `n_eval_examples` deliberately subsamples the split for CPU
+tractability and is logged, not silently capped.
+
+```
+uv run python rq3_accuracy_latency_truthful_qa.py
+```
+
+Writes `../results/rq3_accuracy_latency_truthful_qa_<model_name>.json`.
+
 ## Tests
 
 ```

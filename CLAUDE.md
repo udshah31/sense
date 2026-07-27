@@ -227,10 +227,18 @@ together, don't leave the doc stale.
 ## Current status
 
 Phase 0. Repo scaffolded, all-Python stack, design decisions above committed as a
-working proposal pending real advisor confirmation. Implemented and tested on CPU
-against `sshleifer/tiny-gpt2`: token entropy monitor (`services/neural`), fixed
-calibration/development/test split machinery with a leakage guard (`data`), the
-entropy-gating policy that refuses to run uncalibrated (`services/orchestrator`), and
-the truncated-vs-exact entropy bounds check (`services/orchestrator`). Not yet built:
-symbolic backend (SPARQL/Wikidata), TruthfulQA data loading and real split files,
-RAG baseline, latency instrumentation, experiment scripts.
+working proposal pending real advisor confirmation. Working end-to-end on CPU
+against `sshleifer/tiny-gpt2` and real TruthfulQA data (committed split:
+327/163/327 calibration/development/test, seed 42): token entropy monitor with
+no-op verification, generation latency instrumentation (TTFT, inter-token, via
+`services/neural/src/sense_neural/latency.py`), split machinery with a leakage
+guard, the entropy-gating policy that refuses to run uncalibrated, the
+truncated-vs-exact entropy bounds check, a symbolic backend (SPARQL/Wikidata,
+`services/symbolic`), and the gate-to-symbolic router (`services/orchestrator`,
+annotate-only merge-back). All four required correctness checks pass. All three
+research question harnesses (`experiments/`) run end-to-end on real data: RQ1
+(fixed-threshold transfer), RQ2 (self-adaptive threshold), RQ3 (accuracy-latency
+trade-off — factuality scored via a placeholder lexical-containment metric,
+`eval/src/sense_eval/factuality.py`, not the eventual judge). Not yet built: RAG
+baseline, Llama-3/Mistral runs on GPU (the current results are pipeline-mechanics
+validation on untrained tiny models, not scientific findings).

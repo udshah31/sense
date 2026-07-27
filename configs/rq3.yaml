@@ -1,0 +1,22 @@
+# RQ3 — what accuracy-latency trade-off does routing introduce, and does it hold
+# on both models? Evaluated on the development split (test stays untouched until
+# final reported numbers).
+#
+# n_eval_examples subsamples the development split for CPU tractability — each
+# example runs generation twice (ungated, gated) plus a symbolic round-trip when
+# routed. Explicit and logged, not a silent cap.
+model: cpu_test
+eval_split: development
+n_eval_examples: 20
+
+# The symbolic backend verifies (subject, predicate, object) triples, but this
+# project has no entity/relation extractor yet to turn a free-text TruthfulQA
+# question into one (that's future work, tied to the still-undecided merge-back
+# "replace" policy). This fixed, always-resolvable triple stands in for "some real
+# claim" so the round-trip latency measured is real network cost against the real
+# backend — it is NOT a claim about the TruthfulQA question being verified. Do not
+# read symbolic_result content from this harness as a factuality signal.
+symbolic_probe:
+  subject_label: Albert Einstein
+  predicate_pid: P106
+  object_label: physicist
