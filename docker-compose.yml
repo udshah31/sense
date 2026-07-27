@@ -25,3 +25,5 @@ services:
 
   symbolic:
     build: ./services/symbolic
+    ports:
+      - "8001:8001"

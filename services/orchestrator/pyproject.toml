@@ -5,19 +5,26 @@ description = "Gate policy, routing, symbolic interface, and instrumentation for
 requires-python = ">=3.13.5"
 dependencies = [
     "sense-data",
+    "httpx==0.28.1",
+    "pyyaml==6.0.2",
 ]
 
 [tool.uv.sources]
 sense-data = { path = "../../data", editable = true }
 sense-neural = { path = "../neural", editable = true }
+sense-symbolic = { path = "../symbolic", editable = true }
 
 [dependency-groups]
 dev = [
     "pytest==8.3.5",
-    # test-only: the orchestrator never imports sense-neural at runtime (it talks to
-    # it over HTTP); this is here solely for the truncated-vs-exact entropy bounds
-    # correctness test, which needs an in-process exact value as ground truth.
+    "pytest-asyncio==0.25.3",
+    # test-only: the orchestrator never imports sense-neural/sense-symbolic at
+    # runtime (it talks to both over HTTP); sense-neural is here solely for the
+    # truncated-vs-exact entropy bounds correctness test (in-process ground truth),
+    # and sense-symbolic solely so router tests can exercise a real symbolic
+    # response in-process (via ASGI transport) instead of requiring a live server.
     "sense-neural",
+    "sense-symbolic",
 ]
 
 [build-system]
@@ -29,3 +36,5 @@ packages = ["src/sense_orchestrator"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
+asyncio_mode = "auto"
+asyncio_default_fixture_loop_scope = "function"

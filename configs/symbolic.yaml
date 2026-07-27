@@ -1,0 +1,8 @@
+# Symbolic backend HTTP contract location. `docker` is what orchestrator uses inside
+# docker-compose (service name resolves via Docker's internal DNS); `local` is for
+# running both services directly on a dev machine.
+active: local
+
+base_urls:
+  local: http://localhost:8001
+  docker: http://symbolic:8001
