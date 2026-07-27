@@ -186,27 +186,51 @@ start; retrofitting timing after experiments run is how the claim ends up unsupp
 
 ---
 
-## Open decisions — do not guess these
+## Design decisions
 
-These are unresolved and pending advisor input. If a task requires one, stop and ask
-rather than picking a default and proceeding.
+Decided 2026-07-26 as a working proposal, to unblock implementation. Not yet
+confirmed by the actual project advisor — treat as provisional until that
+confirmation happens, but build against them in the meantime rather than stubbing
+further.
 
-- **Symbolic backend** — KG-Trie constrained decoding, SPARQL endpoint, logical
-  constraint checker, or structured verifier.
-- **Benchmark set** — TruthfulQA, HaluEval, FActScore-style, or knowledge-grounded QA.
-- **Uncertainty signal** — token entropy, full sampled semantic entropy, or
-  probe-based approximation. Full semantic entropy requires an additional NLI model
-  in the stack.
-- **Merge-back policy** — accept, replace, abstain, or annotate. Until decided, the
-  harness annotates only, so routing cost is measured without confounding it with an
-  arbitrary correction strategy.
-- **Baseline RAG stack** — vector store, embedding model, corpus.
+- **Uncertainty signal: token entropy.** The sole online gating signal — the only
+  option cheap enough to sit in the per-step decoding loop without breaking the
+  real-time claim. Full semantic entropy is out of scope for the gate itself; if used
+  at all, it's a single offline correlation study, not part of the pipeline.
+- **Merge-back policy: annotate-only first, replace as a later follow-on.** Run the
+  RQ1–RQ3 routing/latency experiments on annotate-only so routing cost is measured
+  without confounding it with a correction strategy. Add a replace condition only
+  once the symbolic backend is stable, to get a mitigation-effect number without
+  rushing it ahead of a working backend.
+- **Benchmark: TruthfulQA.** Short-form QA suits per-token entropy (long free-form
+  generation dilutes the signal), has an established factuality metric, and is the
+  most-cited comparison point for hallucination-mitigation work. Do not also stand up
+  a second benchmark — one done right beats two done partially.
+- **Symbolic backend: SPARQL endpoint against a public KG (Wikidata).** Lightest
+  option to stand up behind a stable HTTP contract, easiest to stub/mock for CPU
+  testing, predictable round-trip latency for the instrumentation story. KG-Trie
+  constrained decoding, a hand-authored logical constraint checker, and a structured
+  verifier model were all considered and rejected as out of scope for this project's
+  timeline (constrained decoding is a paper on its own; a verifier model blurs into
+  semantic-entropy territory and adds its own latency).
+- **Baseline RAG stack: FAISS + all-MiniLM-L6-v2 + a small Wikipedia passage subset.**
+  In-memory vector store (no server), small CPU-friendly embedding model, modest
+  reproducible corpus. This is a comparison baseline, not the contribution — capped
+  effort on purpose.
 
-Where a component depends on an open decision, build against an interface and provide
-a stub implementation clearly marked as such.
+Build against these decisions as if final. If the real advisor changes one, treat it
+as a design change, not a correction — update this file and the affected code
+together, don't leave the doc stale.
 
 ---
 
 ## Current status
 
-Phase 0 — environment bootstrap. Nothing implemented yet.
+Phase 0. Repo scaffolded, all-Python stack, design decisions above committed as a
+working proposal pending real advisor confirmation. Implemented and tested on CPU
+against `sshleifer/tiny-gpt2`: token entropy monitor (`services/neural`), fixed
+calibration/development/test split machinery with a leakage guard (`data`), the
+entropy-gating policy that refuses to run uncalibrated (`services/orchestrator`), and
+the truncated-vs-exact entropy bounds check (`services/orchestrator`). Not yet built:
+symbolic backend (SPARQL/Wikidata), TruthfulQA data loading and real split files,
+RAG baseline, latency instrumentation, experiment scripts.

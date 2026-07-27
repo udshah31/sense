@@ -10,7 +10,12 @@ See `CLAUDE.md` for full project context, architecture, and constraints.
 
 ## Status
 
-Phase 0 — environment bootstrap. Nothing implemented yet.
+Phase 0. Design decisions committed (see `CLAUDE.md`); core correctness-critical
+pieces implemented and tested against a tiny CPU model: token entropy monitor
+(no-op-on-generation verified), calibration/development/test split machinery
+(leakage-guarded), entropy-gating policy (refuses to run uncalibrated), and
+truncated-vs-exact entropy bounds. Symbolic backend, benchmark data, and RAG
+baseline not yet built.
 
 ## Layout
 
@@ -19,7 +24,7 @@ sense/
 ├── configs/                  # YAML: model, thresholds, dataset, splits
 ├── services/
 │   ├── neural/               # Python: model loading, LogitsProcessor, entropy, probes
-│   ├── symbolic/             # symbolic backend (TBD, behind an HTTP contract)
+│   ├── symbolic/             # symbolic backend: SPARQL endpoint against Wikidata (not yet built)
 │   └── orchestrator/         # Python: gate policy, routing, instrumentation
 ├── experiments/              # one script per table/figure in the paper
 ├── eval/                     # metrics: factuality + latency
