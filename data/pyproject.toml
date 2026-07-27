@@ -3,7 +3,9 @@ name = "sense-data"
 version = "0.1.0"
 description = "Fixed calibration/development/test split index lists and loaders for SENSE."
 requires-python = ">=3.13.5"
-dependencies = []
+dependencies = [
+    "datasets==3.5.0",
+]
 
 [dependency-groups]
 dev = [

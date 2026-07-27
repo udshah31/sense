@@ -6,9 +6,11 @@ discipline). Downstream code loads them with `load_splits` and must never touch
 `.test` indices during threshold fitting; guard calibration code paths with
 `assert_no_test_leakage`.
 
-No benchmark dataset is chosen yet (open decision, see `../CLAUDE.md`), so no real
-split files are committed here yet — only the generic machinery, exercised by
-synthetic indices in `tests/`.
+Benchmark: TruthfulQA (`truthful_qa.py`, generation config, 817 examples — see
+`../CLAUDE.md`'s design decisions). Its committed split is `splits/truthful_qa.json`,
+generated once by `scripts/generate_truthful_qa_splits.py` (seed 42, 40/20/40
+calibration/development/test). Regenerating that script's output is a deliberate,
+rare action — everything else loads the committed file via `splits.load_splits`.
 
 ## Setup
 

@@ -1,0 +1,13 @@
+dataset:
+  name: truthful_qa
+  hf_repo: truthfulqa/truthful_qa
+  hf_config: generation
+  hf_split: validation
+  n_examples: 817
+
+splits:
+  index_file: data/splits/truthful_qa.json
+  seed: 42
+  calibration_frac: 0.4
+  development_frac: 0.2
+  test_frac: 0.4
