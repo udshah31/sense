@@ -1,1 +1,1 @@
-TypeScript. Gate policy, routing, symbolic interface, instrumentation.
+Python. Gate policy, routing, symbolic interface, instrumentation. Talks to the neural service only over HTTP — no in-process imports from services/neural — to keep the routing logic decoupled from model plumbing.

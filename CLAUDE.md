@@ -80,12 +80,12 @@ comments, and log fields must say which one they mean.
 
 ## Architecture
 
-### Language split — this is forced, not stylistic
+### Language — Python throughout
 
 | Component | Language | Why |
 |---|---|---|
 | Entropy monitor, model loading, probes | **Python** | Per-step logits and hidden states are only reachable in-process via Hugging Face Transformers |
-| Gate policy, routing, symbolic interface, orchestration | **TypeScript** | Clean separation of the research contribution from the model plumbing |
+| Gate policy, routing, symbolic interface, orchestration | **Python** | Single-language stack; kept as a separate service module so it only talks to the neural process over HTTP, preserving the same interface boundary a separate codebase would give |
 | Symbolic backend | TBD | Runs as its own container behind a stable HTTP contract |
 
 The HTTP serving path (vLLM, OpenAI-compatible) exposes only truncated top-*k* logprobs
@@ -104,7 +104,7 @@ sense/
 ├── services/
 │   ├── neural/               # Python: model loading, LogitsProcessor, entropy, probes
 │   ├── symbolic/             # TBD backend behind an HTTP contract
-│   └── orchestrator/         # TypeScript: gate policy, routing, instrumentation
+│   └── orchestrator/         # Python: gate policy, routing, instrumentation
 ├── experiments/              # one script per table/figure in the paper
 ├── eval/                     # metrics: factuality + latency
 ├── data/                     # loaders and split index files (no large datasets)
@@ -165,7 +165,7 @@ change, not an excuse.
 ## Reproducibility requirements
 
 - Pinned Docker images by digest, not tag.
-- Pinned Python and Node dependencies.
+- Pinned Python dependencies.
 - Fixed seeds, recorded per run.
 - Config-driven experiments — no parameters passed as edited source.
 - Every run logs: hardware, GPU model, driver, CUDA version, image digest, model

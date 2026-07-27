@@ -20,7 +20,7 @@ sense/
 ├── services/
 │   ├── neural/               # Python: model loading, LogitsProcessor, entropy, probes
 │   ├── symbolic/             # symbolic backend (TBD, behind an HTTP contract)
-│   └── orchestrator/         # TypeScript: gate policy, routing, instrumentation
+│   └── orchestrator/         # Python: gate policy, routing, instrumentation
 ├── experiments/              # one script per table/figure in the paper
 ├── eval/                     # metrics: factuality + latency
 ├── data/                     # loaders and split index files (no large datasets)
