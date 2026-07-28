@@ -1,9 +1,6 @@
 import httpx
-import pytest
 
 from build_corpus import build_corpus, fetch_passage
-
-WIKIPEDIA_SEARCH_URL = "https://en.wikipedia.org/w/api.php"
 
 
 def _mock_transport(response_json):
@@ -56,15 +53,15 @@ def test_build_corpus_collects_resolved_passages():
     response_json = {
         "query": {
             "pages": {
-                "1": {"title": "Paris", "text_stub": "unused"},
+                "1": {"title": "Paris", "extract": "Paris is the capital of France."},
             }
         }
     }
-    # fetch_passage keys off "extract", not "text_stub" — this response has no
-    # extract, so it should resolve to None and be skipped, proving build_corpus
-    # tolerates a mix of resolved and unresolved questions in one run.
     client = httpx.Client(transport=_mock_transport(response_json))
 
     passages = build_corpus(["question one", "question two"], client)
 
-    assert passages == []
+    assert passages == [
+        {"title": "Paris", "text": "Paris is the capital of France."},
+        {"title": "Paris", "text": "Paris is the capital of France."},
+    ]

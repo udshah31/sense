@@ -36,6 +36,36 @@ def build_prompt(passages: list[str], question: str) -> str:
     return f"Context: {context_block}\n\nQuestion: {question}"
 
 
+def build_prompt_within_budget(
+    passages: list[str], question: str, tokenizer, max_tokens: int
+) -> tuple[str, int, bool]:
+    """Build a prompt by adding passages in rank order (most relevant first),
+    stopping once the next passage would exceed the token budget.
+
+    This keeps the question intact and preserves the highest-ranked passages
+    that fit, rather than blindly truncating a fixed-order block from an
+    arbitrary point (which would discard the most relevant passage first when
+    it's truncated from the left).
+
+    Returns (prompt, n_passages_used, any_passage_dropped).
+    """
+    used: list[str] = []
+    for passage in passages:
+        candidate = build_prompt(used + [passage], question)
+        n_tokens = len(tokenizer(candidate, truncation=False)["input_ids"])
+        if n_tokens > max_tokens and used:
+            # Adding this passage would exceed budget and we already have at
+            # least one passage kept; stop here.
+            return build_prompt(used, question), len(used), True
+        if n_tokens > max_tokens and not used:
+            # Even the first passage alone doesn't fit; keep it anyway and
+            # rely on the tokenizer's truncation as a final safety net.
+            return candidate, 1, True
+        used.append(passage)
+
+    return build_prompt(used, question), len(used), False
+
+
 async def run_experiment(config: dict) -> dict:
     model_name = config["rag"]["model"]
     model_cfg = config["models"][model_name]
@@ -47,12 +77,14 @@ async def run_experiment(config: dict) -> dict:
 
     # tokenizer.model_max_length can report a placeholder (e.g. 1e30) for models
     # without an explicit config value; fall back to the model's real position
-    # embedding limit in that case.
+    # embedding limit in that case. Llama/Mistral expose max_position_embeddings;
+    # GPT-2 exposes n_positions — never hard-code a model family (CLAUDE.md).
     model_max_length = tokenizer.model_max_length
     if model_max_length is None or model_max_length > 1_000_000:
-        model_max_length = model.config.n_positions
+        model_max_length = getattr(model.config, "max_position_embeddings", None) or model.config.n_positions
 
-    # Truncate from the left (context) so the question, appended last, survives.
+    # Final safety net only: build_prompt_within_budget should make this rarely
+    # if ever fire, but keep it in case even question+one-passage is too long.
     tokenizer.truncation_side = "left"
 
     examples = load_truthful_qa()
@@ -67,18 +99,25 @@ async def run_experiment(config: dict) -> dict:
             f"{len(all_eval_indices)} available examples for CPU tractability"
         )
 
+    budget = model_max_length - decoding_cfg["max_new_tokens"]
+
     per_example = []
     for index_i in eval_indices:
         example = examples[index_i]
         passages = retrieve(index, example.question, k=top_k)
-        prompt = build_prompt(passages, example.question)
+        prompt, n_passages_used, passage_dropped = build_prompt_within_budget(
+            passages, example.question, tokenizer, budget
+        )
 
         inputs = tokenizer(
             prompt,
             return_tensors="pt",
             truncation=True,
-            max_length=model_max_length - decoding_cfg["max_new_tokens"],
+            max_length=budget,
         )
+        safety_net_truncated = inputs["input_ids"].shape[1] >= budget
+        prompt_truncated = passage_dropped or safety_net_truncated
+
         output_ids = model.generate(
             **inputs,
             max_new_tokens=decoding_cfg["max_new_tokens"],
@@ -96,11 +135,19 @@ async def run_experiment(config: dict) -> dict:
                 "retrieved_passages_preview": [p[:60] for p in passages],
                 "generated_text": generated_text,
                 "factuality": verdict.label,
+                "prompt_truncated": prompt_truncated,
+                "n_passages_used": n_passages_used,
             }
         )
 
     n = len(per_example)
     correct = [r for r in per_example if r["factuality"] == "correct"]
+    verdict_counts = {
+        "correct": sum(1 for r in per_example if r["factuality"] == "correct"),
+        "incorrect": sum(1 for r in per_example if r["factuality"] == "incorrect"),
+        "unknown": sum(1 for r in per_example if r["factuality"] == "unknown"),
+    }
+    n_examples_with_truncated_prompt = sum(1 for r in per_example if r["prompt_truncated"])
 
     return {
         "research_question": "RAG baseline",
@@ -113,8 +160,10 @@ async def run_experiment(config: dict) -> dict:
         "n_available_in_split": len(all_eval_indices),
         "top_k": top_k,
         "decoding": decoding_cfg,
-        "factuality_accuracy_proxy": len(correct) / n,
+        "factuality_accuracy_proxy": (len(correct) / n) if n else None,
         "factuality_metric": "lexical_containment (placeholder, see eval/README.md)",
+        "verdict_counts": verdict_counts,
+        "n_examples_with_truncated_prompt": n_examples_with_truncated_prompt,
         "per_example": per_example,
     }
 

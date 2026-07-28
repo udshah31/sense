@@ -97,7 +97,10 @@ harnesses this runs against the **test** split, since it isn't fitting any thres
 and has nothing to leak. Reports a `factuality_accuracy_proxy` — this uses the same
 lexical-containment placeholder metric as RQ3 (`eval/src/sense_eval/factuality.py`,
 see its README), not a paper-grade judge, so the number is a pipeline sanity check,
-not a reportable accuracy figure.
+not a reportable accuracy figure. Note this baseline runs on the **test** split
+(327 examples) while RQ3 runs on the **development** split (20 examples,
+subsampled) — the two `factuality_accuracy_proxy` numbers are not directly
+comparable until both are evaluated on the same split.
 
 ```
 uv run python rag_baseline_truthful_qa.py
