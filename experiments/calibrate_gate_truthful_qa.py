@@ -12,11 +12,7 @@ and decoding config from configs/gate.yaml. Swapping `active` in model.yaml to
 llama3/mistral on the GPU environment runs the identical code path.
 """
 
-import json
-
-from _common import RESULTS_DIR, SPLIT_PATH, calibration_entropies, load_model, load_yaml_config
-from sense_data.splits import load_splits
-from sense_data.truthful_qa import load_truthful_qa
+from _common import calibration_entropies, load_examples_and_splits, load_model, load_yaml_config, write_results
 from sense_orchestrator.gate import GatePolicy
 
 
@@ -37,8 +33,7 @@ def run() -> dict:
 
     model, tokenizer = load_model(model_cfg)
 
-    examples = load_truthful_qa()
-    splits = load_splits(SPLIT_PATH)
+    examples, splits = load_examples_and_splits()
 
     entropies = calibration_entropies(model, tokenizer, examples, splits.calibration, config["gate"]["decoding"])
 
@@ -67,10 +62,7 @@ def run() -> dict:
         "max_calibration_entropy": max(entropies),
     }
 
-    RESULTS_DIR.mkdir(exist_ok=True)
-    out_path = RESULTS_DIR / f"gate_calibration_truthful_qa_{config['model_name']}.json"
-    out_path.write_text(json.dumps(result, indent=2))
-    print(json.dumps(result, indent=2))
+    write_results(f"gate_calibration_truthful_qa_{config['model_name']}.json", result)
     return result
 
 

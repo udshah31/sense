@@ -16,11 +16,7 @@ condition, so all three â€” fixed, adaptive, and their common source baseline â€
 compared under identical data and decoding config.
 """
 
-import json
-
-from _common import RESULTS_DIR, SPLIT_PATH, calibration_entropies, load_model, load_yaml_config
-from sense_data.splits import load_splits
-from sense_data.truthful_qa import load_truthful_qa
+from _common import calibration_entropies, load_examples_and_splits, load_model, load_yaml_config, write_results
 from sense_orchestrator.gate import GatePolicy
 
 
@@ -46,8 +42,7 @@ def run() -> dict:
     quantile = config["gate"]["quantile"]
     expected_routing_rate = 1.0 - quantile
 
-    examples = load_truthful_qa()
-    splits = load_splits(SPLIT_PATH)
+    examples, splits = load_examples_and_splits()
     eval_indices = getattr(splits, config["rq2"]["eval_split"])
 
     source_model, source_tokenizer = load_model(source_cfg)
@@ -109,10 +104,7 @@ def run() -> dict:
         "adaptive_calibration_fidelity_gap": abs(adaptive_dev_rate - expected_routing_rate),
     }
 
-    RESULTS_DIR.mkdir(exist_ok=True)
-    out_path = RESULTS_DIR / f"rq2_adaptive_truthful_qa_{source_name}_to_{target_name}.json"
-    out_path.write_text(json.dumps(result, indent=2))
-    print(json.dumps(result, indent=2))
+    write_results(f"rq2_adaptive_truthful_qa_{source_name}_to_{target_name}.json", result)
     return result
 
 

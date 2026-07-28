@@ -24,15 +24,12 @@ paper-grade judge (see eval/README.md).
 """
 
 import asyncio
-import json
 from pathlib import Path
 
 import uvicorn
 from sense_symbolic.app import app as symbolic_app
 
-from _common import RESULTS_DIR, SPLIT_PATH, load_model, load_yaml_config, mean_calibration_entropy
-from sense_data.splits import load_splits
-from sense_data.truthful_qa import load_truthful_qa
+from _common import load_examples_and_splits, load_model, load_yaml_config, mean_calibration_entropy, write_results
 from sense_eval.factuality import lexical_containment_verdict
 from sense_neural.entropy import TokenEntropyMonitor
 from sense_neural.latency import generate_with_latency
@@ -60,8 +57,7 @@ async def run_experiment(config: dict) -> dict:
     probe = config["rq3"]["symbolic_probe"]
 
     model, tokenizer = load_model(model_cfg)
-    examples = load_truthful_qa()
-    splits = load_splits(SPLIT_PATH)
+    examples, splits = load_examples_and_splits()
 
     all_eval_indices = getattr(splits, config["rq3"]["eval_split"])
     n_requested = config["rq3"]["n_eval_examples"]
@@ -180,11 +176,11 @@ async def main() -> dict:
         server.should_exit = True
         await server_task
 
-    RESULTS_DIR.mkdir(exist_ok=True)
-    out_path = RESULTS_DIR / f"rq3_accuracy_latency_truthful_qa_{config['rq3']['model']}.json"
-    out_path.write_text(json.dumps(result, indent=2))
-    summary = {k: v for k, v in result.items() if k != "per_example"}
-    print(json.dumps(summary, indent=2))
+    write_results(
+        f"rq3_accuracy_latency_truthful_qa_{config['rq3']['model']}.json",
+        result,
+        print_exclude_keys=frozenset({"per_example"}),
+    )
     return result
 
 

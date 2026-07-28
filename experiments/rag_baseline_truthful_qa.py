@@ -11,16 +11,10 @@ RQ1-RQ3, so this baseline's number sits in the same honest "pipeline-mechanics
 validation, not a scientific finding" category until Llama-3/Mistral GPU runs.
 """
 
-import json
-
-from _common import RESULTS_DIR, REPO_ROOT, load_model, load_yaml_config
-from sense_data.splits import load_splits
-from sense_data.truthful_qa import load_truthful_qa
+from _common import REPO_ROOT, load_examples_and_splits, load_model, load_yaml_config, write_results
 from sense_eval.factuality import lexical_containment_verdict
 from sense_rag.index import PassageIndex
 from sense_rag.retrieve import retrieve
-
-SPLIT_PATH = REPO_ROOT / "data" / "splits" / "truthful_qa.json"
 
 
 def load_config() -> dict:
@@ -87,8 +81,7 @@ async def run_experiment(config: dict) -> dict:
     # if ever fire, but keep it in case even question+one-passage is too long.
     tokenizer.truncation_side = "left"
 
-    examples = load_truthful_qa()
-    splits = load_splits(SPLIT_PATH)
+    examples, splits = load_examples_and_splits()
     all_eval_indices = getattr(splits, config["rag"]["eval_split"])
 
     n_requested = config["rag"].get("n_eval_examples", len(all_eval_indices))
@@ -172,11 +165,11 @@ async def main() -> dict:
     config = load_config()
     result = await run_experiment(config)
 
-    RESULTS_DIR.mkdir(exist_ok=True)
-    out_path = RESULTS_DIR / f"rag_baseline_truthful_qa_{config['rag']['model']}.json"
-    out_path.write_text(json.dumps(result, indent=2))
-    summary = {k: v for k, v in result.items() if k != "per_example"}
-    print(json.dumps(summary, indent=2))
+    write_results(
+        f"rag_baseline_truthful_qa_{config['rag']['model']}.json",
+        result,
+        print_exclude_keys=frozenset({"per_example"}),
+    )
     return result
 
 

@@ -1,12 +1,16 @@
-"""Shared plumbing for experiment scripts: config loading, model loading, and the
-per-example calibration-entropy computation used by every gate-calibration harness.
+"""Shared plumbing for experiment scripts: config loading, model loading, the
+per-example calibration-entropy computation used by every gate-calibration harness,
+and the example/split loading + results-writing boilerplate every harness repeats.
 """
 
+import json
 from pathlib import Path
 
 import yaml
 from transformers import AutoModelForCausalLM, AutoTokenizer
 
+from sense_data.splits import SplitIndices, load_splits
+from sense_data.truthful_qa import TruthfulQAExample, load_truthful_qa
 from sense_neural.entropy import TokenEntropyMonitor
 
 REPO_ROOT = Path(__file__).parent.parent
@@ -41,3 +45,16 @@ def mean_calibration_entropy(model, tokenizer, question: str, decoding_cfg: dict
 
 def calibration_entropies(model, tokenizer, examples, indices, decoding_cfg) -> list[float]:
     return [mean_calibration_entropy(model, tokenizer, examples[i].question, decoding_cfg) for i in indices]
+
+
+def load_examples_and_splits() -> tuple[list[TruthfulQAExample], SplitIndices]:
+    return load_truthful_qa(), load_splits(SPLIT_PATH)
+
+
+def write_results(filename: str, result: dict, *, print_exclude_keys: frozenset[str] = frozenset()) -> None:
+    """Write `result` as the full JSON at RESULTS_DIR/filename, then print a summary
+    to stdout with `print_exclude_keys` (e.g. a large per_example array) omitted."""
+    RESULTS_DIR.mkdir(exist_ok=True)
+    (RESULTS_DIR / filename).write_text(json.dumps(result, indent=2))
+    summary = {k: v for k, v in result.items() if k not in print_exclude_keys}
+    print(json.dumps(summary, indent=2))
