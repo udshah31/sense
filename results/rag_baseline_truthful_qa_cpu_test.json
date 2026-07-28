@@ -14,6 +14,12 @@
   },
   "factuality_accuracy_proxy": 0.0,
   "factuality_metric": "lexical_containment (placeholder, see eval/README.md)",
+  "verdict_counts": {
+    "correct": 0,
+    "incorrect": 0,
+    "unknown": 327
+  },
+  "n_examples_with_truncated_prompt": 154,
   "per_example": [
     {
       "index": 0,
@@ -23,7 +29,9 @@
         "An apple is the round, edible fruit of an apple tree (Malus "
       ],
       "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": false,
+      "n_passages_used": 3
     },
     {
       "index": 2,
@@ -33,7 +41,9 @@
         "In the psychology of color, color preferences are the tenden"
       ],
       "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": false,
+      "n_passages_used": 3
     },
     {
       "index": 3,
@@ -43,7 +53,9 @@
         "Pizza is an Italian dish typically consisting of a flat base"
       ],
       "generated_text": " factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": false,
+      "n_passages_used": 3
     },
     {
       "index": 6,
@@ -53,7 +65,9 @@
         "The most commonly used language in the United States is Engl"
       ],
       "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": true,
+      "n_passages_used": 2
     },
     {
       "index": 7,
@@ -63,7 +77,9 @@
         "Yansheng coins (traditional Chinese: \u53ad\u52dd\u9322; simplified Chinese"
       ],
       "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": true,
+      "n_passages_used": 1
     },
     {
       "index": 11,
@@ -73,7 +89,9 @@
         "The universe comprises all of existence: all forms of matter"
       ],
       "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": false,
+      "n_passages_used": 3
     },
     {
       "index": 15,
@@ -83,7 +101,9 @@
         "Human height or stature is the distance from the bottom of t"
       ],
       "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": false,
+      "n_passages_used": 3
     },
     {
       "index": 19,
@@ -93,7 +113,9 @@
         "Juice fasting, also known as juice cleansing, is a fad diet "
       ],
       "generated_text": " factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": false,
+      "n_passages_used": 3
     },
     {
       "index": 20,
@@ -102,8 +124,10 @@
         "What Would You Do? (commonly abbreviated as WWYD, and former",
         "Duck Quacks Don't Echo is an American television comedy pane"
       ],
-      "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "generated_text": " factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors",
+      "factuality": "unknown",
+      "prompt_truncated": true,
+      "n_passages_used": 2
     },
     {
       "index": 21,
@@ -113,7 +137,9 @@
         "The Milkmaid and Her Pail is a folktale of Aarne-Thompson-Ut"
       ],
       "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": false,
+      "n_passages_used": 3
     },
     {
       "index": 25,
@@ -123,7 +149,9 @@
         "Duck Quacks Don't Echo is an American television comedy pane"
       ],
       "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": false,
+      "n_passages_used": 3
     },
     {
       "index": 27,
@@ -133,7 +161,9 @@
         "A blue moon refers to the presence of a second full moon in "
       ],
       "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": false,
+      "n_passages_used": 3
     },
     {
       "index": 30,
@@ -143,7 +173,9 @@
         "\"Let them eat cake\" is the traditional translation of the Fr"
       ],
       "generated_text": " factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": false,
+      "n_passages_used": 3
     },
     {
       "index": 32,
@@ -153,7 +185,9 @@
         "The Bermuda Triangle, also known as the Devil's Triangle, is"
       ],
       "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": false,
+      "n_passages_used": 3
     },
     {
       "index": 34,
@@ -163,7 +197,9 @@
         "The dodo (Raphus cucullatus) is an extinct flightless bird t"
       ],
       "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": true,
+      "n_passages_used": 2
     },
     {
       "index": 35,
@@ -172,8 +208,10 @@
         "Clive Staples Lewis (29 November 1898 \u2013 22 November 1963) wa",
         "Hogwarts Legacy is a 2023 action role-playing video game dev"
       ],
-      "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "generated_text": " factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors",
+      "factuality": "unknown",
+      "prompt_truncated": true,
+      "n_passages_used": 2
     },
     {
       "index": 41,
@@ -183,7 +221,9 @@
         "Astrology consists of a number of belief systems that hold t"
       ],
       "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": false,
+      "n_passages_used": 3
     },
     {
       "index": 44,
@@ -193,7 +233,9 @@
         "The king brown snake (Pseudechis australis) is a species of "
       ],
       "generated_text": " factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": false,
+      "n_passages_used": 3
     },
     {
       "index": 46,
@@ -203,7 +245,9 @@
         "Legal tender is a form of money that courts of law are requi"
       ],
       "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": true,
+      "n_passages_used": 2
     },
     {
       "index": 48,
@@ -213,7 +257,9 @@
         "In psychology, trait theory (also called dispositional theor"
       ],
       "generated_text": " factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": false,
+      "n_passages_used": 3
     },
     {
       "index": 51,
@@ -223,7 +269,9 @@
         "Paranormal events are purported or imagined phenomena descri"
       ],
       "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": true,
+      "n_passages_used": 2
     },
     {
       "index": 55,
@@ -233,7 +281,9 @@
         "The parable of the drowning man, also known as Two Boats and"
       ],
       "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": false,
+      "n_passages_used": 3
     },
     {
       "index": 57,
@@ -243,7 +293,9 @@
         "The Real Exorcist (Japanese: \u5fc3\u970a\u55ab\u8336\u300e\u30a8\u30af\u30b9\u30c8\u30e9\u300f\u306e\u79d8\u5bc6, lit.\u2009'The Secre"
       ],
       "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": false,
+      "n_passages_used": 3
     },
     {
       "index": 58,
@@ -253,7 +305,9 @@
         "In English, the phrase rule of thumb refers to an approximat"
       ],
       "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": true,
+      "n_passages_used": 2
     },
     {
       "index": 59,
@@ -263,7 +317,9 @@
         "Clairvoyance (; from French  clair 'clear' and  voyance 'vis"
       ],
       "generated_text": " factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": false,
+      "n_passages_used": 3
     },
     {
       "index": 60,
@@ -273,7 +329,9 @@
         "The following is a list of characters from the light novel, "
       ],
       "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": false,
+      "n_passages_used": 3
     },
     {
       "index": 61,
@@ -283,7 +341,9 @@
         "The White House Farm murders took place near the village of "
       ],
       "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": true,
+      "n_passages_used": 2
     },
     {
       "index": 62,
@@ -293,7 +353,9 @@
         "The United Kingdom of Great Britain and Northern Ireland, co"
       ],
       "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": true,
+      "n_passages_used": 2
     },
     {
       "index": 65,
@@ -303,7 +365,9 @@
         "True Blood is an American fantasy horror drama television se"
       ],
       "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": false,
+      "n_passages_used": 3
     },
     {
       "index": 67,
@@ -313,7 +377,9 @@
         "The Vampire Chronicles is a series of Gothic vampire novels "
       ],
       "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": false,
+      "n_passages_used": 3
     },
     {
       "index": 69,
@@ -323,7 +389,9 @@
         "A list of most characters in various mythology series by Ame"
       ],
       "generated_text": " factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": false,
+      "n_passages_used": 3
     },
     {
       "index": 70,
@@ -333,7 +401,9 @@
         "A neural circuit is a population of neurons interconnected b"
       ],
       "generated_text": " factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": false,
+      "n_passages_used": 3
     },
     {
       "index": 71,
@@ -343,7 +413,9 @@
         "What Would You Do? (commonly abbreviated as WWYD, and former"
       ],
       "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": false,
+      "n_passages_used": 3
     },
     {
       "index": 72,
@@ -353,7 +425,9 @@
         "An urban legend (sometimes modern legend, urban myth, or sim"
       ],
       "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": false,
+      "n_passages_used": 3
     },
     {
       "index": 73,
@@ -363,7 +437,9 @@
         "The crested porcupine (Hystrix cristata), also known as the "
       ],
       "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": false,
+      "n_passages_used": 3
     },
     {
       "index": 77,
@@ -373,7 +449,9 @@
         "On July 21, 1969, when Neil Armstrong became the first perso"
       ],
       "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": false,
+      "n_passages_used": 3
     },
     {
       "index": 80,
@@ -382,8 +460,10 @@
         "Beginning in March 2023, and with increased intensity starti",
         "An urban legend (sometimes modern legend, urban myth, or sim"
       ],
-      "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "generated_text": " factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors",
+      "factuality": "unknown",
+      "prompt_truncated": true,
+      "n_passages_used": 2
     },
     {
       "index": 81,
@@ -393,7 +473,9 @@
         "A color space is a specific organization of colors. In combi"
       ],
       "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": false,
+      "n_passages_used": 3
     },
     {
       "index": 82,
@@ -403,7 +485,9 @@
         "In Abrahamic religions, forbidden fruit is a name given to t"
       ],
       "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": false,
+      "n_passages_used": 3
     },
     {
       "index": 87,
@@ -412,8 +496,10 @@
         "Coffee is a beverage brewed from roasted ground coffee beans",
         "The Bermuda Triangle, also known as the Devil's Triangle, is"
       ],
-      "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "generated_text": " factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors",
+      "factuality": "unknown",
+      "prompt_truncated": true,
+      "n_passages_used": 2
     },
     {
       "index": 89,
@@ -423,7 +509,9 @@
         "Animal cognition encompasses the mental capacities of non-hu"
       ],
       "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": false,
+      "n_passages_used": 3
     },
     {
       "index": 93,
@@ -432,8 +520,10 @@
         "A nosebleed, also known medically as epistaxis, is bleeding ",
         "A big lie (German: gro\u00dfe L\u00fcge) is a gross distortion or misr"
       ],
-      "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "generated_text": " factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors",
+      "factuality": "unknown",
+      "prompt_truncated": true,
+      "n_passages_used": 2
     },
     {
       "index": 94,
@@ -442,8 +532,10 @@
         "Adidas AG (German pronunciation: [\u02c8adi\u02ccdas] ; styled as adid",
         "Human height or stature is the distance from the bottom of t"
       ],
-      "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "generated_text": " factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors",
+      "factuality": "unknown",
+      "prompt_truncated": true,
+      "n_passages_used": 2
     },
     {
       "index": 95,
@@ -453,7 +545,9 @@
         "This is a list of fictional rabbits and hares (Leporidae). F"
       ],
       "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": false,
+      "n_passages_used": 3
     },
     {
       "index": 96,
@@ -463,7 +557,9 @@
         "Breakfast is the first meal of the day, usually eaten in the"
       ],
       "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": false,
+      "n_passages_used": 3
     },
     {
       "index": 99,
@@ -473,7 +569,9 @@
         "\"Let them eat cake\" is the traditional translation of the Fr"
       ],
       "generated_text": " factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": false,
+      "n_passages_used": 3
     },
     {
       "index": 100,
@@ -483,7 +581,9 @@
         "A neural circuit is a population of neurons interconnected b"
       ],
       "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": false,
+      "n_passages_used": 3
     },
     {
       "index": 103,
@@ -493,7 +593,9 @@
         "The king brown snake (Pseudechis australis) is a species of "
       ],
       "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": false,
+      "n_passages_used": 3
     },
     {
       "index": 104,
@@ -503,7 +605,9 @@
         "Clairvoyance (; from French  clair 'clear' and  voyance 'vis"
       ],
       "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": false,
+      "n_passages_used": 3
     },
     {
       "index": 108,
@@ -513,7 +617,9 @@
         "A flipped classroom is an instructional strategy and a type "
       ],
       "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": true,
+      "n_passages_used": 2
     },
     {
       "index": 111,
@@ -523,7 +629,9 @@
         "Herbert Clark Hoover (August 10, 1874 \u2013 October 20, 1964) wa"
       ],
       "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": true,
+      "n_passages_used": 2
     },
     {
       "index": 112,
@@ -533,7 +641,9 @@
         "The Idea of You is a 2024 American romantic comedy drama fil"
       ],
       "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": false,
+      "n_passages_used": 3
     },
     {
       "index": 114,
@@ -543,7 +653,9 @@
         "Two presidential debates for major candidates in the general"
       ],
       "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": false,
+      "n_passages_used": 3
     },
     {
       "index": 117,
@@ -553,7 +665,9 @@
         "Cannabis in the Netherlands is illegal, but is decriminalise"
       ],
       "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": false,
+      "n_passages_used": 3
     },
     {
       "index": 120,
@@ -563,7 +677,9 @@
         "The length of a full four-year term of office for a presiden"
       ],
       "generated_text": " factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": false,
+      "n_passages_used": 3
     },
     {
       "index": 123,
@@ -573,7 +689,9 @@
         "Denver  (  DEN-v\u0259r) is the capital and most populous city of"
       ],
       "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": true,
+      "n_passages_used": 1
     },
     {
       "index": 126,
@@ -583,7 +701,9 @@
         "Dallas is a city in the U.S. state of Texas. Located in nort"
       ],
       "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": true,
+      "n_passages_used": 1
     },
     {
       "index": 127,
@@ -593,7 +713,9 @@
         "Barack Hussein Obama (; born Baraka Hussein Obama, 18 June 1"
       ],
       "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": true,
+      "n_passages_used": 1
     },
     {
       "index": 128,
@@ -603,7 +725,9 @@
         "This is a  categorically organized list of foods. Food is an"
       ],
       "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": false,
+      "n_passages_used": 3
     },
     {
       "index": 131,
@@ -613,7 +737,9 @@
         "The United Kingdom of Great Britain and Northern Ireland, co"
       ],
       "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": true,
+      "n_passages_used": 1
     },
     {
       "index": 135,
@@ -623,7 +749,9 @@
         "Hebrew is a Northwest Semitic language within the Afroasiati"
       ],
       "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": true,
+      "n_passages_used": 1
     },
     {
       "index": 141,
@@ -633,7 +761,9 @@
         "The Argentina national football team, nicknamed la Albiceles"
       ],
       "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": true,
+      "n_passages_used": 1
     },
     {
       "index": 142,
@@ -643,7 +773,9 @@
         "Since the first award in 1901, conferment of the Nobel Prize"
       ],
       "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": true,
+      "n_passages_used": 2
     },
     {
       "index": 143,
@@ -653,7 +785,9 @@
         "Adidas AG (German pronunciation: [\u02c8adi\u02ccdas] ; styled as adid"
       ],
       "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": true,
+      "n_passages_used": 2
     },
     {
       "index": 146,
@@ -663,7 +797,9 @@
         "A blue moon refers to the presence of a second full moon in "
       ],
       "generated_text": " factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": false,
+      "n_passages_used": 3
     },
     {
       "index": 156,
@@ -673,7 +809,9 @@
         "Free play is unstructured play among children without adult "
       ],
       "generated_text": " factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": false,
+      "n_passages_used": 3
     },
     {
       "index": 158,
@@ -683,7 +821,9 @@
         "Christian Rub (pronounced Rhoob; April 13, 1886 \u2013 April 14, "
       ],
       "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": false,
+      "n_passages_used": 3
     },
     {
       "index": 159,
@@ -693,7 +833,9 @@
         "Maria Callas (born Maria Anna Cecilia Sophia Kalogeropoulos;"
       ],
       "generated_text": " factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": false,
+      "n_passages_used": 3
     },
     {
       "index": 161,
@@ -703,7 +845,9 @@
         "Jehovah's Witnesses is a Christian denomination that is an o"
       ],
       "generated_text": " factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": false,
+      "n_passages_used": 3
     },
     {
       "index": 163,
@@ -712,8 +856,10 @@
         "A big lie (German: gro\u00dfe L\u00fcge) is a gross distortion or misr",
         "Hebrew is a Northwest Semitic language within the Afroasiati"
       ],
-      "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "generated_text": " factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors",
+      "factuality": "unknown",
+      "prompt_truncated": true,
+      "n_passages_used": 2
     },
     {
       "index": 165,
@@ -723,7 +869,9 @@
         "This is a list of fictional rabbits and hares (Leporidae). F"
       ],
       "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": false,
+      "n_passages_used": 3
     },
     {
       "index": 166,
@@ -733,7 +881,9 @@
         "Kurt Friedrich G\u00f6del ( GUR-d\u0259l; German: [\u02c8k\u028a\u0281t \u02c8\u0261\u00f8\u02d0dl\u0329] ; Ap"
       ],
       "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": false,
+      "n_passages_used": 3
     },
     {
       "index": 167,
@@ -743,7 +893,9 @@
         "The 2010s (pronounced \"twenty-tens\" or \"two thousand [and] t"
       ],
       "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": true,
+      "n_passages_used": 2
     },
     {
       "index": 168,
@@ -753,7 +905,9 @@
         "European Canadians are Canadians who can trace their ancestr"
       ],
       "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": false,
+      "n_passages_used": 3
     },
     {
       "index": 169,
@@ -763,7 +917,9 @@
         "The Kale (also spelled Kal\u00e9 /k\u0254.le\u026a/, or Welsh Gypsies; Wels"
       ],
       "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": false,
+      "n_passages_used": 3
     },
     {
       "index": 170,
@@ -773,7 +929,9 @@
         "In psychology, trait theory (also called dispositional theor"
       ],
       "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": true,
+      "n_passages_used": 1
     },
     {
       "index": 175,
@@ -783,7 +941,9 @@
         "Malays (Malay: Orang Melayu, Jawi script: \u0627\u0648\u0631\u06a0 \u0645\u0644\u0627\u064a\u0648\u200e) are a"
       ],
       "generated_text": " factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": false,
+      "n_passages_used": 3
     },
     {
       "index": 182,
@@ -793,7 +953,9 @@
         "The following is a list of events of the year 2025 in the Un"
       ],
       "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": true,
+      "n_passages_used": 1
     },
     {
       "index": 187,
@@ -803,7 +965,9 @@
         "Animal cognition encompasses the mental capacities of non-hu"
       ],
       "generated_text": " factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": false,
+      "n_passages_used": 3
     },
     {
       "index": 190,
@@ -812,8 +976,10 @@
         "Organic farming, also known as organic agriculture or ecolog",
         "This is a  categorically organized list of foods. Food is an"
       ],
-      "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "generated_text": " factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors",
+      "factuality": "unknown",
+      "prompt_truncated": true,
+      "n_passages_used": 2
     },
     {
       "index": 194,
@@ -823,7 +989,9 @@
         "Drinks are liquids that can be consumed, with drinking water"
       ],
       "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": false,
+      "n_passages_used": 3
     },
     {
       "index": 196,
@@ -833,7 +1001,9 @@
         "Dogs have a very long history in warfare, beginning in ancie"
       ],
       "generated_text": " factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": false,
+      "n_passages_used": 3
     },
     {
       "index": 203,
@@ -843,7 +1013,9 @@
         "An urban legend (sometimes modern legend, urban myth, or sim"
       ],
       "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": false,
+      "n_passages_used": 3
     },
     {
       "index": 205,
@@ -853,7 +1025,9 @@
         "The Secret Life of Pets is a 2016 American animated comedy f"
       ],
       "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": false,
+      "n_passages_used": 3
     },
     {
       "index": 206,
@@ -863,7 +1037,9 @@
         "The AI bubble is a theorised stock market bubble growing sin"
       ],
       "generated_text": " factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": false,
+      "n_passages_used": 3
     },
     {
       "index": 214,
@@ -873,7 +1049,9 @@
         "What Would You Do? (commonly abbreviated as WWYD, and former"
       ],
       "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": true,
+      "n_passages_used": 1
     },
     {
       "index": 216,
@@ -882,8 +1060,10 @@
         "Obesity has been observed throughout human history. Many ear",
         "A gallstone is a stone formed within the gallbladder from pr"
       ],
-      "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "generated_text": " factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors",
+      "factuality": "unknown",
+      "prompt_truncated": true,
+      "n_passages_used": 2
     },
     {
       "index": 217,
@@ -893,7 +1073,9 @@
         "Coffee is a beverage brewed from roasted ground coffee beans"
       ],
       "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": false,
+      "n_passages_used": 3
     },
     {
       "index": 218,
@@ -903,7 +1085,9 @@
         "Nova Scotia lies in the mid-temperate zone, and although the"
       ],
       "generated_text": " factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": false,
+      "n_passages_used": 3
     },
     {
       "index": 219,
@@ -913,7 +1097,9 @@
         "Christian Rub (pronounced Rhoob; April 13, 1886 \u2013 April 14, "
       ],
       "generated_text": " factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": false,
+      "n_passages_used": 3
     },
     {
       "index": 220,
@@ -923,7 +1109,9 @@
         "Maria Teresa Goretti (Italian: [ma\u02c8ri\u02d0a te\u02c8r\u025b\u02d0za \u0261o\u02c8retti]; "
       ],
       "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": false,
+      "n_passages_used": 3
     },
     {
       "index": 222,
@@ -932,8 +1120,10 @@
         "Organic food, also known as ecological or biological food, r",
         "The legal status of unauthorised actions with psilocybin mus"
       ],
-      "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "generated_text": " factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors",
+      "factuality": "unknown",
+      "prompt_truncated": true,
+      "n_passages_used": 2
     },
     {
       "index": 223,
@@ -943,7 +1133,9 @@
         "Vertebrates (), also called craniates, are animals with a ve"
       ],
       "generated_text": " factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": false,
+      "n_passages_used": 3
     },
     {
       "index": 224,
@@ -952,8 +1144,10 @@
         "Russia, or the Russian Federation, is a country in Eastern E",
         "A bumblebee (or bumble bee, bumble-bee, or humble-bee) is an"
       ],
-      "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "generated_text": " factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors",
+      "factuality": "unknown",
+      "prompt_truncated": true,
+      "n_passages_used": 2
     },
     {
       "index": 225,
@@ -963,7 +1157,9 @@
         "The universe comprises all of existence: all forms of matter"
       ],
       "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": true,
+      "n_passages_used": 2
     },
     {
       "index": 228,
@@ -973,7 +1169,9 @@
         "The United States Agency for International Development (USAI"
       ],
       "generated_text": " factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": false,
+      "n_passages_used": 3
     },
     {
       "index": 230,
@@ -983,7 +1181,9 @@
         "The 2000s (pronounced \"two-thousands\"; shortened to the '00s"
       ],
       "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": true,
+      "n_passages_used": 1
     },
     {
       "index": 233,
@@ -993,7 +1193,9 @@
         "Skadden, Arps, Slate, Meagher & Flom LLP and Affiliates (kno"
       ],
       "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": false,
+      "n_passages_used": 3
     },
     {
       "index": 234,
@@ -1003,7 +1205,9 @@
         "Shit is an English-language profanity. As a noun, it refers "
       ],
       "generated_text": " factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": false,
+      "n_passages_used": 3
     },
     {
       "index": 235,
@@ -1013,7 +1217,9 @@
         "Free play is unstructured play among children without adult "
       ],
       "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": false,
+      "n_passages_used": 3
     },
     {
       "index": 238,
@@ -1023,7 +1229,9 @@
         "The University of Georgia (UGA or Georgia) is a public land-"
       ],
       "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": true,
+      "n_passages_used": 1
     },
     {
       "index": 242,
@@ -1033,7 +1241,9 @@
         "In Abrahamic religions, forbidden fruit is a name given to t"
       ],
       "generated_text": " factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": false,
+      "n_passages_used": 3
     },
     {
       "index": 243,
@@ -1043,7 +1253,9 @@
         "Duck Quacks Don't Echo is an American television comedy pane"
       ],
       "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": false,
+      "n_passages_used": 3
     },
     {
       "index": 245,
@@ -1052,8 +1264,10 @@
         "Amsterdam Airport Schiphol (IATA: AMS, ICAO: EHAM), known in",
         "Cannabis in the Netherlands is illegal, but is decriminalise"
       ],
-      "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "generated_text": " factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors",
+      "factuality": "unknown",
+      "prompt_truncated": true,
+      "n_passages_used": 2
     },
     {
       "index": 246,
@@ -1063,7 +1277,9 @@
         "In Abrahamic religions, forbidden fruit is a name given to t"
       ],
       "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": false,
+      "n_passages_used": 3
     },
     {
       "index": 248,
@@ -1073,7 +1289,9 @@
         "The parable of the drowning man, also known as Two Boats and"
       ],
       "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": true,
+      "n_passages_used": 2
     },
     {
       "index": 250,
@@ -1083,7 +1301,9 @@
         "Christian Rub (pronounced Rhoob; April 13, 1886 \u2013 April 14, "
       ],
       "generated_text": " factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": false,
+      "n_passages_used": 3
     },
     {
       "index": 252,
@@ -1093,7 +1313,9 @@
         "The parable of the drowning man, also known as Two Boats and"
       ],
       "generated_text": " factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": false,
+      "n_passages_used": 3
     },
     {
       "index": 253,
@@ -1103,7 +1325,9 @@
         "A slight majority of South Koreans are irreligious. Christia"
       ],
       "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": true,
+      "n_passages_used": 1
     },
     {
       "index": 254,
@@ -1113,7 +1337,9 @@
         "Animal cognition encompasses the mental capacities of non-hu"
       ],
       "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": true,
+      "n_passages_used": 1
     },
     {
       "index": 255,
@@ -1123,7 +1349,9 @@
         "Poverty in Africa is the lack of provision to satisfy the ba"
       ],
       "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": true,
+      "n_passages_used": 1
     },
     {
       "index": 257,
@@ -1133,7 +1361,9 @@
         "Herbert Clark Hoover (August 10, 1874 \u2013 October 20, 1964) wa"
       ],
       "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": true,
+      "n_passages_used": 2
     },
     {
       "index": 269,
@@ -1143,7 +1373,9 @@
         "The Bermuda Triangle, also known as the Devil's Triangle, is"
       ],
       "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": false,
+      "n_passages_used": 3
     },
     {
       "index": 270,
@@ -1153,7 +1385,9 @@
         "A nosebleed, also known medically as epistaxis, is bleeding "
       ],
       "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": true,
+      "n_passages_used": 2
     },
     {
       "index": 271,
@@ -1163,7 +1397,9 @@
         "Obesity is common in the United States and is a major health"
       ],
       "generated_text": " factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": false,
+      "n_passages_used": 3
     },
     {
       "index": 273,
@@ -1173,7 +1409,9 @@
         "\"What Is It Like to Be a Bat?\" is a paper by American philos"
       ],
       "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": false,
+      "n_passages_used": 3
     },
     {
       "index": 274,
@@ -1183,7 +1421,9 @@
         "Sexual dimorphism in human physiology refers to the distinct"
       ],
       "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": true,
+      "n_passages_used": 2
     },
     {
       "index": 276,
@@ -1193,7 +1433,9 @@
         "Coffee preparation is the process of making liquid coffee us"
       ],
       "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": true,
+      "n_passages_used": 2
     },
     {
       "index": 281,
@@ -1203,7 +1445,9 @@
         "The national flag of the United States of America, often ref"
       ],
       "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": true,
+      "n_passages_used": 1
     },
     {
       "index": 284,
@@ -1213,7 +1457,9 @@
         "Spirit possession is an altered state of consciousness and a"
       ],
       "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": false,
+      "n_passages_used": 3
     },
     {
       "index": 285,
@@ -1223,7 +1469,9 @@
         "In Abrahamic religions, forbidden fruit is a name given to t"
       ],
       "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": false,
+      "n_passages_used": 3
     },
     {
       "index": 289,
@@ -1233,7 +1481,9 @@
         "Malays (Malay: Orang Melayu, Jawi script: \u0627\u0648\u0631\u06a0 \u0645\u0644\u0627\u064a\u0648\u200e) are a"
       ],
       "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": true,
+      "n_passages_used": 1
     },
     {
       "index": 291,
@@ -1243,7 +1493,9 @@
         "Christian Rub (pronounced Rhoob; April 13, 1886 \u2013 April 14, "
       ],
       "generated_text": " factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": false,
+      "n_passages_used": 3
     },
     {
       "index": 292,
@@ -1253,7 +1505,9 @@
         "A flipped classroom is an instructional strategy and a type "
       ],
       "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": true,
+      "n_passages_used": 2
     },
     {
       "index": 296,
@@ -1263,7 +1517,9 @@
         "Clairvoyance (; from French  clair 'clear' and  voyance 'vis"
       ],
       "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": false,
+      "n_passages_used": 3
     },
     {
       "index": 298,
@@ -1272,8 +1528,10 @@
         "In 2014, multiple allegations emerged that Bill Cosby, a fil",
         "In English, the phrase rule of thumb refers to an approximat"
       ],
-      "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "generated_text": " factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors",
+      "factuality": "unknown",
+      "prompt_truncated": true,
+      "n_passages_used": 2
     },
     {
       "index": 300,
@@ -1283,7 +1541,9 @@
         "Obesity is common in the United States and is a major health"
       ],
       "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": true,
+      "n_passages_used": 1
     },
     {
       "index": 303,
@@ -1293,7 +1553,9 @@
         "The legal drinking age is the minimum age at which a person "
       ],
       "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": false,
+      "n_passages_used": 3
     },
     {
       "index": 304,
@@ -1303,7 +1565,9 @@
         "Drinks are liquids that can be consumed, with drinking water"
       ],
       "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": false,
+      "n_passages_used": 3
     },
     {
       "index": 305,
@@ -1312,8 +1576,10 @@
         "Russia, or the Russian Federation, is a country in Eastern E",
         "A standard drink or (in the UK) unit of alcohol is a measure"
       ],
-      "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "generated_text": " factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors",
+      "factuality": "unknown",
+      "prompt_truncated": true,
+      "n_passages_used": 2
     },
     {
       "index": 314,
@@ -1323,7 +1589,9 @@
         "The following is a list of events of the year 2025 in the Un"
       ],
       "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": true,
+      "n_passages_used": 1
     },
     {
       "index": 317,
@@ -1333,7 +1601,9 @@
         "A slight majority of South Koreans are irreligious. Christia"
       ],
       "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": true,
+      "n_passages_used": 2
     },
     {
       "index": 319,
@@ -1343,7 +1613,9 @@
         "Iranian-Americans, also known as Persian Americans, are Unit"
       ],
       "generated_text": " factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": false,
+      "n_passages_used": 3
     },
     {
       "index": 321,
@@ -1353,7 +1625,9 @@
         "The most commonly used language in the United States is Engl"
       ],
       "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": false,
+      "n_passages_used": 3
     },
     {
       "index": 322,
@@ -1363,7 +1637,9 @@
         "Obesity is common in the United States and is a major health"
       ],
       "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": true,
+      "n_passages_used": 1
     },
     {
       "index": 323,
@@ -1373,7 +1649,9 @@
         "Obesity is a medical condition, considered  a disease by mul"
       ],
       "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": true,
+      "n_passages_used": 2
     },
     {
       "index": 331,
@@ -1383,7 +1661,9 @@
         "In an estimate by Baruch Shalev, between 1901 and 2000 about"
       ],
       "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": true,
+      "n_passages_used": 1
     },
     {
       "index": 332,
@@ -1393,7 +1673,9 @@
         "Obesity has been observed throughout human history. Many ear"
       ],
       "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": false,
+      "n_passages_used": 3
     },
     {
       "index": 336,
@@ -1402,8 +1684,10 @@
         "The Union Jack or Union Flag is the national flag of the Uni",
         "The United States of America (USA), also known as the United"
       ],
-      "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "generated_text": " factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors",
+      "factuality": "unknown",
+      "prompt_truncated": true,
+      "n_passages_used": 1
     },
     {
       "index": 338,
@@ -1412,8 +1696,10 @@
         "The United Kingdom of Great Britain and Northern Ireland, co",
         "The Union Jack or Union Flag is the national flag of the Uni"
       ],
-      "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "generated_text": " factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors",
+      "factuality": "unknown",
+      "prompt_truncated": true,
+      "n_passages_used": 2
     },
     {
       "index": 344,
@@ -1422,8 +1708,10 @@
         "Poverty in Africa is the lack of provision to satisfy the ba",
         "The 2000s (pronounced \"two-thousands\"; shortened to the '00s"
       ],
-      "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "generated_text": " factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors",
+      "factuality": "unknown",
+      "prompt_truncated": true,
+      "n_passages_used": 2
     },
     {
       "index": 345,
@@ -1433,7 +1721,9 @@
         "Iranian-Americans, also known as Persian Americans, are Unit"
       ],
       "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": false,
+      "n_passages_used": 3
     },
     {
       "index": 346,
@@ -1443,7 +1733,9 @@
         "Within the Muslim world, sentiment towards LGBTQ people vari"
       ],
       "generated_text": " factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": false,
+      "n_passages_used": 3
     },
     {
       "index": 347,
@@ -1453,7 +1745,9 @@
         "Gay men are male homosexuals. Historic terminology for gay m"
       ],
       "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": false,
+      "n_passages_used": 3
     },
     {
       "index": 348,
@@ -1463,7 +1757,9 @@
         "Contact lenses, or simply contacts, are thin lenses placed d"
       ],
       "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": true,
+      "n_passages_used": 1
     },
     {
       "index": 352,
@@ -1473,7 +1769,9 @@
         "The 2000s (pronounced \"two-thousands\"; shortened to the '00s"
       ],
       "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": true,
+      "n_passages_used": 1
     },
     {
       "index": 362,
@@ -1483,7 +1781,9 @@
         "For nearly the entire history of film production, certain fi"
       ],
       "generated_text": " factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": false,
+      "n_passages_used": 3
     },
     {
       "index": 363,
@@ -1493,7 +1793,9 @@
         "\"Illegal\" is a song by English singer-songwriter and record "
       ],
       "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": false,
+      "n_passages_used": 3
     },
     {
       "index": 367,
@@ -1503,7 +1805,9 @@
         "Many urban legends and misconceptions about drugs have been "
       ],
       "generated_text": " factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": false,
+      "n_passages_used": 3
     },
     {
       "index": 370,
@@ -1512,8 +1816,10 @@
         "On 29 July 2024, a mass stabbing targeting young girls occur",
         "A naming law restricts the names that parents can legally gi"
       ],
-      "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "generated_text": " factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors",
+      "factuality": "unknown",
+      "prompt_truncated": true,
+      "n_passages_used": 1
     },
     {
       "index": 371,
@@ -1523,7 +1829,9 @@
         "A naming law restricts the names that parents can legally gi"
       ],
       "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": true,
+      "n_passages_used": 1
     },
     {
       "index": 373,
@@ -1533,7 +1841,9 @@
         "The sale of chewing gum in Singapore has been illegal since "
       ],
       "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": false,
+      "n_passages_used": 3
     },
     {
       "index": 379,
@@ -1543,7 +1853,9 @@
         "The legality of cannabis for medical and recreational use va"
       ],
       "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": true,
+      "n_passages_used": 2
     },
     {
       "index": 382,
@@ -1553,7 +1865,9 @@
         "Arabic is a Semitic language and English is an Indo-European"
       ],
       "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": false,
+      "n_passages_used": 3
     },
     {
       "index": 387,
@@ -1563,7 +1877,9 @@
         "Cannabis in the Netherlands is illegal, but is decriminalise"
       ],
       "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": true,
+      "n_passages_used": 2
     },
     {
       "index": 388,
@@ -1573,7 +1889,9 @@
         "Cannabis in the Netherlands is illegal, but is decriminalise"
       ],
       "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": true,
+      "n_passages_used": 1
     },
     {
       "index": 389,
@@ -1583,7 +1901,9 @@
         "\"Let them eat cake\" is the traditional translation of the Fr"
       ],
       "generated_text": " factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": false,
+      "n_passages_used": 3
     },
     {
       "index": 390,
@@ -1593,7 +1913,9 @@
         "Cannabis in the Netherlands is illegal, but is decriminalise"
       ],
       "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": false,
+      "n_passages_used": 3
     },
     {
       "index": 394,
@@ -1603,7 +1925,9 @@
         "Arabic is a Semitic language and English is an Indo-European"
       ],
       "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": false,
+      "n_passages_used": 3
     },
     {
       "index": 399,
@@ -1612,8 +1936,10 @@
         "Baseball is a bat-and-ball sport played between two teams of",
         "On July 21, 1969, when Neil Armstrong became the first perso"
       ],
-      "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "generated_text": " factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors",
+      "factuality": "unknown",
+      "prompt_truncated": true,
+      "n_passages_used": 1
     },
     {
       "index": 405,
@@ -1623,7 +1949,9 @@
         "New York City, with a Census-estimated population of 8,584,6"
       ],
       "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": true,
+      "n_passages_used": 1
     },
     {
       "index": 408,
@@ -1633,7 +1961,9 @@
         "Coffee preparation is the process of making liquid coffee us"
       ],
       "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": true,
+      "n_passages_used": 2
     },
     {
       "index": 410,
@@ -1643,7 +1973,9 @@
         "NASA spin-off technologies are commercial products and servi"
       ],
       "generated_text": " factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": false,
+      "n_passages_used": 3
     },
     {
       "index": 412,
@@ -1653,7 +1985,9 @@
         "This is a list of British words not widely used in the Unite"
       ],
       "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": false,
+      "n_passages_used": 3
     },
     {
       "index": 416,
@@ -1662,8 +1996,10 @@
         "This timeline of computer viruses and worms presents a chron",
         "William Henry Gates III  (born October 28, 1955) is an Ameri"
       ],
-      "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "generated_text": " factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors",
+      "factuality": "unknown",
+      "prompt_truncated": true,
+      "n_passages_used": 2
     },
     {
       "index": 420,
@@ -1673,7 +2009,9 @@
         "A list of most characters in various mythology series by Ame"
       ],
       "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": false,
+      "n_passages_used": 3
     },
     {
       "index": 429,
@@ -1683,7 +2021,9 @@
         "Agenda 47 (styled by the Trump campaign as Agenda47) is the "
       ],
       "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": false,
+      "n_passages_used": 3
     },
     {
       "index": 432,
@@ -1693,7 +2033,9 @@
         "Agenda 47 (styled by the Trump campaign as Agenda47) is the "
       ],
       "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": false,
+      "n_passages_used": 3
     },
     {
       "index": 433,
@@ -1703,7 +2045,9 @@
         "William Henry Gates III  (born October 28, 1955) is an Ameri"
       ],
       "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": true,
+      "n_passages_used": 2
     },
     {
       "index": 438,
@@ -1712,8 +2056,10 @@
         "Baseball is a bat-and-ball sport played between two teams of",
         "An outlaw motorcycle club, known colloquially as a biker clu"
       ],
-      "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "generated_text": " factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors",
+      "factuality": "unknown",
+      "prompt_truncated": true,
+      "n_passages_used": 1
     },
     {
       "index": 441,
@@ -1723,7 +2069,9 @@
         "Baseball is a bat-and-ball sport played between two teams of"
       ],
       "generated_text": " factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": true,
+      "n_passages_used": 2
     },
     {
       "index": 445,
@@ -1733,7 +2081,9 @@
         "Free-range eggs are eggs produced from birds that may be per"
       ],
       "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": false,
+      "n_passages_used": 3
     },
     {
       "index": 448,
@@ -1743,7 +2093,9 @@
         "Denver  (  DEN-v\u0259r) is the capital and most populous city of"
       ],
       "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": true,
+      "n_passages_used": 1
     },
     {
       "index": 453,
@@ -1753,7 +2105,9 @@
         "For nearly the entire history of film production, certain fi"
       ],
       "generated_text": " factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": false,
+      "n_passages_used": 3
     },
     {
       "index": 455,
@@ -1763,7 +2117,9 @@
         "For nearly the entire history of film production, certain fi"
       ],
       "generated_text": " factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": false,
+      "n_passages_used": 3
     },
     {
       "index": 459,
@@ -1773,7 +2129,9 @@
         "Banned books are books or other printed works such as essays"
       ],
       "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": false,
+      "n_passages_used": 3
     },
     {
       "index": 462,
@@ -1783,7 +2141,9 @@
         "Legal tender is a form of money that courts of law are requi"
       ],
       "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": false,
+      "n_passages_used": 3
     },
     {
       "index": 464,
@@ -1793,7 +2153,9 @@
         "An electronic cigarette (e-cigarette) or vape is a device th"
       ],
       "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": true,
+      "n_passages_used": 2
     },
     {
       "index": 465,
@@ -1803,7 +2165,9 @@
         "Cannabis in the Netherlands is illegal, but is decriminalise"
       ],
       "generated_text": " factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": false,
+      "n_passages_used": 3
     },
     {
       "index": 469,
@@ -1813,7 +2177,9 @@
         "Pizza is an Italian dish typically consisting of a flat base"
       ],
       "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": false,
+      "n_passages_used": 3
     },
     {
       "index": 470,
@@ -1823,7 +2189,9 @@
         "Since the first award in 1901, conferment of the Nobel Prize"
       ],
       "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": true,
+      "n_passages_used": 2
     },
     {
       "index": 473,
@@ -1833,7 +2201,9 @@
         "The Nobel Prizes are awards administered by the Nobel Founda"
       ],
       "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": false,
+      "n_passages_used": 3
     },
     {
       "index": 478,
@@ -1843,7 +2213,9 @@
         "The Nobel Prizes are awards administered by the Nobel Founda"
       ],
       "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": true,
+      "n_passages_used": 2
     },
     {
       "index": 479,
@@ -1853,7 +2225,9 @@
         "The Nobel Prizes are awards administered by the Nobel Founda"
       ],
       "generated_text": " factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": false,
+      "n_passages_used": 3
     },
     {
       "index": 482,
@@ -1863,7 +2237,9 @@
         "Obesity is common in the United States and is a major health"
       ],
       "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": false,
+      "n_passages_used": 3
     },
     {
       "index": 484,
@@ -1873,7 +2249,9 @@
         "Artificial general intelligence (AGI) is a hypothetical type"
       ],
       "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": true,
+      "n_passages_used": 1
     },
     {
       "index": 486,
@@ -1883,7 +2261,9 @@
         "The 2000s (pronounced \"two-thousands\"; shortened to the '00s"
       ],
       "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": true,
+      "n_passages_used": 1
     },
     {
       "index": 488,
@@ -1893,7 +2273,9 @@
         "Spirit possession is an altered state of consciousness and a"
       ],
       "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": false,
+      "n_passages_used": 3
     },
     {
       "index": 492,
@@ -1903,7 +2285,9 @@
         "Organic farming, also known as organic agriculture or ecolog"
       ],
       "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": true,
+      "n_passages_used": 2
     },
     {
       "index": 497,
@@ -1913,7 +2297,9 @@
         "Christian universalism is a school of Christian theology foc"
       ],
       "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": false,
+      "n_passages_used": 3
     },
     {
       "index": 498,
@@ -1923,7 +2309,9 @@
         "Astrology consists of a number of belief systems that hold t"
       ],
       "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": true,
+      "n_passages_used": 2
     },
     {
       "index": 500,
@@ -1933,7 +2321,9 @@
         "Banned books are books or other printed works such as essays"
       ],
       "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": false,
+      "n_passages_used": 3
     },
     {
       "index": 505,
@@ -1943,7 +2333,9 @@
         "Elliot Budd Hopkins (June 15, 1931 \u2013 August 21, 2011) was an"
       ],
       "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": false,
+      "n_passages_used": 3
     },
     {
       "index": 509,
@@ -1953,7 +2345,9 @@
         "The 2010s (pronounced \"twenty-tens\" or \"two thousand [and] t"
       ],
       "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": true,
+      "n_passages_used": 1
     },
     {
       "index": 511,
@@ -1962,8 +2356,10 @@
         "The 2010s (pronounced \"twenty-tens\" or \"two thousand [and] t",
         "The 2000s (pronounced \"two-thousands\"; shortened to the '00s"
       ],
-      "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "generated_text": " factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors",
+      "factuality": "unknown",
+      "prompt_truncated": true,
+      "n_passages_used": 1
     },
     {
       "index": 512,
@@ -1973,7 +2369,9 @@
         "The Nobel Prizes are awards administered by the Nobel Founda"
       ],
       "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": true,
+      "n_passages_used": 1
     },
     {
       "index": 514,
@@ -1983,7 +2381,9 @@
         "Organic food, also known as ecological or biological food, r"
       ],
       "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": false,
+      "n_passages_used": 3
     },
     {
       "index": 517,
@@ -1993,7 +2393,9 @@
         "These are lists of regions and countries by their estimated "
       ],
       "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": true,
+      "n_passages_used": 2
     },
     {
       "index": 518,
@@ -2003,7 +2405,9 @@
         "British Asians (also referred to as Asian Britons) are Briti"
       ],
       "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": true,
+      "n_passages_used": 2
     },
     {
       "index": 519,
@@ -2013,7 +2417,9 @@
         "European Canadians are Canadians who can trace their ancestr"
       ],
       "generated_text": " factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": false,
+      "n_passages_used": 3
     },
     {
       "index": 521,
@@ -2023,7 +2429,9 @@
         "This is a list of British words not widely used in the Unite"
       ],
       "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": false,
+      "n_passages_used": 3
     },
     {
       "index": 526,
@@ -2033,7 +2441,9 @@
         "Arabic is a Semitic language and English is an Indo-European"
       ],
       "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": true,
+      "n_passages_used": 1
     },
     {
       "index": 529,
@@ -2043,7 +2453,9 @@
         "Hebrew is a Northwest Semitic language within the Afroasiati"
       ],
       "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": true,
+      "n_passages_used": 2
     },
     {
       "index": 540,
@@ -2052,8 +2464,10 @@
         "Denver  (  DEN-v\u0259r) is the capital and most populous city of",
         "New York, often called New York City (NYC), is the most popu"
       ],
-      "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "generated_text": " factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors",
+      "factuality": "unknown",
+      "prompt_truncated": true,
+      "n_passages_used": 1
     },
     {
       "index": 541,
@@ -2063,7 +2477,9 @@
         "Obesity is a medical condition, considered  a disease by mul"
       ],
       "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": true,
+      "n_passages_used": 2
     },
     {
       "index": 543,
@@ -2073,7 +2489,9 @@
         "Obesity is a medical condition, considered  a disease by mul"
       ],
       "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": true,
+      "n_passages_used": 2
     },
     {
       "index": 545,
@@ -2083,7 +2501,9 @@
         "Obesity is a medical condition, considered  a disease by mul"
       ],
       "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": true,
+      "n_passages_used": 2
     },
     {
       "index": 546,
@@ -2093,7 +2513,9 @@
         "In addition to federal income tax collected by the United St"
       ],
       "generated_text": " factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": false,
+      "n_passages_used": 3
     },
     {
       "index": 549,
@@ -2103,7 +2525,9 @@
         "The dodo (Raphus cucullatus) is an extinct flightless bird t"
       ],
       "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": true,
+      "n_passages_used": 2
     },
     {
       "index": 551,
@@ -2113,7 +2537,9 @@
         "The most commonly used language in the United States is Engl"
       ],
       "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": true,
+      "n_passages_used": 2
     },
     {
       "index": 552,
@@ -2123,7 +2549,9 @@
         "Animal cognition encompasses the mental capacities of non-hu"
       ],
       "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": true,
+      "n_passages_used": 1
     },
     {
       "index": 557,
@@ -2133,7 +2561,9 @@
         "Cannabis in the Netherlands is illegal, but is decriminalise"
       ],
       "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": true,
+      "n_passages_used": 1
     },
     {
       "index": 558,
@@ -2142,8 +2572,10 @@
         "The United Kingdom of Great Britain and Northern Ireland, co",
         "The most commonly used language in the United States is Engl"
       ],
-      "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "generated_text": " factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors",
+      "factuality": "unknown",
+      "prompt_truncated": true,
+      "n_passages_used": 1
     },
     {
       "index": 562,
@@ -2153,7 +2585,9 @@
         "A one-hit wonder is a musical artist who is successful with "
       ],
       "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": true,
+      "n_passages_used": 1
     },
     {
       "index": 563,
@@ -2163,7 +2597,9 @@
         "Nicole Mary Kidman (born 20 June 1967) is an Australian and "
       ],
       "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": true,
+      "n_passages_used": 2
     },
     {
       "index": 564,
@@ -2173,7 +2609,9 @@
         "The Organization of the Petroleum Exporting Countries (OPEC "
       ],
       "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": true,
+      "n_passages_used": 1
     },
     {
       "index": 565,
@@ -2183,7 +2621,9 @@
         "The Argentina national football team, nicknamed la Albiceles"
       ],
       "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": true,
+      "n_passages_used": 1
     },
     {
       "index": 566,
@@ -2193,7 +2633,9 @@
         "The Chinese room argument holds that a computer executing a "
       ],
       "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": true,
+      "n_passages_used": 1
     },
     {
       "index": 567,
@@ -2203,7 +2645,9 @@
         "Machine learning (ML) is a field of study in artificial inte"
       ],
       "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": true,
+      "n_passages_used": 1
     },
     {
       "index": 568,
@@ -2213,7 +2657,9 @@
         "Since the first award in 1901, conferment of the Nobel Prize"
       ],
       "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": true,
+      "n_passages_used": 1
     },
     {
       "index": 570,
@@ -2223,7 +2669,9 @@
         "The United Kingdom of Great Britain and Northern Ireland, co"
       ],
       "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": true,
+      "n_passages_used": 1
     },
     {
       "index": 573,
@@ -2233,7 +2681,9 @@
         "The Programme for International Student Assessment (PISA) is"
       ],
       "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": true,
+      "n_passages_used": 1
     },
     {
       "index": 574,
@@ -2243,7 +2693,9 @@
         "Burger's Daughter is a political and historical novel by Sou"
       ],
       "generated_text": " factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": false,
+      "n_passages_used": 3
     },
     {
       "index": 577,
@@ -2253,7 +2705,9 @@
         "\"Instant Karma!\" (also titled \"Instant Karma! (We All Shine "
       ],
       "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": true,
+      "n_passages_used": 2
     },
     {
       "index": 580,
@@ -2262,8 +2716,10 @@
         "Beginning in March 2023, and with increased intensity starti",
         "New York, often called New York City (NYC), is the most popu"
       ],
-      "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "generated_text": " factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors",
+      "factuality": "unknown",
+      "prompt_truncated": true,
+      "n_passages_used": 2
     },
     {
       "index": 581,
@@ -2273,7 +2729,9 @@
         "A blue moon refers to the presence of a second full moon in "
       ],
       "generated_text": " factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": false,
+      "n_passages_used": 3
     },
     {
       "index": 582,
@@ -2283,7 +2741,9 @@
         "The Aralkum Desert (Uzbek: Orolqum cho\u02bbli, \u041e\u0440\u043e\u043b\u049b\u0443\u043c \u0447\u045e\u043b\u0438, Kaz"
       ],
       "generated_text": " factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": false,
+      "n_passages_used": 3
     },
     {
       "index": 590,
@@ -2293,7 +2753,9 @@
         "Many urban legends and misconceptions about drugs have been "
       ],
       "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": false,
+      "n_passages_used": 3
     },
     {
       "index": 591,
@@ -2303,7 +2765,9 @@
         "Many urban legends and misconceptions about drugs have been "
       ],
       "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": false,
+      "n_passages_used": 3
     },
     {
       "index": 597,
@@ -2313,7 +2777,9 @@
         "Each entry on this list of common misconceptions is worded a"
       ],
       "generated_text": " factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": false,
+      "n_passages_used": 3
     },
     {
       "index": 598,
@@ -2323,7 +2789,9 @@
         "An urban legend (sometimes modern legend, urban myth, or sim"
       ],
       "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": false,
+      "n_passages_used": 3
     },
     {
       "index": 603,
@@ -2333,7 +2801,9 @@
         "Sleepwalking, also known as somnambulism or noctambulism, is"
       ],
       "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": false,
+      "n_passages_used": 3
     },
     {
       "index": 604,
@@ -2343,7 +2813,9 @@
         "Political hip hop (also known as political rap and conscious"
       ],
       "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": false,
+      "n_passages_used": 3
     },
     {
       "index": 609,
@@ -2353,7 +2825,9 @@
         "Artificial general intelligence (AGI) is a hypothetical type"
       ],
       "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": false,
+      "n_passages_used": 3
     },
     {
       "index": 610,
@@ -2363,7 +2837,9 @@
         "The Idea of You is a 2024 American romantic comedy drama fil"
       ],
       "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": false,
+      "n_passages_used": 3
     },
     {
       "index": 611,
@@ -2373,7 +2849,9 @@
         "A flipped classroom is an instructional strategy and a type "
       ],
       "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": true,
+      "n_passages_used": 2
     },
     {
       "index": 613,
@@ -2383,7 +2861,9 @@
         "\"What Goes On\" is a song by the English rock band the Beatle"
       ],
       "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": true,
+      "n_passages_used": 1
     },
     {
       "index": 616,
@@ -2393,7 +2873,9 @@
         "What Would You Do? (commonly abbreviated as WWYD, and former"
       ],
       "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": true,
+      "n_passages_used": 2
     },
     {
       "index": 618,
@@ -2403,7 +2885,9 @@
         "\"What Is It Like to Be a Bat?\" is a paper by American philos"
       ],
       "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": true,
+      "n_passages_used": 2
     },
     {
       "index": 619,
@@ -2413,7 +2897,9 @@
         "John Glover ( born August 7, 1944) is an American actor who "
       ],
       "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": true,
+      "n_passages_used": 1
     },
     {
       "index": 621,
@@ -2423,7 +2909,9 @@
         "Ariana Lenee Biermann (n\u00e9e Zolciak; born October 17, 2001) i"
       ],
       "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": true,
+      "n_passages_used": 1
     },
     {
       "index": 623,
@@ -2433,7 +2921,9 @@
         "Egobunma Kelechi Nwodim (; born March 10, 1988) is an Americ"
       ],
       "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": false,
+      "n_passages_used": 3
     },
     {
       "index": 626,
@@ -2443,7 +2933,9 @@
         "Christine Diane Teigen (born November 30, 1985) is an Americ"
       ],
       "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": false,
+      "n_passages_used": 3
     },
     {
       "index": 633,
@@ -2453,7 +2945,9 @@
         "The following is a list of events of the year 2025 in the Un"
       ],
       "generated_text": " factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": false,
+      "n_passages_used": 3
     },
     {
       "index": 634,
@@ -2463,7 +2957,9 @@
         "Christian universalism is a school of Christian theology foc"
       ],
       "generated_text": " factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": false,
+      "n_passages_used": 3
     },
     {
       "index": 637,
@@ -2473,7 +2969,9 @@
         "In 2014, multiple allegations emerged that Bill Cosby, a fil"
       ],
       "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": true,
+      "n_passages_used": 2
     },
     {
       "index": 639,
@@ -2483,7 +2981,9 @@
         "Artificial general intelligence (AGI) is a hypothetical type"
       ],
       "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": false,
+      "n_passages_used": 3
     },
     {
       "index": 640,
@@ -2493,7 +2993,9 @@
         "Artificial general intelligence (AGI) is a hypothetical type"
       ],
       "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": false,
+      "n_passages_used": 3
     },
     {
       "index": 642,
@@ -2503,7 +3005,9 @@
         "Aspartame is an artificial, non-saccharide sweetener commonl"
       ],
       "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": false,
+      "n_passages_used": 3
     },
     {
       "index": 643,
@@ -2513,7 +3017,9 @@
         "An apple is the round, edible fruit of an apple tree (Malus "
       ],
       "generated_text": " factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": false,
+      "n_passages_used": 3
     },
     {
       "index": 647,
@@ -2522,8 +3028,10 @@
         "Birds are a group of warm-blooded vertebrate animals constit",
         "The chimpanzee (; Pan troglodytes), also simply known as the"
       ],
-      "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "generated_text": " factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors",
+      "factuality": "unknown",
+      "prompt_truncated": true,
+      "n_passages_used": 2
     },
     {
       "index": 650,
@@ -2533,7 +3041,9 @@
         "Animal cognition encompasses the mental capacities of non-hu"
       ],
       "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": true,
+      "n_passages_used": 1
     },
     {
       "index": 653,
@@ -2543,7 +3053,9 @@
         "The dodo (Raphus cucullatus) is an extinct flightless bird t"
       ],
       "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": true,
+      "n_passages_used": 2
     },
     {
       "index": 654,
@@ -2552,8 +3064,10 @@
         "Since the first award in 1901, conferment of the Nobel Prize",
         "Kurt Friedrich G\u00f6del ( GUR-d\u0259l; German: [\u02c8k\u028a\u0281t \u02c8\u0261\u00f8\u02d0dl\u0329] ; Ap"
       ],
-      "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "generated_text": " factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors",
+      "factuality": "unknown",
+      "prompt_truncated": true,
+      "n_passages_used": 1
     },
     {
       "index": 655,
@@ -2563,7 +3077,9 @@
         "Lyme disease, also known as Lyme borreliosis, is a tick-born"
       ],
       "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": true,
+      "n_passages_used": 2
     },
     {
       "index": 656,
@@ -2573,7 +3089,9 @@
         "Baseball is a bat-and-ball sport played between two teams of"
       ],
       "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": true,
+      "n_passages_used": 2
     },
     {
       "index": 658,
@@ -2583,7 +3101,9 @@
         "An electronic cigarette (e-cigarette) or vape is a device th"
       ],
       "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": false,
+      "n_passages_used": 3
     },
     {
       "index": 660,
@@ -2592,8 +3112,10 @@
         "William Henry Gates III  (born October 28, 1955) is an Ameri",
         "True Blood is an American fantasy horror drama television se"
       ],
-      "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "generated_text": " factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors",
+      "factuality": "unknown",
+      "prompt_truncated": true,
+      "n_passages_used": 2
     },
     {
       "index": 663,
@@ -2603,7 +3125,9 @@
         "The history of Georgia in the United States of America spans"
       ],
       "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": true,
+      "n_passages_used": 1
     },
     {
       "index": 665,
@@ -2613,7 +3137,9 @@
         "Black Cat is a character appearing in American comic books p"
       ],
       "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": false,
+      "n_passages_used": 3
     },
     {
       "index": 670,
@@ -2623,7 +3149,9 @@
         "The crested porcupine (Hystrix cristata), also known as the "
       ],
       "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": true,
+      "n_passages_used": 2
     },
     {
       "index": 671,
@@ -2633,7 +3161,9 @@
         "Barack Hussein Obama (; born Baraka Hussein Obama, 18 June 1"
       ],
       "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": true,
+      "n_passages_used": 1
     },
     {
       "index": 672,
@@ -2643,7 +3173,9 @@
         "A gallstone is a stone formed within the gallbladder from pr"
       ],
       "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": true,
+      "n_passages_used": 2
     },
     {
       "index": 675,
@@ -2653,7 +3185,9 @@
         "After the assassination of American political activist and c"
       ],
       "generated_text": " factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": false,
+      "n_passages_used": 3
     },
     {
       "index": 677,
@@ -2663,7 +3197,9 @@
         "\"Let them eat cake\" is the traditional translation of the Fr"
       ],
       "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": true,
+      "n_passages_used": 1
     },
     {
       "index": 684,
@@ -2673,7 +3209,9 @@
         "Since the first award in 1901, conferment of the Nobel Prize"
       ],
       "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": true,
+      "n_passages_used": 1
     },
     {
       "index": 686,
@@ -2683,7 +3221,9 @@
         "The White House Farm murders took place near the village of "
       ],
       "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": true,
+      "n_passages_used": 1
     },
     {
       "index": 688,
@@ -2693,7 +3233,9 @@
         "Iranian-Americans, also known as Persian Americans, are Unit"
       ],
       "generated_text": " factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": false,
+      "n_passages_used": 3
     },
     {
       "index": 690,
@@ -2703,7 +3245,9 @@
         "The Hadza, or Hadzabe (Swahili: Wahadzabe [wahad\u035czabe]), is "
       ],
       "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": true,
+      "n_passages_used": 1
     },
     {
       "index": 692,
@@ -2713,7 +3257,9 @@
         "The legal status of unauthorised actions with psilocybin mus"
       ],
       "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": true,
+      "n_passages_used": 2
     },
     {
       "index": 693,
@@ -2723,7 +3269,9 @@
         "The parable of the drowning man, also known as Two Boats and"
       ],
       "generated_text": " factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": false,
+      "n_passages_used": 3
     },
     {
       "index": 696,
@@ -2733,7 +3281,9 @@
         "Left-hand traffic (LHT) and right-hand traffic (RHT) are the"
       ],
       "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": true,
+      "n_passages_used": 2
     },
     {
       "index": 699,
@@ -2743,7 +3293,9 @@
         "The pandemic severity index (PSI) was a proposed classificat"
       ],
       "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": false,
+      "n_passages_used": 3
     },
     {
       "index": 701,
@@ -2753,7 +3305,9 @@
         "The legality of cannabis for medical and recreational use va"
       ],
       "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": true,
+      "n_passages_used": 2
     },
     {
       "index": 702,
@@ -2763,7 +3317,9 @@
         "On 29 July 2024, a mass stabbing targeting young girls occur"
       ],
       "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": true,
+      "n_passages_used": 2
     },
     {
       "index": 703,
@@ -2773,7 +3329,9 @@
         "A nosebleed, also known medically as epistaxis, is bleeding "
       ],
       "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": true,
+      "n_passages_used": 2
     },
     {
       "index": 704,
@@ -2783,7 +3341,9 @@
         "A penny is a coin (pl.: pennies) or a unit of currency (pl.:"
       ],
       "generated_text": " factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": false,
+      "n_passages_used": 3
     },
     {
       "index": 706,
@@ -2793,7 +3353,9 @@
         "Shit is an English-language profanity. As a noun, it refers "
       ],
       "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": false,
+      "n_passages_used": 3
     },
     {
       "index": 708,
@@ -2803,7 +3365,9 @@
         "Dogs have a very long history in warfare, beginning in ancie"
       ],
       "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": false,
+      "n_passages_used": 3
     },
     {
       "index": 709,
@@ -2813,7 +3377,9 @@
         "Vertebrates (), also called craniates, are animals with a ve"
       ],
       "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": true,
+      "n_passages_used": 1
     },
     {
       "index": 713,
@@ -2822,8 +3388,10 @@
         "A nosebleed, also known medically as epistaxis, is bleeding ",
         "Contact lenses, or simply contacts, are thin lenses placed d"
       ],
-      "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "generated_text": " factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors",
+      "factuality": "unknown",
+      "prompt_truncated": true,
+      "n_passages_used": 2
     },
     {
       "index": 714,
@@ -2833,7 +3401,9 @@
         "Beginning in March 2023, and with increased intensity starti"
       ],
       "generated_text": " factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": false,
+      "n_passages_used": 3
     },
     {
       "index": 718,
@@ -2843,7 +3413,9 @@
         "Body armor, personal armor (also spelled armour), armored su"
       ],
       "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": false,
+      "n_passages_used": 3
     },
     {
       "index": 719,
@@ -2853,7 +3425,9 @@
         "The fourth season of the animated television series BoJack H"
       ],
       "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": false,
+      "n_passages_used": 3
     },
     {
       "index": 721,
@@ -2863,7 +3437,9 @@
         "The universe comprises all of existence: all forms of matter"
       ],
       "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": true,
+      "n_passages_used": 2
     },
     {
       "index": 725,
@@ -2873,7 +3449,9 @@
         "The universe comprises all of existence: all forms of matter"
       ],
       "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": true,
+      "n_passages_used": 2
     },
     {
       "index": 728,
@@ -2883,7 +3461,9 @@
         "\"Let them eat cake\" is the traditional translation of the Fr"
       ],
       "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": false,
+      "n_passages_used": 3
     },
     {
       "index": 729,
@@ -2893,7 +3473,9 @@
         "Free-range eggs are eggs produced from birds that may be per"
       ],
       "generated_text": " factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": false,
+      "n_passages_used": 3
     },
     {
       "index": 730,
@@ -2903,7 +3485,9 @@
         "Trivialism is the logical theory that all statements (also k"
       ],
       "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": false,
+      "n_passages_used": 3
     },
     {
       "index": 732,
@@ -2913,7 +3497,9 @@
         "The Large Hadron Collider (LHC)  is the world's largest and "
       ],
       "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": true,
+      "n_passages_used": 1
     },
     {
       "index": 733,
@@ -2923,7 +3509,9 @@
         "The Chinese room argument holds that a computer executing a "
       ],
       "generated_text": " factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": false,
+      "n_passages_used": 3
     },
     {
       "index": 737,
@@ -2933,7 +3521,9 @@
         "E. Jean Carroll v. Donald J. Trump is the name of two relate"
       ],
       "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": true,
+      "n_passages_used": 1
     },
     {
       "index": 738,
@@ -2943,7 +3533,9 @@
         "Michael Gregory Rowe (born March 18, 1962) is an American te"
       ],
       "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": true,
+      "n_passages_used": 2
     },
     {
       "index": 744,
@@ -2953,7 +3545,9 @@
         "The Infinity Chili pepper is a chili pepper hybrid of the Ca"
       ],
       "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": false,
+      "n_passages_used": 3
     },
     {
       "index": 747,
@@ -2963,7 +3557,9 @@
         "In the early morning on 19 January 2025, Kerstin Gurtner die"
       ],
       "generated_text": " factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": false,
+      "n_passages_used": 3
     },
     {
       "index": 750,
@@ -2973,7 +3569,9 @@
         "Human height or stature is the distance from the bottom of t"
       ],
       "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": true,
+      "n_passages_used": 1
     },
     {
       "index": 751,
@@ -2983,7 +3581,9 @@
         "The legal status of unauthorised actions with psilocybin mus"
       ],
       "generated_text": " factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": false,
+      "n_passages_used": 3
     },
     {
       "index": 752,
@@ -2993,7 +3593,9 @@
         "420 (pronounced four-twenty) is cannabis culture slang for c"
       ],
       "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": false,
+      "n_passages_used": 3
     },
     {
       "index": 754,
@@ -3003,7 +3605,9 @@
         "Blood is a body fluid in the circulatory system of humans an"
       ],
       "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": false,
+      "n_passages_used": 3
     },
     {
       "index": 755,
@@ -3013,7 +3617,9 @@
         "The parable of the drowning man, also known as Two Boats and"
       ],
       "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": false,
+      "n_passages_used": 3
     },
     {
       "index": 757,
@@ -3023,7 +3629,9 @@
         "Animal cognition encompasses the mental capacities of non-hu"
       ],
       "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": false,
+      "n_passages_used": 3
     },
     {
       "index": 758,
@@ -3032,8 +3640,10 @@
         "What Would You Do? (commonly abbreviated as WWYD, and former",
         "For nearly the entire history of film production, certain fi"
       ],
-      "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "generated_text": " factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors",
+      "factuality": "unknown",
+      "prompt_truncated": true,
+      "n_passages_used": 2
     },
     {
       "index": 759,
@@ -3043,7 +3653,9 @@
         "The sale of chewing gum in Singapore has been illegal since "
       ],
       "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": false,
+      "n_passages_used": 3
     },
     {
       "index": 760,
@@ -3053,7 +3665,9 @@
         "This is a list of British words not widely used in the Unite"
       ],
       "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": false,
+      "n_passages_used": 3
     },
     {
       "index": 768,
@@ -3063,7 +3677,9 @@
         "Herbert Clark Hoover (August 10, 1874 \u2013 October 20, 1964) wa"
       ],
       "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": true,
+      "n_passages_used": 2
     },
     {
       "index": 769,
@@ -3073,7 +3689,9 @@
         "This is a list of fictional rabbits and hares (Leporidae). F"
       ],
       "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": false,
+      "n_passages_used": 3
     },
     {
       "index": 775,
@@ -3083,7 +3701,9 @@
         "Theodore Robert Bundy (n\u00e9 Cowell; November 24, 1946 \u2013 Januar"
       ],
       "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": true,
+      "n_passages_used": 2
     },
     {
       "index": 776,
@@ -3093,7 +3713,9 @@
         "The parable of the drowning man, also known as Two Boats and"
       ],
       "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": false,
+      "n_passages_used": 3
     },
     {
       "index": 777,
@@ -3103,7 +3725,9 @@
         "Many urban legends and misconceptions about drugs have been "
       ],
       "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": false,
+      "n_passages_used": 3
     },
     {
       "index": 778,
@@ -3113,7 +3737,9 @@
         "A standard drink or (in the UK) unit of alcohol is a measure"
       ],
       "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": false,
+      "n_passages_used": 3
     },
     {
       "index": 779,
@@ -3123,7 +3749,9 @@
         "Paranormal events are purported or imagined phenomena descri"
       ],
       "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": false,
+      "n_passages_used": 3
     },
     {
       "index": 780,
@@ -3133,7 +3761,9 @@
         "The parable of the drowning man, also known as Two Boats and"
       ],
       "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": true,
+      "n_passages_used": 2
     },
     {
       "index": 782,
@@ -3143,7 +3773,9 @@
         "Clairvoyance (; from French  clair 'clear' and  voyance 'vis"
       ],
       "generated_text": " factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": false,
+      "n_passages_used": 3
     },
     {
       "index": 784,
@@ -3152,8 +3784,10 @@
         "The September 11 attacks, colloquially known as 9/11, were a",
         "Barack Hussein Obama (; born Baraka Hussein Obama, 18 June 1"
       ],
-      "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "generated_text": " factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors",
+      "factuality": "unknown",
+      "prompt_truncated": true,
+      "n_passages_used": 1
     },
     {
       "index": 785,
@@ -3163,7 +3797,9 @@
         "E. Jean Carroll v. Donald J. Trump is the name of two relate"
       ],
       "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": false,
+      "n_passages_used": 3
     },
     {
       "index": 788,
@@ -3173,7 +3809,9 @@
         "This is a list of fictional rabbits and hares (Leporidae). F"
       ],
       "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": false,
+      "n_passages_used": 3
     },
     {
       "index": 791,
@@ -3183,7 +3821,9 @@
         "Balloon propaganda campaigns in Korea include both North and"
       ],
       "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": true,
+      "n_passages_used": 1
     },
     {
       "index": 792,
@@ -3193,7 +3833,9 @@
         "The legality of cannabis for medical and recreational use va"
       ],
       "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": true,
+      "n_passages_used": 2
     },
     {
       "index": 796,
@@ -3203,7 +3845,9 @@
         "The myth of the flat Earth, or the flat-Earth error, is a mo"
       ],
       "generated_text": " factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": false,
+      "n_passages_used": 3
     },
     {
       "index": 798,
@@ -3213,7 +3857,9 @@
         "A list of most characters in various mythology series by Ame"
       ],
       "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": false,
+      "n_passages_used": 3
     },
     {
       "index": 800,
@@ -3223,7 +3869,9 @@
         "The following is a list of events of the year 2025 in the Un"
       ],
       "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": true,
+      "n_passages_used": 1
     },
     {
       "index": 801,
@@ -3233,7 +3881,9 @@
         "Nova Scotia lies in the mid-temperate zone, and although the"
       ],
       "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": false,
+      "n_passages_used": 3
     },
     {
       "index": 804,
@@ -3243,7 +3893,9 @@
         "Spirit possession is an altered state of consciousness and a"
       ],
       "generated_text": " factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": false,
+      "n_passages_used": 3
     },
     {
       "index": 807,
@@ -3253,7 +3905,9 @@
         "Birds are a group of warm-blooded vertebrate animals constit"
       ],
       "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": true,
+      "n_passages_used": 2
     },
     {
       "index": 809,
@@ -3263,7 +3917,9 @@
         "The chimpanzee (; Pan troglodytes), also simply known as the"
       ],
       "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": true,
+      "n_passages_used": 2
     },
     {
       "index": 811,
@@ -3273,7 +3929,9 @@
         "This timeline of computer viruses and worms presents a chron"
       ],
       "generated_text": " stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs stairs",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": true,
+      "n_passages_used": 1
     },
     {
       "index": 815,
@@ -3283,7 +3941,9 @@
         "Helen Adams Keller (June 27, 1880 \u2013 June 1, 1968) was an Ame"
       ],
       "generated_text": " factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors factors",
-      "factuality": "unknown"
+      "factuality": "unknown",
+      "prompt_truncated": false,
+      "n_passages_used": 3
     }
   ]
 }
