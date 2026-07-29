@@ -24,10 +24,10 @@ models:
   # first use there, per CLAUDE.md's model-revision-pinning constraint.
   llama3:
     hf_repo: meta-llama/Meta-Llama-3-8B
-    revision: null  # TODO: pin before any GPU run
+    revision: 8cde5ca8380496c9a6cc7ef3a8b46a0372a1d920  # pinned 2026-07-28, main branch HEAD
     quantization: null  # TODO: decide and hold constant across all conditions
 
   mistral:
     hf_repo: mistralai/Mistral-7B-v0.1
-    revision: null  # TODO: pin before any GPU run
+    revision: 27d67f1b5f57dc0953326b2601d68371d40ea8da  # pinned 2026-07-28, main branch HEAD
     quantization: null  # TODO: must match the llama3 entry's scheme exactly
