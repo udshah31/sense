@@ -69,3 +69,46 @@ def test_load_model_rejects_unknown_quantization_scheme():
 def test_load_model_raises_on_missing_revision():
     with pytest.raises(ValueError, match="no pinned revision"):
         load_model({"hf_repo": "sshleifer/tiny-gpt2"})
+
+
+def test_load_model_passes_hf_token_env_var_to_from_pretrained(monkeypatch):
+    monkeypatch.setenv("HF_TOKEN", "fake-token-for-test")
+    captured = {}
+    import _common
+
+    real_model_from_pretrained = _common.AutoModelForCausalLM.from_pretrained
+    real_tokenizer_from_pretrained = _common.AutoTokenizer.from_pretrained
+
+    def fake_model_from_pretrained(repo, **kwargs):
+        captured["model_token"] = kwargs.get("token")
+        return real_model_from_pretrained(repo, **{k: v for k, v in kwargs.items() if k != "token"})
+
+    def fake_tokenizer_from_pretrained(repo, **kwargs):
+        captured["tokenizer_token"] = kwargs.get("token")
+        return real_tokenizer_from_pretrained(repo, **{k: v for k, v in kwargs.items() if k != "token"})
+
+    monkeypatch.setattr(_common.AutoModelForCausalLM, "from_pretrained", fake_model_from_pretrained)
+    monkeypatch.setattr(_common.AutoTokenizer, "from_pretrained", fake_tokenizer_from_pretrained)
+
+    load_model(TINY_GPT2)
+
+    assert captured["model_token"] == "fake-token-for-test"
+    assert captured["tokenizer_token"] == "fake-token-for-test"
+
+
+def test_load_model_passes_none_token_when_hf_token_unset(monkeypatch):
+    monkeypatch.delenv("HF_TOKEN", raising=False)
+    captured = {}
+    import _common
+
+    real_model_from_pretrained = _common.AutoModelForCausalLM.from_pretrained
+
+    def fake_model_from_pretrained(repo, **kwargs):
+        captured["model_token"] = kwargs.get("token")
+        return real_model_from_pretrained(repo, **{k: v for k, v in kwargs.items() if k != "token"})
+
+    monkeypatch.setattr(_common.AutoModelForCausalLM, "from_pretrained", fake_model_from_pretrained)
+
+    load_model(TINY_GPT2)
+
+    assert captured["model_token"] is None

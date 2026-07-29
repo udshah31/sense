@@ -4,6 +4,7 @@ and the example/split loading + results-writing boilerplate every harness repeat
 """
 
 import json
+import os
 from pathlib import Path
 
 import torch
@@ -47,8 +48,13 @@ def load_model(model_cfg: dict):
         )
     torch_dtype = _QUANTIZATION_TORCH_DTYPES[quantization]
 
-    tokenizer = AutoTokenizer.from_pretrained(model_cfg["hf_repo"], revision=model_cfg["revision"])
-    model_kwargs = {"revision": model_cfg["revision"]}
+    # Gated repos (e.g. Llama-3) require an authenticated token; public repos (the
+    # CPU-test models, Mistral) ignore it. Read once per call, not at import time,
+    # so tests can monkeypatch the environment without reloading the module.
+    hf_token = os.environ.get("HF_TOKEN") or None
+
+    tokenizer = AutoTokenizer.from_pretrained(model_cfg["hf_repo"], revision=model_cfg["revision"], token=hf_token)
+    model_kwargs = {"revision": model_cfg["revision"], "token": hf_token}
     if torch_dtype is not None:
         model_kwargs["torch_dtype"] = torch_dtype
     model = AutoModelForCausalLM.from_pretrained(model_cfg["hf_repo"], **model_kwargs)
