@@ -1,0 +1,407 @@
+{
+  "/Users/udaysah/projects/sense/data/rag_corpus/passages.json": {
+    "mtime": 1785251066.9964926,
+    "ast_hash": "1d2c4d34b27515b9da044ccd68c66a71",
+    "semantic_hash": "1d2c4d34b27515b9da044ccd68c66a71"
+  },
+  "/Users/udaysah/projects/sense/data/scripts/generate_truthful_qa_splits.py": {
+    "mtime": 1785127367.4335074,
+    "ast_hash": "25c3fd75056cae477d70804dcd0148b4",
+    "semantic_hash": "25c3fd75056cae477d70804dcd0148b4"
+  },
+  "/Users/udaysah/projects/sense/data/splits/truthful_qa.json": {
+    "mtime": 1785127375.1151571,
+    "ast_hash": "7cbe694edec71a41a68912845e3de8f2",
+    "semantic_hash": "7cbe694edec71a41a68912845e3de8f2"
+  },
+  "/Users/udaysah/projects/sense/data/src/sense_data/__init__.py": {
+    "mtime": 1785124664.9359496,
+    "ast_hash": "d41d8cd98f00b204e9800998ecf8427e",
+    "semantic_hash": "d41d8cd98f00b204e9800998ecf8427e"
+  },
+  "/Users/udaysah/projects/sense/data/src/sense_data/splits.py": {
+    "mtime": 1785124687.2142496,
+    "ast_hash": "304fb2b11ccae834490cec70dcd84755",
+    "semantic_hash": "304fb2b11ccae834490cec70dcd84755"
+  },
+  "/Users/udaysah/projects/sense/data/src/sense_data/truthful_qa.py": {
+    "mtime": 1785127349.4361145,
+    "ast_hash": "96b78af36c0508f1eb983c19bab0ca6f",
+    "semantic_hash": "96b78af36c0508f1eb983c19bab0ca6f"
+  },
+  "/Users/udaysah/projects/sense/data/tests/test_leakage.py": {
+    "mtime": 1785124699.5986898,
+    "ast_hash": "d48177b806e9539ce0a50cb1fc6cb49a",
+    "semantic_hash": "d48177b806e9539ce0a50cb1fc6cb49a"
+  },
+  "/Users/udaysah/projects/sense/data/tests/test_splits.py": {
+    "mtime": 1785124693.992755,
+    "ast_hash": "0cb613765d9d9a4b2430dbf86e72a1ba",
+    "semantic_hash": "0cb613765d9d9a4b2430dbf86e72a1ba"
+  },
+  "/Users/udaysah/projects/sense/data/tests/test_truthful_qa.py": {
+    "mtime": 1785127380.4084704,
+    "ast_hash": "e96cd84b80f62666dea3de1f3d4fbdea",
+    "semantic_hash": "e96cd84b80f62666dea3de1f3d4fbdea"
+  },
+  "/Users/udaysah/projects/sense/data/tests/test_truthful_qa_splits_file.py": {
+    "mtime": 1785127387.5418553,
+    "ast_hash": "b8ba8eb27e3564035671033356ed5253",
+    "semantic_hash": "b8ba8eb27e3564035671033356ed5253"
+  },
+  "/Users/udaysah/projects/sense/eval/src/sense_eval/__init__.py": {
+    "mtime": 1785131903.516029,
+    "ast_hash": "d41d8cd98f00b204e9800998ecf8427e",
+    "semantic_hash": "d41d8cd98f00b204e9800998ecf8427e"
+  },
+  "/Users/udaysah/projects/sense/eval/src/sense_eval/factuality.py": {
+    "mtime": 1785131917.2934601,
+    "ast_hash": "f92ad3805603ad2504988c9d8d5cad51",
+    "semantic_hash": "f92ad3805603ad2504988c9d8d5cad51"
+  },
+  "/Users/udaysah/projects/sense/eval/tests/test_factuality.py": {
+    "mtime": 1785131939.5928445,
+    "ast_hash": "7e3cdf84352b6508537b852190b50aa8",
+    "semantic_hash": "7e3cdf84352b6508537b852190b50aa8"
+  },
+  "/Users/udaysah/projects/sense/experiments/tests/test_adaptive_threshold_truthful_qa.py": {
+    "mtime": 1785128044.5802467,
+    "ast_hash": "8c8e72871a7821bf37b9766c9266101b",
+    "semantic_hash": "8c8e72871a7821bf37b9766c9266101b"
+  },
+  "/Users/udaysah/projects/sense/experiments/tests/test_calibrate_gate_truthful_qa.py": {
+    "mtime": 1785127868.4580488,
+    "ast_hash": "18bc1e1c090887bfa06c157eb444d48b",
+    "semantic_hash": "18bc1e1c090887bfa06c157eb444d48b"
+  },
+  "/Users/udaysah/projects/sense/experiments/tests/test_rag_baseline_truthful_qa.py": {
+    "mtime": 1785251066.9996798,
+    "ast_hash": "30e26f72197075e75dcc44fb8898c151",
+    "semantic_hash": "30e26f72197075e75dcc44fb8898c151"
+  },
+  "/Users/udaysah/projects/sense/experiments/tests/test_rq3_accuracy_latency_truthful_qa.py": {
+    "mtime": 1785132208.951123,
+    "ast_hash": "d1ef2f232bbb9b33f249d73efed4db14",
+    "semantic_hash": "d1ef2f232bbb9b33f249d73efed4db14"
+  },
+  "/Users/udaysah/projects/sense/experiments/tests/test_transfer_threshold_truthful_qa.py": {
+    "mtime": 1785127955.6871154,
+    "ast_hash": "17f59294a6c685b5848d728c6e202358",
+    "semantic_hash": "17f59294a6c685b5848d728c6e202358"
+  },
+  "/Users/udaysah/projects/sense/results/gate_calibration_truthful_qa_cpu_test.json": {
+    "mtime": 1785127569.6744082,
+    "ast_hash": "a005f9a257e739e59187ee6752e380ca",
+    "semantic_hash": "a005f9a257e739e59187ee6752e380ca"
+  },
+  "/Users/udaysah/projects/sense/results/rag_baseline_truthful_qa_cpu_test.json": {
+    "mtime": 1785251067.0025153,
+    "ast_hash": "7c6d4549279946b952dbf946c6cae9c3",
+    "semantic_hash": "7c6d4549279946b952dbf946c6cae9c3"
+  },
+  "/Users/udaysah/projects/sense/results/rq1_transfer_truthful_qa_cpu_test_to_cpu_test_transfer_target.json": {
+    "mtime": 1785127750.5422475,
+    "ast_hash": "c7c9e3afd0f7a2f734957a71213cb67d",
+    "semantic_hash": "c7c9e3afd0f7a2f734957a71213cb67d"
+  },
+  "/Users/udaysah/projects/sense/results/rq2_adaptive_truthful_qa_cpu_test_to_cpu_test_transfer_target.json": {
+    "mtime": 1785128028.1552005,
+    "ast_hash": "b026660cd48238c4bb4747581f7a3e0a",
+    "semantic_hash": "b026660cd48238c4bb4747581f7a3e0a"
+  },
+  "/Users/udaysah/projects/sense/results/rq3_accuracy_latency_truthful_qa_cpu_test.json": {
+    "mtime": 1785132146.9428704,
+    "ast_hash": "f165ad26455ffa39f9b76064c8f0bf9b",
+    "semantic_hash": "f165ad26455ffa39f9b76064c8f0bf9b"
+  },
+  "/Users/udaysah/projects/sense/services/neural/src/sense_neural/__init__.py": {
+    "mtime": 1785123270.4524338,
+    "ast_hash": "d41d8cd98f00b204e9800998ecf8427e",
+    "semantic_hash": "d41d8cd98f00b204e9800998ecf8427e"
+  },
+  "/Users/udaysah/projects/sense/services/neural/src/sense_neural/entropy.py": {
+    "mtime": 1785126580.5804713,
+    "ast_hash": "d0842dc4ef35532a190173e47bb1b6a7",
+    "semantic_hash": "d0842dc4ef35532a190173e47bb1b6a7"
+  },
+  "/Users/udaysah/projects/sense/services/neural/src/sense_neural/latency.py": {
+    "mtime": 1785131874.5895517,
+    "ast_hash": "2e880c72cbea7faacdd3433f6a8b781c",
+    "semantic_hash": "2e880c72cbea7faacdd3433f6a8b781c"
+  },
+  "/Users/udaysah/projects/sense/services/neural/tests/conftest.py": {
+    "mtime": 1785123603.3647554,
+    "ast_hash": "bc330619c2462d79f15bc967103d647b",
+    "semantic_hash": "bc330619c2462d79f15bc967103d647b"
+  },
+  "/Users/udaysah/projects/sense/services/neural/tests/test_entropy_monitor.py": {
+    "mtime": 1785123612.0646327,
+    "ast_hash": "a72fe66f4fd49da063f46dc0929e17af",
+    "semantic_hash": "a72fe66f4fd49da063f46dc0929e17af"
+  },
+  "/Users/udaysah/projects/sense/services/neural/tests/test_environment.py": {
+    "mtime": 1785123289.6268332,
+    "ast_hash": "af8c1064d694099299cf261d2960b060",
+    "semantic_hash": "af8c1064d694099299cf261d2960b060"
+  },
+  "/Users/udaysah/projects/sense/services/neural/tests/test_latency.py": {
+    "mtime": 1785131887.137111,
+    "ast_hash": "fc827cde54333b68cd6adbf701ca1375",
+    "semantic_hash": "fc827cde54333b68cd6adbf701ca1375"
+  },
+  "/Users/udaysah/projects/sense/services/orchestrator/src/sense_orchestrator/__init__.py": {
+    "mtime": 1785125546.9523156,
+    "ast_hash": "d41d8cd98f00b204e9800998ecf8427e",
+    "semantic_hash": "d41d8cd98f00b204e9800998ecf8427e"
+  },
+  "/Users/udaysah/projects/sense/services/orchestrator/src/sense_orchestrator/gate.py": {
+    "mtime": 1785125579.0522826,
+    "ast_hash": "e6ae126a7977136ebc90f80d0e27e1a3",
+    "semantic_hash": "e6ae126a7977136ebc90f80d0e27e1a3"
+  },
+  "/Users/udaysah/projects/sense/services/orchestrator/src/sense_orchestrator/router.py": {
+    "mtime": 1785130355.9783466,
+    "ast_hash": "3ac31ccf6b9ca2bbc1a648297390ba7f",
+    "semantic_hash": "3ac31ccf6b9ca2bbc1a648297390ba7f"
+  },
+  "/Users/udaysah/projects/sense/services/orchestrator/src/sense_orchestrator/symbolic_client.py": {
+    "mtime": 1785130343.3795097,
+    "ast_hash": "38b540960695e207765ea1f0aa38bfa8",
+    "semantic_hash": "38b540960695e207765ea1f0aa38bfa8"
+  },
+  "/Users/udaysah/projects/sense/services/orchestrator/src/sense_orchestrator/truncated_entropy.py": {
+    "mtime": 1785126600.2092507,
+    "ast_hash": "f2a7c5450dde913251ec2cf6dedb770f",
+    "semantic_hash": "f2a7c5450dde913251ec2cf6dedb770f"
+  },
+  "/Users/udaysah/projects/sense/services/orchestrator/tests/test_gate.py": {
+    "mtime": 1785125587.5172637,
+    "ast_hash": "950e68484e768bf13c28cbaa8dffada9",
+    "semantic_hash": "950e68484e768bf13c28cbaa8dffada9"
+  },
+  "/Users/udaysah/projects/sense/services/orchestrator/tests/test_router.py": {
+    "mtime": 1785130389.6968076,
+    "ast_hash": "f434a0d44df38237d70a094ed4323601",
+    "semantic_hash": "f434a0d44df38237d70a094ed4323601"
+  },
+  "/Users/udaysah/projects/sense/services/orchestrator/tests/test_truncated_entropy.py": {
+    "mtime": 1785126618.8910263,
+    "ast_hash": "a28e754eb1b0169b498a667cd698ca13",
+    "semantic_hash": "a28e754eb1b0169b498a667cd698ca13"
+  },
+  "/Users/udaysah/projects/sense/services/orchestrator/tests/test_truncated_entropy_bounds_math.py": {
+    "mtime": 1785126625.514987,
+    "ast_hash": "e9bef0221bbdefb189f00a1b0fc7b08d",
+    "semantic_hash": "e9bef0221bbdefb189f00a1b0fc7b08d"
+  },
+  "/Users/udaysah/projects/sense/services/rag/scripts/build_corpus.py": {
+    "mtime": 1785251067.004477,
+    "ast_hash": "a095a6a383f681ebab390c3f0163e87a",
+    "semantic_hash": "a095a6a383f681ebab390c3f0163e87a"
+  },
+  "/Users/udaysah/projects/sense/services/rag/src/sense_rag/__init__.py": {
+    "mtime": 1785251067.0045872,
+    "ast_hash": "d41d8cd98f00b204e9800998ecf8427e",
+    "semantic_hash": "d41d8cd98f00b204e9800998ecf8427e"
+  },
+  "/Users/udaysah/projects/sense/services/rag/src/sense_rag/index.py": {
+    "mtime": 1785251067.0052204,
+    "ast_hash": "8326e8bb1ed9603035863e95ffa2dc64",
+    "semantic_hash": "8326e8bb1ed9603035863e95ffa2dc64"
+  },
+  "/Users/udaysah/projects/sense/services/rag/src/sense_rag/retrieve.py": {
+    "mtime": 1785251067.0055802,
+    "ast_hash": "ee122acb8cf0b4e4b0f354fed8daf866",
+    "semantic_hash": "ee122acb8cf0b4e4b0f354fed8daf866"
+  },
+  "/Users/udaysah/projects/sense/services/rag/tests/conftest.py": {
+    "mtime": 1785251067.0058641,
+    "ast_hash": "c06c65977d2b2f82dcfb29b244f06c42",
+    "semantic_hash": "c06c65977d2b2f82dcfb29b244f06c42"
+  },
+  "/Users/udaysah/projects/sense/services/rag/tests/test_build_corpus.py": {
+    "mtime": 1785251067.0060978,
+    "ast_hash": "1d3f60acd32dacfc737f97ba541dc956",
+    "semantic_hash": "1d3f60acd32dacfc737f97ba541dc956"
+  },
+  "/Users/udaysah/projects/sense/services/rag/tests/test_index.py": {
+    "mtime": 1785251067.0065014,
+    "ast_hash": "c5f9f45a2eb93495d13dc14ef44dcb14",
+    "semantic_hash": "c5f9f45a2eb93495d13dc14ef44dcb14"
+  },
+  "/Users/udaysah/projects/sense/services/rag/tests/test_retrieve.py": {
+    "mtime": 1785251067.0068738,
+    "ast_hash": "0006c24b111d2af8fc0b086a24c4339b",
+    "semantic_hash": "0006c24b111d2af8fc0b086a24c4339b"
+  },
+  "/Users/udaysah/projects/sense/services/symbolic/src/sense_symbolic/__init__.py": {
+    "mtime": 1785128421.279225,
+    "ast_hash": "d41d8cd98f00b204e9800998ecf8427e",
+    "semantic_hash": "d41d8cd98f00b204e9800998ecf8427e"
+  },
+  "/Users/udaysah/projects/sense/services/symbolic/src/sense_symbolic/app.py": {
+    "mtime": 1785128461.9815748,
+    "ast_hash": "4e887a2ef9ba0edada6745f601732a7a",
+    "semantic_hash": "4e887a2ef9ba0edada6745f601732a7a"
+  },
+  "/Users/udaysah/projects/sense/services/symbolic/src/sense_symbolic/wikidata_client.py": {
+    "mtime": 1785128576.6291344,
+    "ast_hash": "105462eb5d5e8cbf0c6360bfe0ff8740",
+    "semantic_hash": "105462eb5d5e8cbf0c6360bfe0ff8740"
+  },
+  "/Users/udaysah/projects/sense/services/symbolic/tests/test_app.py": {
+    "mtime": 1785128924.2809603,
+    "ast_hash": "e9ccc40ffef6d3ef9fba88b8b1a44e56",
+    "semantic_hash": "e9ccc40ffef6d3ef9fba88b8b1a44e56"
+  },
+  "/Users/udaysah/projects/sense/services/symbolic/tests/test_wikidata_client.py": {
+    "mtime": 1785128909.221183,
+    "ast_hash": "9c53841fdf9efbbc755493f2f291b13f",
+    "semantic_hash": "9c53841fdf9efbbc755493f2f291b13f"
+  },
+  "/Users/udaysah/projects/sense/CLAUDE.md": {
+    "mtime": 1785251066.993563,
+    "ast_hash": "ea3ffebee2771ed38f4f488caa05b062",
+    "semantic_hash": "ea3ffebee2771ed38f4f488caa05b062"
+  },
+  "/Users/udaysah/projects/sense/README.md": {
+    "mtime": 1785251066.9939814,
+    "ast_hash": "946e8dc84c2f1f8ccbabf2254fe79553",
+    "semantic_hash": "946e8dc84c2f1f8ccbabf2254fe79553"
+  },
+  "/Users/udaysah/projects/sense/configs/README.md": {
+    "mtime": 1785118129.026736,
+    "ast_hash": "88ce19962ebf8af33f45a3c810fd4f13",
+    "semantic_hash": "88ce19962ebf8af33f45a3c810fd4f13"
+  },
+  "/Users/udaysah/projects/sense/configs/dataset.yaml": {
+    "mtime": 1785127412.8361027,
+    "ast_hash": "84f9c882acedfb08013ed854e7f3302d",
+    "semantic_hash": "84f9c882acedfb08013ed854e7f3302d"
+  },
+  "/Users/udaysah/projects/sense/configs/gate.yaml": {
+    "mtime": 1785127484.7276976,
+    "ast_hash": "e1213d9ce20a069ed723a8449b867c72",
+    "semantic_hash": "e1213d9ce20a069ed723a8449b867c72"
+  },
+  "/Users/udaysah/projects/sense/configs/model.yaml": {
+    "mtime": 1785127696.158441,
+    "ast_hash": "d52d6ad44a0991990824f266fec25df6",
+    "semantic_hash": "d52d6ad44a0991990824f266fec25df6"
+  },
+  "/Users/udaysah/projects/sense/configs/rag.yaml": {
+    "mtime": 1785251066.9942818,
+    "ast_hash": "35b57ee5319cbc11e9adc3fcf0cdb8bc",
+    "semantic_hash": "35b57ee5319cbc11e9adc3fcf0cdb8bc"
+  },
+  "/Users/udaysah/projects/sense/configs/rq1.yaml": {
+    "mtime": 1785127705.9555135,
+    "ast_hash": "dda794d063bc3f4838e2c0e084ccff5f",
+    "semantic_hash": "dda794d063bc3f4838e2c0e084ccff5f"
+  },
+  "/Users/udaysah/projects/sense/configs/rq2.yaml": {
+    "mtime": 1785127978.4437225,
+    "ast_hash": "ce0d6ed107c6a930df45aa323d44ab14",
+    "semantic_hash": "ce0d6ed107c6a930df45aa323d44ab14"
+  },
+  "/Users/udaysah/projects/sense/configs/rq3.yaml": {
+    "mtime": 1785131955.2487192,
+    "ast_hash": "5fde0cf2e72abbf3a447c7b5db8fa6c7",
+    "semantic_hash": "5fde0cf2e72abbf3a447c7b5db8fa6c7"
+  },
+  "/Users/udaysah/projects/sense/configs/symbolic.yaml": {
+    "mtime": 1785130366.3771513,
+    "ast_hash": "8363e9c11d15e1ed2f363c1ec0ee8e44",
+    "semantic_hash": "8363e9c11d15e1ed2f363c1ec0ee8e44"
+  },
+  "/Users/udaysah/projects/sense/data/README.md": {
+    "mtime": 1785127417.0670586,
+    "ast_hash": "e6c5ec418fc604400de578d4ba9cc1e5",
+    "semantic_hash": "e6c5ec418fc604400de578d4ba9cc1e5"
+  },
+  "/Users/udaysah/projects/sense/docker-compose.yml": {
+    "mtime": 1785130376.4582531,
+    "ast_hash": "bec8fcc6a8c44c34332594cdb118310a",
+    "semantic_hash": "bec8fcc6a8c44c34332594cdb118310a"
+  },
+  "/Users/udaysah/projects/sense/docs/superpowers/plans/2026-07-27-rag-baseline.md": {
+    "mtime": 1785173030.911311,
+    "ast_hash": "15d2ac5fcbf54691f01b19a931e62440",
+    "semantic_hash": "15d2ac5fcbf54691f01b19a931e62440"
+  },
+  "/Users/udaysah/projects/sense/docs/superpowers/specs/2026-07-27-rag-baseline-design.md": {
+    "mtime": 1785172894.6373003,
+    "ast_hash": "9681bef7c2429438da98346d54053894",
+    "semantic_hash": "9681bef7c2429438da98346d54053894"
+  },
+  "/Users/udaysah/projects/sense/eval/README.md": {
+    "mtime": 1785132285.3802338,
+    "ast_hash": "82eb436eb2ca3ec0ab3a3a721a5ff911",
+    "semantic_hash": "82eb436eb2ca3ec0ab3a3a721a5ff911"
+  },
+  "/Users/udaysah/projects/sense/experiments/README.md": {
+    "mtime": 1785251066.998332,
+    "ast_hash": "65e2b3259ebb3732542483fdb10194fe",
+    "semantic_hash": "65e2b3259ebb3732542483fdb10194fe"
+  },
+  "/Users/udaysah/projects/sense/services/neural/README.md": {
+    "mtime": 1785132262.1153061,
+    "ast_hash": "7f8765db0f31f0f725e4f07e060161fb",
+    "semantic_hash": "7f8765db0f31f0f725e4f07e060161fb"
+  },
+  "/Users/udaysah/projects/sense/services/orchestrator/README.md": {
+    "mtime": 1785130500.7487485,
+    "ast_hash": "850fd71998550168b25157b47ac14bf2",
+    "semantic_hash": "850fd71998550168b25157b47ac14bf2"
+  },
+  "/Users/udaysah/projects/sense/services/rag/README.md": {
+    "mtime": 1785251067.003814,
+    "ast_hash": "d54d19bced29d038c20ec80ad2ca0a7b",
+    "semantic_hash": "d54d19bced29d038c20ec80ad2ca0a7b"
+  },
+  "/Users/udaysah/projects/sense/services/symbolic/README.md": {
+    "mtime": 1785129242.1715899,
+    "ast_hash": "b1b9200aa710d1525eb29d9bba7fcf12",
+    "semantic_hash": "b1b9200aa710d1525eb29d9bba7fcf12"
+  },
+  "/Users/udaysah/projects/sense/experiments/_common.py": {
+    "mtime": 1785273636.2447436,
+    "ast_hash": "9772f5129fc0f15cc6b8cc144f5f7c5f",
+    "semantic_hash": "9772f5129fc0f15cc6b8cc144f5f7c5f"
+  },
+  "/Users/udaysah/projects/sense/experiments/adaptive_threshold_truthful_qa.py": {
+    "mtime": 1785273668.5527868,
+    "ast_hash": "2b970f935ad093d67cd6f6d4a87c89cc",
+    "semantic_hash": "2b970f935ad093d67cd6f6d4a87c89cc"
+  },
+  "/Users/udaysah/projects/sense/experiments/calibrate_gate_truthful_qa.py": {
+    "mtime": 1785273684.8617947,
+    "ast_hash": "f8abc260018cbc3d45aca64250dc2ccd",
+    "semantic_hash": "f8abc260018cbc3d45aca64250dc2ccd"
+  },
+  "/Users/udaysah/projects/sense/experiments/rag_baseline_truthful_qa.py": {
+    "mtime": 1785273738.882624,
+    "ast_hash": "9c4dd5d444956af15d13ddbe5eabd7a4",
+    "semantic_hash": "9c4dd5d444956af15d13ddbe5eabd7a4"
+  },
+  "/Users/udaysah/projects/sense/experiments/rq3_accuracy_latency_truthful_qa.py": {
+    "mtime": 1785273714.2609963,
+    "ast_hash": "c161f5e27d7a1aaf90293fb95436dca7",
+    "semantic_hash": "c161f5e27d7a1aaf90293fb95436dca7"
+  },
+  "/Users/udaysah/projects/sense/experiments/tests/test_common.py": {
+    "mtime": 1785273755.1980152,
+    "ast_hash": "378682e1c52197182c1efc08129bc468",
+    "semantic_hash": "378682e1c52197182c1efc08129bc468"
+  },
+  "/Users/udaysah/projects/sense/experiments/transfer_threshold_truthful_qa.py": {
+    "mtime": 1785273654.2540188,
+    "ast_hash": "51ad056192155a40d34f83db6d7918dd",
+    "semantic_hash": "51ad056192155a40d34f83db6d7918dd"
+  },
+  "/Users/udaysah/projects/sense/graphify-out/memory/query_20260728_210933_why_does_run_experiment___connect_the_rag_baseline.md": {
+    "mtime": 1785272973.1866155,
+    "ast_hash": "a3963f12a4005d5302b5748e2b054cdf",
+    "semantic_hash": "a3963f12a4005d5302b5748e2b054cdf"
+  }
+}
