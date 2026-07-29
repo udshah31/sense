@@ -1,8 +1,13 @@
 import json
 
-from _common import RESULTS_DIR, load_examples_and_splits, write_results
+import pytest
+import torch
+
+from _common import RESULTS_DIR, load_examples_and_splits, load_model, write_results
 from sense_data.splits import SplitIndices
 from sense_data.truthful_qa import TruthfulQAExample
+
+TINY_GPT2 = {"hf_repo": "sshleifer/tiny-gpt2", "revision": "5f91d94bd9cd7190a9f3216ff93cd1dd95f2c7be"}
 
 
 def test_load_examples_and_splits_returns_real_data():
@@ -36,3 +41,31 @@ def test_write_results_prints_summary_excluding_given_keys(tmp_path, monkeypatch
     assert printed == {"a": 1}
     written = json.loads((tmp_path / "test_write_results_summary.json").read_text())
     assert written == result
+
+
+def test_load_model_defaults_to_no_dtype_override_when_quantization_missing():
+    model, _ = load_model(TINY_GPT2)
+
+    assert model.dtype == torch.float32
+
+
+def test_load_model_none_quantization_matches_missing_key():
+    model, _ = load_model({**TINY_GPT2, "quantization": "none"})
+
+    assert model.dtype == torch.float32
+
+
+def test_load_model_bf16_quantization_sets_torch_dtype():
+    model, _ = load_model({**TINY_GPT2, "quantization": "bf16"})
+
+    assert model.dtype == torch.bfloat16
+
+
+def test_load_model_rejects_unknown_quantization_scheme():
+    with pytest.raises(ValueError, match="unknown quantization scheme"):
+        load_model({**TINY_GPT2, "quantization": "int8"})
+
+
+def test_load_model_raises_on_missing_revision():
+    with pytest.raises(ValueError, match="no pinned revision"):
+        load_model({"hf_repo": "sshleifer/tiny-gpt2"})

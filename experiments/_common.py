@@ -6,6 +6,7 @@ and the example/split loading + results-writing boilerplate every harness repeat
 import json
 from pathlib import Path
 
+import torch
 import yaml
 from transformers import AutoModelForCausalLM, AutoTokenizer
 
@@ -23,11 +24,34 @@ def load_yaml_config(name: str) -> dict:
     return yaml.safe_load((CONFIGS_DIR / name).read_text())
 
 
+# configs/model.yaml's quantization schemes (CLAUDE.md #2: one scheme, held constant
+# across every model and condition it's used in). "none"/missing means no dtype
+# override — the transformers default (fp32), matching the tiny CPU-test models'
+# existing behavior. Unknown values raise rather than silently falling back, per
+# CLAUDE.md's never-add-a-silent-default rule.
+_QUANTIZATION_TORCH_DTYPES: dict[str, torch.dtype | None] = {
+    "none": None,
+    "bf16": torch.bfloat16,
+}
+
+
 def load_model(model_cfg: dict):
     if not model_cfg.get("revision"):
         raise ValueError(f"model '{model_cfg['hf_repo']}' has no pinned revision")
+
+    quantization = model_cfg.get("quantization", "none")
+    if quantization not in _QUANTIZATION_TORCH_DTYPES:
+        raise ValueError(
+            f"model '{model_cfg['hf_repo']}' has unknown quantization scheme {quantization!r} — "
+            f"expected one of {sorted(_QUANTIZATION_TORCH_DTYPES)}"
+        )
+    torch_dtype = _QUANTIZATION_TORCH_DTYPES[quantization]
+
     tokenizer = AutoTokenizer.from_pretrained(model_cfg["hf_repo"], revision=model_cfg["revision"])
-    model = AutoModelForCausalLM.from_pretrained(model_cfg["hf_repo"], revision=model_cfg["revision"])
+    model_kwargs = {"revision": model_cfg["revision"]}
+    if torch_dtype is not None:
+        model_kwargs["torch_dtype"] = torch_dtype
+    model = AutoModelForCausalLM.from_pretrained(model_cfg["hf_repo"], **model_kwargs)
     return model, tokenizer
 
 
