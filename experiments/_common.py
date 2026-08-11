@@ -66,13 +66,18 @@ def load_model(model_cfg: dict):
             bnb_4bit_compute_dtype=torch.bfloat16,
             bnb_4bit_use_double_quant=True,
         )
+        # bitsandbytes 4-bit layers are placed directly onto the GPU at load time —
+        # device_map is required (not optional the way it is for bf16/fp32, which
+        # default to CPU and work fine there). Without it here, the quantized model
+        # ends up split unpredictably and inputs built on CPU mismatch its device.
+        model_kwargs["device_map"] = "auto"
     model = AutoModelForCausalLM.from_pretrained(model_cfg["hf_repo"], **model_kwargs)
     return model, tokenizer
 
 
 def mean_calibration_entropy(model, tokenizer, question: str, decoding_cfg: dict) -> float:
     monitor = TokenEntropyMonitor(vocab_size=tokenizer.vocab_size)
-    inputs = tokenizer(question, return_tensors="pt")
+    inputs = tokenizer(question, return_tensors="pt").to(model.device)
     model.generate(
         **inputs,
         max_new_tokens=decoding_cfg["max_new_tokens"],
