@@ -7,6 +7,6 @@
 # what the threshold was calibrated to produce. A gate whose held-out routing rate
 # tracks its intended rate is behaving as calibrated; one that doesn't has failed to
 # transfer, whether or not that gap is due to a genuinely worse model fit.
-source_model: cpu_test
-target_model: cpu_test_transfer_target
+source_model: llama3
+target_model: mistral
 eval_split: development
