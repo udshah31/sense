@@ -22,19 +22,37 @@ models:
 
   # GPU-environment entries — not runnable locally. Revisions must be pinned before
   # first use there, per CLAUDE.md's model-revision-pinning constraint.
-  # Quantization: bf16 for both, per CLAUDE.md #2 (quantization held constant
-  # across every model/condition). Chosen over int8/int4 because the entropy
-  # gate reads raw next-token logits directly — aggressive quantization
-  # perturbs that distribution, and this project's entire routing signal is
-  # that distribution. bf16 halves fp32 memory with minimal logit distortion,
-  # not zero, so entropy characterization runs should sanity-check that the
-  # no-op/bounds correctness checks still hold under it before RQ1-RQ3 GPU runs.
+  # Quantization: 4-bit (NF4) for all five, per CLAUDE.md #2 and the 2026-08-10 scope
+  # reconciliation — supersedes the earlier bf16-only plan. Held constant across
+  # every checkpoint because the entropy gate reads raw next-token logits directly;
+  # aggressive quantization perturbs that distribution, and this project's entire
+  # routing signal is that distribution. Not zero perturbation, so entropy
+  # characterization runs should sanity-check that the no-op/bounds correctness
+  # checks still hold under it before trusting RQ1-RQ3 GPU numbers.
   llama3:
     hf_repo: meta-llama/Meta-Llama-3-8B
     revision: 8cde5ca8380496c9a6cc7ef3a8b46a0372a1d920  # pinned 2026-07-28, main branch HEAD
-    quantization: bf16
+    quantization: 4bit
 
   mistral:
     hf_repo: mistralai/Mistral-7B-v0.1
     revision: 27d67f1b5f57dc0953326b2601d68371d40ea8da  # pinned 2026-07-28, main branch HEAD
-    quantization: bf16
+    quantization: 4bit
+
+  # Qwen3 scale ladder + cross-family anchor (advisor-confirmed 2026-08-10 — "please
+  # include the Qwen3 ladder", all three rungs kept). Qwen3 runs non-thinking
+  # throughout (CLAUDE.md's Models section).
+  qwen3_8b:
+    hf_repo: Qwen/Qwen3-8B
+    revision: b968826d9c46dd6066d109eabc6255188de91218  # pinned 2026-08-11, main branch HEAD
+    quantization: 4bit
+
+  qwen3_4b:
+    hf_repo: Qwen/Qwen3-4B
+    revision: 1cfa9a7208912126459214e8b04321603b3df60c  # pinned 2026-08-11, main branch HEAD
+    quantization: 4bit
+
+  qwen3_1_7b:
+    hf_repo: Qwen/Qwen3-1.7B
+    revision: 70d244cc86ccca08cf5af4e1e306ecf908b1ad5e  # pinned 2026-08-11, main branch HEAD
+    quantization: 4bit

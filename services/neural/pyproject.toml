@@ -8,6 +8,12 @@ dependencies = [
     "transformers==4.51.3",
     "numpy==2.2.4",
     "pyyaml==6.0.2",
+    # bitsandbytes has no macOS wheels (CPU dev box) — Linux-only, matching the
+    # "Llama-3/Mistral/Qwen3 GPU runs happen on the GPU environment only" rule.
+    # CPU tests never reach the 4-bit BitsAndBytesConfig branch for real (they use
+    # "none" quantization with tiny-gpt2), so this doesn't break CPU-testability.
+    "bitsandbytes==0.45.3; sys_platform == 'linux'",
+    "accelerate==1.6.0",
 ]
 
 [dependency-groups]

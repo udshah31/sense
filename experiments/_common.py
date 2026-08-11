@@ -9,7 +9,7 @@ from pathlib import Path
 
 import torch
 import yaml
-from transformers import AutoModelForCausalLM, AutoTokenizer
+from transformers import AutoModelForCausalLM, AutoTokenizer, BitsAndBytesConfig
 
 from sense_data.splits import SplitIndices, load_splits
 from sense_data.truthful_qa import TruthfulQAExample, load_truthful_qa
@@ -26,14 +26,12 @@ def load_yaml_config(name: str) -> dict:
 
 
 # configs/model.yaml's quantization schemes (CLAUDE.md #2: one scheme, held constant
-# across every model and condition it's used in). "none"/missing means no dtype
-# override — the transformers default (fp32), matching the tiny CPU-test models'
-# existing behavior. Unknown values raise rather than silently falling back, per
-# CLAUDE.md's never-add-a-silent-default rule.
-_QUANTIZATION_TORCH_DTYPES: dict[str, torch.dtype | None] = {
-    "none": None,
-    "bf16": torch.bfloat16,
-}
+# across every model and condition it's used in — 4-bit for every GPU checkpoint per
+# the 2026-08-10 scope reconciliation). "none"/missing means no dtype override — the
+# transformers default (fp32), matching the tiny CPU-test models' existing behavior.
+# Unknown values raise rather than silently falling back, per CLAUDE.md's
+# never-add-a-silent-default rule.
+_QUANTIZATION_SCHEMES = frozenset({"none", "bf16", "4bit"})
 
 
 def load_model(model_cfg: dict):
@@ -41,12 +39,11 @@ def load_model(model_cfg: dict):
         raise ValueError(f"model '{model_cfg['hf_repo']}' has no pinned revision")
 
     quantization = model_cfg.get("quantization", "none")
-    if quantization not in _QUANTIZATION_TORCH_DTYPES:
+    if quantization not in _QUANTIZATION_SCHEMES:
         raise ValueError(
             f"model '{model_cfg['hf_repo']}' has unknown quantization scheme {quantization!r} — "
-            f"expected one of {sorted(_QUANTIZATION_TORCH_DTYPES)}"
+            f"expected one of {sorted(_QUANTIZATION_SCHEMES)}"
         )
-    torch_dtype = _QUANTIZATION_TORCH_DTYPES[quantization]
 
     # Gated repos (e.g. Llama-3) require an authenticated token; public repos (the
     # CPU-test models, Mistral) ignore it. Read once per call, not at import time,
@@ -55,8 +52,20 @@ def load_model(model_cfg: dict):
 
     tokenizer = AutoTokenizer.from_pretrained(model_cfg["hf_repo"], revision=model_cfg["revision"], token=hf_token)
     model_kwargs = {"revision": model_cfg["revision"], "token": hf_token}
-    if torch_dtype is not None:
-        model_kwargs["torch_dtype"] = torch_dtype
+    if quantization == "bf16":
+        model_kwargs["torch_dtype"] = torch.bfloat16
+    elif quantization == "4bit":
+        # NF4 (bitsandbytes) — compute dtype stays bf16 so the entropy gate's logits
+        # keep the same precision profile the earlier bf16-only plan assumed. This
+        # is CLAUDE.md's #2 constraint: perturbs the logit distribution somewhat,
+        # not zero, so the no-op/bounds correctness checks must still be sanity-
+        # checked under it before trusting RQ1-RQ3 numbers (see CLAUDE.md).
+        model_kwargs["quantization_config"] = BitsAndBytesConfig(
+            load_in_4bit=True,
+            bnb_4bit_quant_type="nf4",
+            bnb_4bit_compute_dtype=torch.bfloat16,
+            bnb_4bit_use_double_quant=True,
+        )
     model = AutoModelForCausalLM.from_pretrained(model_cfg["hf_repo"], **model_kwargs)
     return model, tokenizer
 

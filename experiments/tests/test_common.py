@@ -66,6 +66,34 @@ def test_load_model_rejects_unknown_quantization_scheme():
         load_model({**TINY_GPT2, "quantization": "int8"})
 
 
+def test_load_model_4bit_quantization_passes_bitsandbytes_nf4_config(monkeypatch):
+    # bitsandbytes has no macOS wheels (see services/neural/pyproject.toml), so this
+    # skips on the CPU dev box and only runs on the GPU environment (Linux). Even
+    # there it verifies the *config object* passed to from_pretrained rather than
+    # doing an end-to-end load — BitsAndBytesConfig.__init__ itself checks bitsandbytes
+    # is importable, which is enough to exercise without a full CUDA model load.
+    pytest.importorskip("bitsandbytes")
+    import _common
+    from transformers import BitsAndBytesConfig
+
+    captured = {}
+    real_from_pretrained = _common.AutoModelForCausalLM.from_pretrained
+
+    def fake_from_pretrained(repo, **kwargs):
+        captured["quantization_config"] = kwargs.get("quantization_config")
+        return real_from_pretrained(repo, revision=kwargs["revision"], token=kwargs["token"])
+
+    monkeypatch.setattr(_common.AutoModelForCausalLM, "from_pretrained", fake_from_pretrained)
+
+    load_model({**TINY_GPT2, "quantization": "4bit"})
+
+    cfg = captured["quantization_config"]
+    assert isinstance(cfg, BitsAndBytesConfig)
+    assert cfg.load_in_4bit is True
+    assert cfg.bnb_4bit_quant_type == "nf4"
+    assert cfg.bnb_4bit_compute_dtype == torch.bfloat16
+
+
 def test_load_model_raises_on_missing_revision():
     with pytest.raises(ValueError, match="no pinned revision"):
         load_model({"hf_repo": "sshleifer/tiny-gpt2"})
