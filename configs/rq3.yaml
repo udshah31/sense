@@ -1,13 +1,14 @@
 # RQ3 — what accuracy-latency trade-off does routing introduce, and does it hold
-# on both models? Evaluated on the development split (test stays untouched until
-# final reported numbers).
+# across all checkpoints? Evaluated on the development split (test stays untouched
+# until final reported numbers).
 #
-# n_eval_examples subsamples the development split for CPU tractability — each
-# example runs generation twice (ungated, gated) plus a symbolic round-trip when
-# routed. Explicit and logged, not a silent cap.
-model: cpu_test
+# n_eval_examples caps the development split. On the CPU-test model this was 20 for
+# CPU tractability; on the real GPU environment it's raised to the full development
+# split (163 examples) — no CPU-tractability subsampling applies here. Explicit and
+# logged, not a silent cap.
+model: llama3
 eval_split: development
-n_eval_examples: 20
+n_eval_examples: 163
 
 # The symbolic backend verifies (subject, predicate, object) triples, but this
 # project has no entity/relation extractor yet to turn a free-text TruthfulQA
