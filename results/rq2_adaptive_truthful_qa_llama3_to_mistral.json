@@ -1,0 +1,28 @@
+{
+  "research_question": "RQ2",
+  "dataset": "truthful_qa",
+  "eval_split": "development",
+  "n_eval_examples": 163,
+  "quantile": 0.9,
+  "expected_routing_rate": 0.09999999999999998,
+  "decoding": {
+    "do_sample": false,
+    "max_new_tokens": 20
+  },
+  "source_model": {
+    "name": "llama3",
+    "hf_repo": "meta-llama/Meta-Llama-3-8B",
+    "revision": "8cde5ca8380496c9a6cc7ef3a8b46a0372a1d920"
+  },
+  "target_model": {
+    "name": "mistral",
+    "hf_repo": "mistralai/Mistral-7B-v0.1",
+    "revision": "27d67f1b5f57dc0953326b2601d68371d40ea8da"
+  },
+  "fixed_threshold": 0.2813402990814051,
+  "fixed_dev_routing_rate": 0.15337423312883436,
+  "fixed_calibration_fidelity_gap": 0.05337423312883438,
+  "adaptive_threshold": 0.2820440725736927,
+  "adaptive_dev_routing_rate": 0.15337423312883436,
+  "adaptive_calibration_fidelity_gap": 0.05337423312883438
+}
