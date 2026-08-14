@@ -5,6 +5,7 @@ description = "Fixed calibration/development/test split index lists and loaders 
 requires-python = ">=3.13.5"
 dependencies = [
     "datasets==3.5.0",
+    "pyyaml==6.0.3",
 ]
 
 [dependency-groups]
