@@ -1,6 +1,14 @@
 """One-time, offline corpus build: queries the Wikipedia REST API for each
-TruthfulQA test-split question and writes the resolved passages to
+HaluEval test-split question and writes the resolved passages to
 data/rag_corpus/passages.json, committed to the repo.
+
+Re-pointed from TruthfulQA to HaluEval (2026-08-13 scope reconciliation) — same
+retrieval architecture (live Wikipedia search resolved once, offline FAISS lookup
+at run time), only the question source changed. HaluEval's own `knowledge` field
+would also work as a corpus directly, but going through Wikipedia search keeps
+the baseline an honest "can retrieval find *a* relevant passage" test rather than
+handing the model the exact source passage HaluEval's questions were written
+from, which would trivially inflate its accuracy relative to the gated pipeline.
 
 Not part of any automated test-suite execution path or experiment run path —
 sense_rag.index and sense_rag.retrieve only ever read the committed output file.
@@ -19,7 +27,7 @@ REQUEST_HEADERS = {"User-Agent": "sense-rag/0.1 (CSCI699 research project; no co
 
 REPO_ROOT = Path(__file__).parent.parent.parent.parent
 CORPUS_PATH = REPO_ROOT / "data" / "rag_corpus" / "passages.json"
-SPLIT_PATH = REPO_ROOT / "data" / "splits" / "truthful_qa.json"
+SPLIT_PATH = REPO_ROOT / "data" / "splits" / "halueval.json"
 
 
 def fetch_passage(question: str, client: httpx.Client) -> dict | None:
@@ -76,11 +84,11 @@ def build_corpus(questions: list[str], client: httpx.Client) -> list[dict]:
 
 def main() -> None:
     sys.path.insert(0, str(REPO_ROOT / "data" / "src"))
-    from sense_data.splits import load_splits
-    from sense_data.truthful_qa import load_truthful_qa
+    from sense_data.halueval import load_halueval
+    from sense_data.splits import load_per_checkpoint_splits
 
-    examples = load_truthful_qa()
-    splits = load_splits(SPLIT_PATH)
+    examples = load_halueval()
+    splits = load_per_checkpoint_splits(SPLIT_PATH)
     questions = [examples[i].question for i in splits.test]
 
     # Force IPv4: this network environment's IPv6 route to Wikipedia's edge is

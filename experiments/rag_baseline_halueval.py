@@ -1,25 +1,49 @@
-"""RAG comparison baseline: retrieve-then-generate accuracy on the TruthfulQA test
+"""RAG comparison baseline: retrieve-then-generate accuracy on the HaluEval test
 split, using FAISS + all-MiniLM-L6-v2 over a committed, pre-built Wikipedia passage
 corpus (services/rag/scripts/build_corpus.py). Accuracy-only — no latency
 instrumentation, no gate interaction (CLAUDE.md: "a comparison baseline, not the
 contribution — capped effort on purpose").
+
+Re-pointed from TruthfulQA to HaluEval (2026-08-13 scope reconciliation) —
+TruthfulQA stays in the repo for the excluded-benchmark discussion (CLAUDE.md),
+but is no longer what this baseline is scored against. HaluEval gives each
+example a `right_answer` and a model-authored `hallucinated_answer`; the
+lexical-containment verdict below treats those the same way the TruthfulQA
+version treated best/correct vs. incorrect answers.
 
 Retrieval and generation never touch the network at run time: the corpus is
 pre-built and committed, and the embedding model is loaded from the local HF
 cache after its first download. Same decoding config and model (tiny-gpt2) as
 RQ1-RQ3, so this baseline's number sits in the same honest "pipeline-mechanics
 validation, not a scientific finding" category until Llama-3/Mistral GPU runs.
+
+Reports task_accuracy/hallucination_rate/abstention_rate together (never a
+subset — write_results enforces this); abstention_rate is always 0 here, since
+this baseline has no routing/merge-back policy to abstain with at all.
 """
 
-from _common import REPO_ROOT, load_examples_and_splits, load_model, load_yaml_config, write_results
-from sense_eval.factuality import lexical_containment_verdict
+from _common import REPO_ROOT, load_model, load_model_registry, load_yaml_config, write_results
+from sense_data.halueval import load_halueval
+from sense_data.splits import load_per_checkpoint_splits
+from sense_eval.factuality import (
+    PLACEHOLDER_FACTUALITY_METRIC_LABEL,
+    FactualityVerdict,
+    lexical_containment_verdict,
+    summarize_factuality,
+)
 from sense_rag.index import PassageIndex
 from sense_rag.retrieve import retrieve
+
+HALUEVAL_SPLIT_PATH = REPO_ROOT / "data" / "splits" / "halueval.json"
+
+
+def load_examples_and_splits():
+    return load_halueval(), load_per_checkpoint_splits(HALUEVAL_SPLIT_PATH)
 
 
 def load_config() -> dict:
     return {
-        "models": load_yaml_config("model.yaml")["models"],
+        "models": load_model_registry(),
         "gate": load_yaml_config("gate.yaml"),
         "rag": load_yaml_config("rag.yaml"),
     }
@@ -119,7 +143,7 @@ async def run_experiment(config: dict) -> dict:
         generated_text = tokenizer.decode(output_ids[0][inputs["input_ids"].shape[1] :], skip_special_tokens=True)
 
         verdict = lexical_containment_verdict(
-            generated_text, example.best_answer, example.correct_answers, example.incorrect_answers
+            generated_text, example.right_answer, (), (example.hallucinated_answer,)
         )
 
         per_example.append(
@@ -134,17 +158,18 @@ async def run_experiment(config: dict) -> dict:
         )
 
     n = len(per_example)
-    correct = [r for r in per_example if r["factuality"] == "correct"]
-    verdict_counts = {
-        "correct": sum(1 for r in per_example if r["factuality"] == "correct"),
-        "incorrect": sum(1 for r in per_example if r["factuality"] == "incorrect"),
-        "unknown": sum(1 for r in per_example if r["factuality"] == "unknown"),
-    }
+    # No routing/merge-back policy exists in this baseline at all — n_abstained is
+    # always 0, but stated explicitly (not defaulted) so that stays a deliberate
+    # fact about this harness rather than an assumption baked into the reporting
+    # layer.
+    n_abstained = 0
+    verdicts = [FactualityVerdict(label=r["factuality"]) for r in per_example]
+    factuality_report = summarize_factuality(verdicts, n_abstained=n_abstained)
     n_examples_with_truncated_prompt = sum(1 for r in per_example if r["prompt_truncated"])
 
     return {
         "research_question": "RAG baseline",
-        "dataset": "truthful_qa",
+        "dataset": "halueval",
         "model_name": model_name,
         "hf_repo": model_cfg["hf_repo"],
         "revision": model_cfg["revision"],
@@ -153,9 +178,11 @@ async def run_experiment(config: dict) -> dict:
         "n_available_in_split": len(all_eval_indices),
         "top_k": top_k,
         "decoding": decoding_cfg,
-        "factuality_accuracy_proxy": (len(correct) / n) if n else None,
-        "factuality_metric": "lexical_containment (placeholder, see eval/README.md)",
-        "verdict_counts": verdict_counts,
+        "task_accuracy": factuality_report["task_accuracy"],
+        "hallucination_rate": factuality_report["hallucination_rate"],
+        "abstention_rate": factuality_report["abstention_rate"],
+        "factuality_report": factuality_report,
+        "factuality_metric": PLACEHOLDER_FACTUALITY_METRIC_LABEL,
         "n_examples_with_truncated_prompt": n_examples_with_truncated_prompt,
         "per_example": per_example,
     }
@@ -166,7 +193,7 @@ async def main() -> dict:
     result = await run_experiment(config)
 
     write_results(
-        f"rag_baseline_truthful_qa_{config['rag']['model']}.json",
+        f"rag_baseline_halueval_{config['rag']['model']}.json",
         result,
         print_exclude_keys=frozenset({"per_example"}),
     )

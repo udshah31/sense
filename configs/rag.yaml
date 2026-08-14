@@ -1,6 +1,14 @@
 # RAG comparison baseline (CLAUDE.md's Phase-0 design decisions). Accuracy-only,
 # no latency instrumentation, no gate interaction — see docs/superpowers/specs/
 # 2026-07-27-rag-baseline-design.md.
+#
+# corpus_path/eval_split re-pointed from TruthfulQA to HaluEval (2026-08-13 scope
+# reconciliation, CLAUDE.md's excluded-benchmark decision) — same retrieval
+# architecture (FAISS + all-MiniLM-L6-v2 over a committed passages.json built by
+# services/rag/scripts/build_corpus.py), corpus now resolved from HaluEval's
+# test-split questions instead of TruthfulQA's. `eval_split` indexes into
+# data/splits/halueval.json's shared development/test split (not the
+# per-checkpoint calibration sets — this baseline doesn't touch the gate).
 model: cpu_test        # key into configs/model.yaml, same model as RQ1-RQ3
 top_k: 3
 corpus_path: data/rag_corpus/passages.json

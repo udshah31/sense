@@ -3,7 +3,7 @@ import json
 import pytest
 from transformers import AutoTokenizer
 
-from rag_baseline_truthful_qa import build_prompt, build_prompt_within_budget, run_experiment
+from rag_baseline_halueval import build_prompt, build_prompt_within_budget, run_experiment
 
 TINY_GPT2_REVISION = "5f91d94bd9cd7190a9f3216ff93cd1dd95f2c7be"
 
@@ -33,16 +33,24 @@ async def test_run_experiment_end_to_end_on_fixture_corpus(tmp_path):
 
     result = await run_experiment(config)
 
+    assert result["dataset"] == "halueval"
     assert result["n_eval_examples"] == 2
-    assert 0.0 <= result["factuality_accuracy_proxy"] <= 1.0
+    assert 0.0 <= result["task_accuracy"] <= 1.0
+    assert 0.0 <= result["hallucination_rate"] <= 1.0
+    assert result["abstention_rate"] == 0.0
     assert len(result["per_example"]) == 2
     for record in result["per_example"]:
         assert "retrieved_passages_preview" in record
         assert "factuality" in record
         assert "prompt_truncated" in record
         assert "n_passages_used" in record
-    assert "verdict_counts" in result
-    assert sum(result["verdict_counts"].values()) == len(result["per_example"])
+    assert "factuality_report" in result
+    assert (
+        result["factuality_report"]["n_correct"]
+        + result["factuality_report"]["n_incorrect"]
+        + result["factuality_report"]["n_unknown"]
+        == len(result["per_example"])
+    )
     assert "n_examples_with_truncated_prompt" in result
 
 
@@ -50,7 +58,7 @@ async def test_run_experiment_end_to_end_on_fixture_corpus(tmp_path):
 async def test_run_experiment_does_not_crash_on_overlong_prompt(tmp_path):
     # A repeated long sentence forces the tokenized prompt well past tiny-gpt2's
     # 1024-token position-embedding limit, reproducing the crash observed in the
-    # full 327-example run (IndexError: index out of range in self).
+    # full-split run (IndexError: index out of range in self).
     long_sentence = "This is a very long fixture sentence about a fixture topic used to overflow the context window. "
     fixture_passages = [
         {"title": "Fixture", "text": long_sentence * 60},
@@ -125,8 +133,12 @@ async def test_run_experiment_handles_zero_examples_without_zero_division(tmp_pa
     result = await run_experiment(config)
 
     assert result["n_eval_examples"] == 0
-    assert result["factuality_accuracy_proxy"] is None
-    assert result["verdict_counts"] == {"correct": 0, "incorrect": 0, "unknown": 0}
+    assert result["task_accuracy"] is None
+    assert result["hallucination_rate"] is None
+    assert result["abstention_rate"] is None
+    assert result["factuality_report"]["n_correct"] == 0
+    assert result["factuality_report"]["n_incorrect"] == 0
+    assert result["factuality_report"]["n_unknown"] == 0
     assert result["n_examples_with_truncated_prompt"] == 0
 
 
