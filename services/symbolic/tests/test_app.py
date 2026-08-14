@@ -1,9 +1,21 @@
+"""Tests for the "sparql" backend — kept as a fallback (CLAUDE.md's design
+decisions), not deleted when z3 became the default (2026-08-13 scope
+reconciliation). Hits the real public Wikidata endpoints — no mocking, since the
+whole point of this backend is a live symbolic verification round-trip. Facts
+used here are stable/definitional (a Nobel laureate's occupation), not likely to
+change.
+
+See test_app_z3.py for the default backend's tests (local, deterministic, no
+network) and test_app_backend_selection.py for the create_app()/env-var wiring
+shared by both.
+"""
+
 import pytest
 from fastapi.testclient import TestClient
 
-from sense_symbolic.app import app
+from sense_symbolic.app import create_app
 
-client = TestClient(app)
+client = TestClient(create_app("sparql"))
 
 EINSTEIN = "Albert Einstein"
 PHYSICIST = "physicist"
@@ -14,7 +26,7 @@ OCCUPATION_PID = "P106"
 def test_health():
     response = client.get("/health")
     assert response.status_code == 200
-    assert response.json() == {"status": "ok"}
+    assert response.json() == {"status": "ok", "backend": "sparql"}
 
 
 def test_entity_exists_for_known_entity():

@@ -7,7 +7,7 @@ dependencies = [
     "torch==2.7.0",
     "transformers==4.51.3",
     "numpy==2.2.4",
-    "pyyaml==6.0.2",
+    "pyyaml==6.0.3",
     # bitsandbytes has no macOS wheels (CPU dev box) — Linux-only, matching the
     # "Llama-3/Mistral/Qwen3 GPU runs happen on the GPU environment only" rule.
     # CPU tests never reach the 4-bit BitsAndBytesConfig branch for real (they use
