@@ -51,7 +51,7 @@ def run() -> dict:
     # Source native calibration — what gets transferred to produce the fixed gate.
     source_gate = GatePolicy()
     source_cal_entropies = calibration_entropies(
-        source_model, source_tokenizer, examples, splits.calibration, decoding_cfg
+        source_model, source_tokenizer, examples, splits.calibration, decoding_cfg, source_cfg
     )
     source_threshold = source_gate.calibrate(
         calibration_entropies=source_cal_entropies,
@@ -69,7 +69,7 @@ def run() -> dict:
     # calibration-split entropies — the self-adaptive threshold RQ2 asks about.
     adaptive_gate = GatePolicy()
     target_cal_entropies = calibration_entropies(
-        target_model, target_tokenizer, examples, splits.calibration, decoding_cfg
+        target_model, target_tokenizer, examples, splits.calibration, decoding_cfg, target_cfg
     )
     adaptive_threshold = adaptive_gate.calibrate(
         calibration_entropies=target_cal_entropies,
@@ -80,7 +80,7 @@ def run() -> dict:
     )
 
     target_eval_entropies = calibration_entropies(
-        target_model, target_tokenizer, examples, eval_indices, decoding_cfg
+        target_model, target_tokenizer, examples, eval_indices, decoding_cfg, target_cfg
     )
 
     fixed_dev_rate = routing_rate(fixed_gate, target_eval_entropies)

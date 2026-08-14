@@ -40,19 +40,29 @@ models:
     quantization: 4bit
 
   # Qwen3 scale ladder + cross-family anchor (advisor-confirmed 2026-08-10 — "please
-  # include the Qwen3 ladder", all three rungs kept). Qwen3 runs non-thinking
-  # throughout (CLAUDE.md's Models section).
+  # include the Qwen3 ladder", all three rungs kept). Qwen3 is a hybrid thinking/
+  # non-thinking model family; `thinking_mode: false` is read by
+  # experiments/_common.py's build_generation_inputs to force chat-template
+  # generation with enable_thinking=False, per CLAUDE.md's "Qwen3 runs in
+  # non-thinking mode throughout." Verified 2026-08-13 against the live Hub API:
+  # all three repos exist, the pinned revisions match current main-branch HEAD, and
+  # tokenizer.json/vocab.json/merges.txt have identical content hashes across all
+  # three sizes — genuinely one shared tokenizer, not just same vocab size, which is
+  # the stated reason Qwen3 was chosen as the scale ladder (CLAUDE.md #4).
   qwen3_8b:
     hf_repo: Qwen/Qwen3-8B
     revision: b968826d9c46dd6066d109eabc6255188de91218  # pinned 2026-08-11, main branch HEAD
     quantization: 4bit
+    thinking_mode: false
 
   qwen3_4b:
     hf_repo: Qwen/Qwen3-4B
     revision: 1cfa9a7208912126459214e8b04321603b3df60c  # pinned 2026-08-11, main branch HEAD
     quantization: 4bit
+    thinking_mode: false
 
   qwen3_1_7b:
     hf_repo: Qwen/Qwen3-1.7B
     revision: 70d244cc86ccca08cf5af4e1e306ecf908b1ad5e  # pinned 2026-08-11, main branch HEAD
     quantization: 4bit
+    thinking_mode: false

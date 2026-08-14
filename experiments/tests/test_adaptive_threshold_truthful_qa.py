@@ -14,6 +14,8 @@ from sense_orchestrator.gate import GatePolicy
 SOURCE_MODEL = "sshleifer/tiny-gpt2"
 TARGET_MODEL = "hf-internal-testing/tiny-random-GPTNeoXForCausalLM"
 DECODING_CFG = {"do_sample": False, "max_new_tokens": 5}
+SOURCE_MODEL_CFG = {"hf_repo": SOURCE_MODEL}
+TARGET_MODEL_CFG = {"hf_repo": TARGET_MODEL}
 
 
 @pytest.fixture(scope="module")
@@ -39,7 +41,9 @@ def test_adaptive_gate_calibrates_independently_of_fixed_gate(source, target, sm
     cal_subset = small_splits.calibration[:5]
     dev_subset = small_splits.development[:5]
 
-    source_entropies = calibration_entropies(source_model, source_tokenizer, examples, cal_subset, DECODING_CFG)
+    source_entropies = calibration_entropies(
+        source_model, source_tokenizer, examples, cal_subset, DECODING_CFG, SOURCE_MODEL_CFG
+    )
     source_gate = GatePolicy()
     source_threshold = source_gate.calibrate(
         calibration_entropies=source_entropies,
@@ -52,7 +56,9 @@ def test_adaptive_gate_calibrates_independently_of_fixed_gate(source, target, sm
     fixed_gate = GatePolicy()
     fixed_gate.set_threshold(source_threshold, source="transferred-from-source")
 
-    target_entropies = calibration_entropies(target_model, target_tokenizer, examples, cal_subset, DECODING_CFG)
+    target_entropies = calibration_entropies(
+        target_model, target_tokenizer, examples, cal_subset, DECODING_CFG, TARGET_MODEL_CFG
+    )
     adaptive_gate = GatePolicy()
     adaptive_threshold = adaptive_gate.calibrate(
         calibration_entropies=target_entropies,
@@ -68,7 +74,9 @@ def test_adaptive_gate_calibrates_independently_of_fixed_gate(source, target, sm
     assert adaptive_gate.calibration_source == "adaptive-target"
     assert fixed_gate.calibration_source == "transferred-from-source"
 
-    eval_entropies = calibration_entropies(target_model, target_tokenizer, examples, dev_subset, DECODING_CFG)
+    eval_entropies = calibration_entropies(
+        target_model, target_tokenizer, examples, dev_subset, DECODING_CFG, TARGET_MODEL_CFG
+    )
     fixed_rate = routing_rate(fixed_gate, eval_entropies)
     adaptive_rate = routing_rate(adaptive_gate, eval_entropies)
 

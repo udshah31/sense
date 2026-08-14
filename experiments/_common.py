@@ -75,9 +75,34 @@ def load_model(model_cfg: dict):
     return model, tokenizer
 
 
-def mean_calibration_entropy(model, tokenizer, question: str, decoding_cfg: dict) -> float:
+def build_generation_inputs(tokenizer, question: str, model_cfg: dict):
+    """Tokenize `question` for generation. Qwen3 is a hybrid thinking/non-thinking
+    family (model.yaml's `thinking_mode: false` on every qwen3_* entry) — forcing
+    non-thinking mode requires routing through the chat template with
+    enable_thinking=False, since that's the only interface Qwen3 exposes for it.
+    Models without a `thinking_mode` entry keep the plain-completion tokenization
+    the rest of the pipeline (llama3, mistral, cpu_test) already used.
+    """
+    if model_cfg.get("thinking_mode") is False:
+        if tokenizer.chat_template is None:
+            raise ValueError(
+                f"model '{model_cfg['hf_repo']}' sets thinking_mode: false but its tokenizer has no "
+                "chat_template — cannot enforce non-thinking mode without one"
+            )
+        return tokenizer.apply_chat_template(
+            [{"role": "user", "content": question}],
+            tokenize=True,
+            add_generation_prompt=True,
+            enable_thinking=False,
+            return_tensors="pt",
+            return_dict=True,
+        )
+    return tokenizer(question, return_tensors="pt")
+
+
+def mean_calibration_entropy(model, tokenizer, question: str, decoding_cfg: dict, model_cfg: dict) -> float:
     monitor = TokenEntropyMonitor(vocab_size=tokenizer.vocab_size)
-    inputs = tokenizer(question, return_tensors="pt").to(model.device)
+    inputs = build_generation_inputs(tokenizer, question, model_cfg).to(model.device)
     model.generate(
         **inputs,
         max_new_tokens=decoding_cfg["max_new_tokens"],
@@ -87,8 +112,8 @@ def mean_calibration_entropy(model, tokenizer, question: str, decoding_cfg: dict
     return sum(monitor.entropies) / len(monitor.entropies)
 
 
-def calibration_entropies(model, tokenizer, examples, indices, decoding_cfg) -> list[float]:
-    return [mean_calibration_entropy(model, tokenizer, examples[i].question, decoding_cfg) for i in indices]
+def calibration_entropies(model, tokenizer, examples, indices, decoding_cfg, model_cfg) -> list[float]:
+    return [mean_calibration_entropy(model, tokenizer, examples[i].question, decoding_cfg, model_cfg) for i in indices]
 
 
 def load_examples_and_splits() -> tuple[list[TruthfulQAExample], SplitIndices]:

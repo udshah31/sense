@@ -35,7 +35,9 @@ def run() -> dict:
 
     examples, splits = load_examples_and_splits()
 
-    entropies = calibration_entropies(model, tokenizer, examples, splits.calibration, config["gate"]["decoding"])
+    entropies = calibration_entropies(
+        model, tokenizer, examples, splits.calibration, config["gate"]["decoding"], model_cfg
+    )
 
     gate = GatePolicy()
     threshold = gate.calibrate(

@@ -2,8 +2,10 @@ import json
 
 import pytest
 import torch
+import yaml
+from transformers import AutoTokenizer
 
-from _common import RESULTS_DIR, load_examples_and_splits, load_model, write_results
+from _common import CONFIGS_DIR, RESULTS_DIR, build_generation_inputs, load_examples_and_splits, load_model, write_results
 from sense_data.splits import SplitIndices
 from sense_data.truthful_qa import TruthfulQAExample
 
@@ -140,3 +142,63 @@ def test_load_model_passes_none_token_when_hf_token_unset(monkeypatch):
     load_model(TINY_GPT2)
 
     assert captured["model_token"] is None
+
+
+def test_build_generation_inputs_uses_plain_tokenization_without_thinking_mode():
+    tokenizer = AutoTokenizer.from_pretrained(TINY_GPT2["hf_repo"])
+
+    inputs = build_generation_inputs(tokenizer, "What is the capital of France?", TINY_GPT2)
+
+    expected = tokenizer("What is the capital of France?", return_tensors="pt")
+    assert inputs["input_ids"].tolist() == expected["input_ids"].tolist()
+
+
+def test_build_generation_inputs_raises_without_chat_template_when_thinking_mode_false():
+    tokenizer = AutoTokenizer.from_pretrained(TINY_GPT2["hf_repo"])
+    assert tokenizer.chat_template is None  # tiny-gpt2 has no chat template
+
+    with pytest.raises(ValueError, match="no chat_template"):
+        build_generation_inputs(tokenizer, "question", {**TINY_GPT2, "thinking_mode": False})
+
+
+def test_build_generation_inputs_routes_through_chat_template_when_thinking_mode_false(monkeypatch):
+    tokenizer = AutoTokenizer.from_pretrained(TINY_GPT2["hf_repo"])
+    tokenizer.chat_template = "fake-template"
+    captured = {}
+
+    def fake_apply_chat_template(self, messages, **kwargs):
+        captured["messages"] = messages
+        captured["kwargs"] = kwargs
+        return {"input_ids": torch.tensor([[1, 2, 3]])}
+
+    monkeypatch.setattr(type(tokenizer), "apply_chat_template", fake_apply_chat_template)
+
+    build_generation_inputs(tokenizer, "question", {**TINY_GPT2, "thinking_mode": False})
+
+    assert captured["messages"] == [{"role": "user", "content": "question"}]
+    assert captured["kwargs"]["enable_thinking"] is False
+    assert captured["kwargs"]["add_generation_prompt"] is True
+
+
+def test_qwen3_ladder_shares_a_consistent_tokenizer():
+    """CLAUDE.md's stated reason for choosing the Qwen3 ladder is that the three
+    sizes share a tokenizer (raw entropy comparable across scale, unlike the
+    cross-family axis). Verify that at load time rather than assuming it — flag it
+    loudly if it's ever not true, since RQ1-RQ3's cross-scale comparisons would be
+    invalid without it.
+    """
+    model_cfg = yaml.safe_load((CONFIGS_DIR / "model.yaml").read_text())["models"]
+    qwen3_entries = {name: cfg for name, cfg in model_cfg.items() if name.startswith("qwen3_")}
+    assert len(qwen3_entries) == 3, "expected all three Qwen3 ladder rungs in model.yaml"
+
+    vocabs = {
+        name: AutoTokenizer.from_pretrained(cfg["hf_repo"], revision=cfg["revision"]).get_vocab()
+        for name, cfg in qwen3_entries.items()
+    }
+
+    (first_name, first_vocab), *rest = vocabs.items()
+    for name, vocab in rest:
+        assert vocab == first_vocab, (
+            f"Qwen3 tokenizer mismatch: {name} does not share {first_name}'s vocabulary — "
+            "the scale-ladder premise (comparable raw entropy across scale) does not hold"
+        )

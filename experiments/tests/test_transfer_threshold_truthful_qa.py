@@ -13,6 +13,8 @@ from sense_orchestrator.gate import GatePolicy
 SOURCE_MODEL = "sshleifer/tiny-gpt2"
 TARGET_MODEL = "hf-internal-testing/tiny-random-GPTNeoXForCausalLM"
 DECODING_CFG = {"do_sample": False, "max_new_tokens": 5}
+SOURCE_MODEL_CFG = {"hf_repo": SOURCE_MODEL}
+TARGET_MODEL_CFG = {"hf_repo": TARGET_MODEL}
 
 
 @pytest.fixture(scope="module")
@@ -39,7 +41,9 @@ def test_transfer_harness_runs_end_to_end(source, target, small_splits):
     cal_subset = small_splits.calibration[:5]
     dev_subset = small_splits.development[:5]
 
-    source_entropies = calibration_entropies(source_model, source_tokenizer, examples, cal_subset, DECODING_CFG)
+    source_entropies = calibration_entropies(
+        source_model, source_tokenizer, examples, cal_subset, DECODING_CFG, SOURCE_MODEL_CFG
+    )
     source_gate = GatePolicy()
     source_threshold = source_gate.calibrate(
         calibration_entropies=source_entropies,
@@ -49,7 +53,9 @@ def test_transfer_harness_runs_end_to_end(source, target, small_splits):
         source="source",
     )
 
-    target_entropies = calibration_entropies(target_model, target_tokenizer, examples, cal_subset, DECODING_CFG)
+    target_entropies = calibration_entropies(
+        target_model, target_tokenizer, examples, cal_subset, DECODING_CFG, TARGET_MODEL_CFG
+    )
     target_native_gate = GatePolicy()
     target_native_gate.calibrate(
         calibration_entropies=target_entropies,
@@ -62,7 +68,9 @@ def test_transfer_harness_runs_end_to_end(source, target, small_splits):
     transferred_gate = GatePolicy()
     transferred_gate.set_threshold(source_threshold, source="transferred-from-source")
 
-    eval_entropies = calibration_entropies(target_model, target_tokenizer, examples, dev_subset, DECODING_CFG)
+    eval_entropies = calibration_entropies(
+        target_model, target_tokenizer, examples, dev_subset, DECODING_CFG, TARGET_MODEL_CFG
+    )
 
     transferred_decisions = [transferred_gate.decide(h) for h in eval_entropies]
     native_decisions = [target_native_gate.decide(h) for h in eval_entropies]
@@ -78,7 +86,9 @@ def test_transferred_threshold_equals_source_native_threshold(source, small_spli
     examples = load_truthful_qa()
     cal_subset = small_splits.calibration[:5]
 
-    entropies = calibration_entropies(source_model, source_tokenizer, examples, cal_subset, DECODING_CFG)
+    entropies = calibration_entropies(
+        source_model, source_tokenizer, examples, cal_subset, DECODING_CFG, SOURCE_MODEL_CFG
+    )
     source_gate = GatePolicy()
     threshold = source_gate.calibrate(
         calibration_entropies=entropies,

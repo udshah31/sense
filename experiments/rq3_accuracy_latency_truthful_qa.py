@@ -70,7 +70,7 @@ async def run_experiment(config: dict) -> dict:
 
     gate = GatePolicy()
     cal_entropies = [
-        mean_calibration_entropy(model, tokenizer, examples[i].question, decoding_cfg)
+        mean_calibration_entropy(model, tokenizer, examples[i].question, decoding_cfg, model_cfg)
         for i in splits.calibration
     ]
     gate.calibrate(
