@@ -1,5 +1,8 @@
 """Integration test for the RQ1 transfer harness, on a small subset for speed —
-transfer_threshold_truthful_qa.py itself runs the full committed splits.
+transfer_threshold_halueval.py itself runs the full committed per-checkpoint
+splits. Uses tiny CPU-testable models standing in for real checkpoints (CLAUDE.md:
+every component must be testable on CPU with a tiny model) — the real five-
+checkpoint run only happens on the GPU environment.
 """
 
 import pytest
@@ -9,12 +12,15 @@ from _common import calibration_entropies
 from sense_data.splits import generate_splits
 from sense_data.truthful_qa import load_truthful_qa
 from sense_orchestrator.gate import GatePolicy
+from transfer_threshold_halueval import run_pair
 
 SOURCE_MODEL = "sshleifer/tiny-gpt2"
 TARGET_MODEL = "hf-internal-testing/tiny-random-GPTNeoXForCausalLM"
+SOURCE_MODEL_REVISION = "5f91d94bd9cd7190a9f3216ff93cd1dd95f2c7be"
+TARGET_MODEL_REVISION = "f417fcb49b46298ae7c01308ff33bfeadc104bd3"
 DECODING_CFG = {"do_sample": False, "max_new_tokens": 5}
-SOURCE_MODEL_CFG = {"hf_repo": SOURCE_MODEL}
-TARGET_MODEL_CFG = {"hf_repo": TARGET_MODEL}
+SOURCE_MODEL_CFG = {"hf_repo": SOURCE_MODEL, "revision": SOURCE_MODEL_REVISION}
+TARGET_MODEL_CFG = {"hf_repo": TARGET_MODEL, "revision": TARGET_MODEL_REVISION}
 
 
 @pytest.fixture(scope="module")
@@ -101,3 +107,33 @@ def test_transferred_threshold_equals_source_native_threshold(source, small_spli
     transferred_gate = GatePolicy()
     transferred_gate.set_threshold(threshold, source="transferred-from-source")
     assert transferred_gate.threshold == threshold
+
+
+def test_run_pair_end_to_end_on_tiny_models_via_halueval_shaped_splits():
+    """Exercises run_pair itself (not just the underlying primitives above),
+    against a tiny per-checkpoint-shaped split built from real HaluEval data —
+    the actual code path the real five-checkpoint run uses, just with cpu_test
+    stand-ins and a tiny slice for speed.
+    """
+    from sense_data.halueval import load_halueval
+    from sense_data.splits import PerCheckpointSplitIndices
+
+    examples = load_halueval()[:50]
+    splits = PerCheckpointSplitIndices(
+        development=list(range(40, 50)),
+        test=list(range(30, 40)),
+        calibration={"source": list(range(0, 10)), "target": list(range(10, 20))},
+    )
+    models_registry = {"source": SOURCE_MODEL_CFG, "target": TARGET_MODEL_CFG}
+
+    result = run_pair(
+        models_registry, examples, splits, DECODING_CFG, quantile=0.9,
+        eval_split="development", source_name="source", target_name="target",
+    )
+
+    assert result["research_question"] == "RQ1"
+    assert result["dataset"] == "halueval"
+    assert result["source_model"]["name"] == "source"
+    assert result["target_model"]["name"] == "target"
+    assert 0.0 <= result["transfer_agreement_rate"] <= 1.0
+    assert result["n_eval_examples"] == 10
