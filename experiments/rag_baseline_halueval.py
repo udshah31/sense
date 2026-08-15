@@ -23,8 +23,7 @@ this baseline has no routing/merge-back policy to abstain with at all.
 """
 
 from _common import REPO_ROOT, load_model, load_model_registry, load_yaml_config, write_results
-from sense_data.halueval import load_halueval
-from sense_data.splits import load_per_checkpoint_splits
+from _common import load_halueval_examples_and_splits as load_examples_and_splits
 from sense_eval.factuality import (
     PLACEHOLDER_FACTUALITY_METRIC_LABEL,
     FactualityVerdict,
@@ -33,12 +32,6 @@ from sense_eval.factuality import (
 )
 from sense_rag.index import PassageIndex
 from sense_rag.retrieve import retrieve
-
-HALUEVAL_SPLIT_PATH = REPO_ROOT / "data" / "splits" / "halueval.json"
-
-
-def load_examples_and_splits():
-    return load_halueval(), load_per_checkpoint_splits(HALUEVAL_SPLIT_PATH)
 
 
 def load_config() -> dict:
