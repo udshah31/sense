@@ -16,13 +16,13 @@ condition, so all three â€” fixed, adaptive, and their common source baseline â€
 compared under identical data and decoding config.
 """
 
-from _common import calibration_entropies, load_examples_and_splits, load_model, load_yaml_config, write_results
+from _common import calibration_entropies, load_examples_and_splits, load_model, load_model_registry, load_yaml_config, write_results
 from sense_orchestrator.gate import GatePolicy
 
 
 def load_config() -> dict:
     return {
-        "models": load_yaml_config("model.yaml")["models"],
+        "models": load_model_registry(),
         "gate": load_yaml_config("gate.yaml"),
         "rq2": load_yaml_config("rq2.yaml"),
     }

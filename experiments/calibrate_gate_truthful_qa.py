@@ -12,7 +12,7 @@ and decoding config from configs/gate.yaml. Swapping `active` in model.yaml to
 llama3/mistral on the GPU environment runs the identical code path.
 """
 
-from _common import calibration_entropies, load_examples_and_splits, load_model, load_yaml_config, write_results
+from _common import assert_pinned_gpu_quantization, calibration_entropies, load_examples_and_splits, load_model, load_yaml_config, write_results
 from sense_orchestrator.gate import GatePolicy
 
 
@@ -20,6 +20,7 @@ def load_config() -> dict:
     model_cfg = load_yaml_config("model.yaml")
     gate_cfg = load_yaml_config("gate.yaml")
     active = model_cfg["active"]
+    assert_pinned_gpu_quantization(model_cfg["models"])
     return {
         "model": model_cfg["models"][active],
         "model_name": active,

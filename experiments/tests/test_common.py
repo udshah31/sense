@@ -5,7 +5,18 @@ import torch
 import yaml
 from transformers import AutoTokenizer
 
-from _common import CONFIGS_DIR, RESULTS_DIR, build_generation_inputs, load_examples_and_splits, load_model, write_results
+from _common import (
+    CONFIGS_DIR,
+    RESULTS_DIR,
+    GPU_CHECKPOINT_KEYS,
+    QuantizationSchemeError,
+    assert_pinned_gpu_quantization,
+    build_generation_inputs,
+    load_examples_and_splits,
+    load_model,
+    load_model_registry,
+    write_results,
+)
 from sense_data.splits import SplitIndices
 from sense_data.truthful_qa import TruthfulQAExample
 
@@ -202,3 +213,37 @@ def test_qwen3_ladder_shares_a_consistent_tokenizer():
             f"Qwen3 tokenizer mismatch: {name} does not share {first_name}'s vocabulary — "
             "the scale-ladder premise (comparable raw entropy across scale) does not hold"
         )
+
+
+# CLAUDE.md non-negotiable constraint #2: quantization is held constant across every
+# GPU checkpoint. This must fail loudly the moment any checkpoint drifts from the
+# pinned scheme — same pattern as TokenEntropyMonitor's no-op-generation guard and
+# GatePolicy's uncalibrated-decide guard.
+
+
+def test_assert_pinned_gpu_quantization_passes_for_committed_model_yaml():
+    models = yaml.safe_load((CONFIGS_DIR / "model.yaml").read_text())["models"]
+
+    assert_pinned_gpu_quantization(models)  # must not raise
+
+
+def test_load_model_registry_returns_validated_models_map():
+    models = load_model_registry()
+
+    assert GPU_CHECKPOINT_KEYS <= models.keys()
+
+
+def test_assert_pinned_gpu_quantization_raises_when_a_checkpoint_drifts():
+    models = yaml.safe_load((CONFIGS_DIR / "model.yaml").read_text())["models"]
+    models["mistral"] = {**models["mistral"], "quantization": "bf16"}
+
+    with pytest.raises(QuantizationSchemeError, match="mistral"):
+        assert_pinned_gpu_quantization(models)
+
+
+def test_assert_pinned_gpu_quantization_raises_when_a_checkpoint_is_missing():
+    models = yaml.safe_load((CONFIGS_DIR / "model.yaml").read_text())["models"]
+    del models["qwen3_1_7b"]
+
+    with pytest.raises(QuantizationSchemeError, match="qwen3_1_7b"):
+        assert_pinned_gpu_quantization(models)

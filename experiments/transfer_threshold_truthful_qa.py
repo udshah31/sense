@@ -15,13 +15,13 @@ Evaluated on development, never test (CLAUDE.md's data split discipline — test
 touched once, at the end, for the reported numbers).
 """
 
-from _common import calibration_entropies, load_examples_and_splits, load_model, load_yaml_config, write_results
+from _common import calibration_entropies, load_examples_and_splits, load_model, load_model_registry, load_yaml_config, write_results
 from sense_orchestrator.gate import GatePolicy
 
 
 def load_config() -> dict:
     return {
-        "models": load_yaml_config("model.yaml")["models"],
+        "models": load_model_registry(),
         "gate": load_yaml_config("gate.yaml"),
         "rq1": load_yaml_config("rq1.yaml"),
     }

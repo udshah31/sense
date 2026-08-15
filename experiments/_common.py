@@ -5,6 +5,7 @@ and the example/split loading + results-writing boilerplate every harness repeat
 
 import json
 import os
+import sys
 from pathlib import Path
 
 import torch
@@ -13,6 +14,7 @@ from transformers import AutoModelForCausalLM, AutoTokenizer, BitsAndBytesConfig
 
 from sense_data.splits import SplitIndices, load_splits
 from sense_data.truthful_qa import TruthfulQAExample, load_truthful_qa
+from sense_eval.factuality import assert_factuality_metrics_reported_together
 from sense_neural.entropy import TokenEntropyMonitor
 
 REPO_ROOT = Path(__file__).parent.parent
@@ -32,6 +34,50 @@ def load_yaml_config(name: str) -> dict:
 # Unknown values raise rather than silently falling back, per CLAUDE.md's
 # never-add-a-silent-default rule.
 _QUANTIZATION_SCHEMES = frozenset({"none", "bf16", "4bit"})
+
+# The five checkpoints named in CLAUDE.md's model table. cpu_test/cpu_test_transfer_target
+# are CPU-only stand-ins and are exempt — model.yaml already notes their scheme is
+# irrelevant at that size.
+GPU_CHECKPOINT_KEYS = frozenset({"llama3", "mistral", "qwen3_8b", "qwen3_4b", "qwen3_1_7b"})
+PINNED_GPU_QUANTIZATION_SCHEME = "4bit"
+
+
+class QuantizationSchemeError(ValueError):
+    """Raised when a GPU checkpoint's quantization scheme doesn't match the one
+    pinned for all five (CLAUDE.md non-negotiable constraint #2). Quantization
+    perturbs the logit distribution the entropy gate reads directly, so mixing
+    schemes across checkpoints makes cross-model comparisons meaningless — this
+    must fail loudly, never default or silently pass, same as GatePolicy's
+    uncalibrated-decide guard.
+    """
+
+
+def assert_pinned_gpu_quantization(models: dict) -> None:
+    missing = GPU_CHECKPOINT_KEYS - models.keys()
+    if missing:
+        raise QuantizationSchemeError(f"model.yaml is missing required GPU checkpoints: {sorted(missing)}")
+
+    offending = {
+        key: models[key].get("quantization")
+        for key in GPU_CHECKPOINT_KEYS
+        if models[key].get("quantization") != PINNED_GPU_QUANTIZATION_SCHEME
+    }
+    if offending:
+        raise QuantizationSchemeError(
+            f"all five GPU checkpoints must be pinned to quantization: {PINNED_GPU_QUANTIZATION_SCHEME!r} "
+            f"(CLAUDE.md non-negotiable constraint #2) — found mismatches: {offending}"
+        )
+
+
+def load_model_registry() -> dict:
+    """model.yaml's `models` map, validated against the constant-quantization
+    constraint. Every experiment harness should read model configs through this
+    instead of load_yaml_config("model.yaml")["models"] directly, so the check runs
+    on every real invocation and not only in tests.
+    """
+    models = load_yaml_config("model.yaml")["models"]
+    assert_pinned_gpu_quantization(models)
+    return models
 
 
 def load_model(model_cfg: dict):
@@ -122,7 +168,25 @@ def load_examples_and_splits() -> tuple[list[TruthfulQAExample], SplitIndices]:
 
 def write_results(filename: str, result: dict, *, print_exclude_keys: frozenset[str] = frozenset()) -> None:
     """Write `result` as the full JSON at RESULTS_DIR/filename, then print a summary
-    to stdout with `print_exclude_keys` (e.g. a large per_example array) omitted."""
+    to stdout with `print_exclude_keys` (e.g. a large per_example array) omitted.
+
+    Every result funnels through here, so this is the one place that enforces
+    task_accuracy/hallucination_rate/abstention_rate always being reported
+    together (CLAUDE.md/the proposal) — raises rather than writing a result that
+    reports a subset. It also warns loudly (not silently) whenever a result's
+    factuality_metric is the lexical-containment placeholder, so a
+    pipeline-mechanics number can't quietly read as a final one in a results
+    directory full of otherwise-real numbers.
+    """
+    assert_factuality_metrics_reported_together(result)
+    factuality_metric = result.get("factuality_metric", "")
+    if "placeholder" in factuality_metric.lower():
+        print(
+            f"WARNING: {filename} was scored with a placeholder factuality metric "
+            f"({factuality_metric!r}) — not a real judge, not a reportable result.",
+            file=sys.stderr,
+        )
+
     RESULTS_DIR.mkdir(exist_ok=True)
     (RESULTS_DIR / filename).write_text(json.dumps(result, indent=2))
     summary = {k: v for k, v in result.items() if k not in print_exclude_keys}

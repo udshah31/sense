@@ -20,7 +20,10 @@ free-text-to-triple extractor yet (out of scope, tied to the undecided merge-bac
 backend; it is not a factuality check of the question and must not be read as one.
 
 Factuality is scored with eval/'s lexical-containment proxy — a placeholder, not a
-paper-grade judge (see eval/README.md).
+paper-grade judge (see eval/README.md). Reported as task_accuracy/hallucination_rate/
+abstention_rate together (never a subset — write_results enforces this), even
+though abstention_rate is always 0 here: merge-back is annotate-only for now, so
+nothing in this harness can abstain.
 """
 
 import asyncio
@@ -29,8 +32,13 @@ from pathlib import Path
 import uvicorn
 from sense_symbolic.app import app as symbolic_app
 
-from _common import load_examples_and_splits, load_model, load_yaml_config, mean_calibration_entropy, write_results
-from sense_eval.factuality import lexical_containment_verdict
+from _common import load_examples_and_splits, load_model, load_model_registry, load_yaml_config, mean_calibration_entropy, write_results
+from sense_eval.factuality import (
+    PLACEHOLDER_FACTUALITY_METRIC_LABEL,
+    FactualityVerdict,
+    lexical_containment_verdict,
+    summarize_factuality,
+)
 from sense_neural.entropy import TokenEntropyMonitor
 from sense_neural.latency import generate_with_latency
 from sense_orchestrator.gate import GatePolicy
@@ -43,7 +51,7 @@ SYMBOLIC_BASE_URL = f"http://{SYMBOLIC_HOST}:{SYMBOLIC_PORT}"
 
 def load_config() -> dict:
     return {
-        "models": load_yaml_config("model.yaml")["models"],
+        "models": load_model_registry(),
         "gate": load_yaml_config("gate.yaml"),
         "rq3": load_yaml_config("rq3.yaml"),
     }
@@ -133,7 +141,15 @@ async def run_experiment(config: dict) -> dict:
 
     n = len(per_example)
     routed = [r for r in per_example if r["routed"]]
-    correct = [r for r in per_example if r["factuality"] == "correct"]
+
+    # Merge-back is annotate-only for now (CLAUDE.md's design decisions) — abstain
+    # is a configurable-but-not-yet-built merge-back policy, so no example here is
+    # ever abstained. n_abstained is passed explicitly rather than defaulted so
+    # that becoming untrue (once abstain is implemented) can't silently slip past
+    # this harness without updating it.
+    n_abstained = 0
+    verdicts = [FactualityVerdict(label=r["factuality"]) for r in per_example]
+    factuality_report = summarize_factuality(verdicts, n_abstained=n_abstained)
 
     result = {
         "research_question": "RQ3",
@@ -147,8 +163,11 @@ async def run_experiment(config: dict) -> dict:
         "quantile": quantile,
         "decoding": decoding_cfg,
         "routing_rate": len(routed) / n,
-        "factuality_accuracy_proxy": len(correct) / n,
-        "factuality_metric": "lexical_containment (placeholder, see eval/README.md)",
+        "task_accuracy": factuality_report["task_accuracy"],
+        "hallucination_rate": factuality_report["hallucination_rate"],
+        "abstention_rate": factuality_report["abstention_rate"],
+        "factuality_report": factuality_report,
+        "factuality_metric": PLACEHOLDER_FACTUALITY_METRIC_LABEL,
         "mean_ungated_total_ms": sum(r["ungated_total_ms"] for r in per_example) / n,
         "mean_gated_total_ms": sum(r["gated_total_ms"] for r in per_example) / n,
         "mean_gate_eval_latency_ms": sum(r["gate_eval_latency_ms"] for r in per_example) / n,
