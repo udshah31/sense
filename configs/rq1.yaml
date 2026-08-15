@@ -1,10 +1,22 @@
 # RQ1 — does a fixed entropy-gating threshold, calibrated on one model, transfer to
-# a model from a different family? source_model/target_model are keys into
-# configs/model.yaml. On the GPU environment this becomes source: llama3,
-# target: mistral (or vice versa); cpu_test / cpu_test_transfer_target lets the
-# identical code path run on CPU.
-source_model: llama3
-target_model: mistral
+# a model from a different family or a different scale? Both axes named in
+# CLAUDE.md get tested: three cross-family anchors (llama3, mistral, qwen3_8b) and
+# the Qwen3 scale ladder (qwen3_8b -> qwen3_4b -> qwen3_1_7b, largest-to-smallest —
+# the direction a self-adaptive threshold would need to beat a fixed one on).
+#
+# Each entry is one directed source->target transfer run; the harness writes one
+# result file per pair (rq1_transfer_halueval_<source>_to_<target>.json). This is
+# five pairs, not the full 20-pair matrix across five checkpoints — deliberately
+# contained scope (CLAUDE.md: "the symbolic backend can quietly become a research
+# project of its own" applies just as much to blowing up the transfer matrix).
+# Add reverse-direction pairs here if the advisor wants fuller coverage; don't add
+# them silently.
+transfer_pairs:
+  - {source_model: llama3, target_model: mistral}
+  - {source_model: llama3, target_model: qwen3_8b}
+  - {source_model: mistral, target_model: qwen3_8b}
+  - {source_model: qwen3_8b, target_model: qwen3_4b}
+  - {source_model: qwen3_8b, target_model: qwen3_1_7b}
 
 # Transfer is evaluated on the development split, never test — test is touched once,
 # at the end, for the numbers that go in the paper (CLAUDE.md's data split discipline).
