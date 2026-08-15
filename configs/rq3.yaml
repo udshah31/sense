@@ -1,22 +1,28 @@
 # RQ3 — what accuracy-latency trade-off does routing introduce, and does it hold
-# across all checkpoints? Evaluated on the development split (test stays untouched
-# until final reported numbers).
+# across all checkpoints? Loops over every entry in `models`; the harness writes
+# one result file per model (rq3_accuracy_latency_halueval_<model>.json).
 #
-# n_eval_examples caps the development split. On the CPU-test model this was 20 for
-# CPU tractability; on the real GPU environment it's raised to the full development
-# split (163 examples) — no CPU-tractability subsampling applies here. Explicit and
-# logged, not a silent cap.
-model: llama3
+# n_eval_examples caps the development split. HaluEval's per-checkpoint split
+# (data/splits/halueval.json) has 1,000 development-split rows; this runs the full
+# development split on the GPU environment — no CPU-tractability subsampling
+# applies here. Explicit and logged, not a silent cap. This is real compute: five
+# checkpoints x 1,000 examples x 2 generations (gated + ungated) each — lower this
+# deliberately (and note why in the run notes) if a first pass needs to be cheaper.
+models: [llama3, mistral, qwen3_8b, qwen3_4b, qwen3_1_7b]
 eval_split: development
-n_eval_examples: 163
+n_eval_examples: 1000
 
 # The symbolic backend verifies (subject, predicate, object) triples, but this
-# project has no entity/relation extractor yet to turn a free-text TruthfulQA
+# project has no entity/relation extractor yet to turn a free-text HaluEval
 # question into one (that's future work, tied to the still-undecided merge-back
 # "replace" policy). This fixed, always-resolvable triple stands in for "some real
-# claim" so the round-trip latency measured is real network cost against the real
-# backend — it is NOT a claim about the TruthfulQA question being verified. Do not
-# read symbolic_result content from this harness as a factuality signal.
+# claim" so the round-trip latency measured is real cost against the real backend
+# (the Z3 symbolic backend by default — see services/symbolic) — it is NOT a claim
+# about the HaluEval question being verified. Do not read symbolic_result content
+# from this harness as a factuality signal. (Chosen deliberately: Albert
+# Einstein/physicist/P106 is also a fact in the Z3 backend's fixed domain KB —
+# services/symbolic/src/sense_symbolic/domain.py — so it resolves to verified=true
+# under the default backend, not just a latency no-op.)
 symbolic_probe:
   subject_label: Albert Einstein
   predicate_pid: P106
