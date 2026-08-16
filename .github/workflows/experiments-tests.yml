@@ -1,0 +1,26 @@
+name: experiments tests
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: experiments
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v3
+        with:
+          python-version: "3.13"
+
+      - name: Sync environment (CPU only)
+        run: uv sync --group dev
+
+      - name: Run experiments test suite
+        run: uv run pytest -q
