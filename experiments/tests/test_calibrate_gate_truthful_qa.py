@@ -13,6 +13,7 @@ from sense_orchestrator.gate import GatePolicy
 
 TINY_MODEL = "sshleifer/tiny-gpt2"
 DECODING_CFG = {"do_sample": False, "max_new_tokens": 5}
+MODEL_CFG = {"hf_repo": TINY_MODEL}
 
 
 @pytest.fixture(scope="module")
@@ -29,7 +30,7 @@ def test_gate_calibrates_on_a_real_truthful_qa_subset(tiny_model_and_tokenizer):
     subset = splits.calibration[:5]
 
     entropies = [
-        mean_calibration_entropy(model, tokenizer, examples[i].question, DECODING_CFG) for i in subset
+        mean_calibration_entropy(model, tokenizer, examples[i].question, DECODING_CFG, MODEL_CFG) for i in subset
     ]
 
     gate = GatePolicy()
@@ -53,7 +54,7 @@ def test_calibrating_on_real_test_split_indices_raises(tiny_model_and_tokenizer)
     leaking_subset = splits.test[:5]
 
     entropies = [
-        mean_calibration_entropy(model, tokenizer, examples[i].question, DECODING_CFG)
+        mean_calibration_entropy(model, tokenizer, examples[i].question, DECODING_CFG, MODEL_CFG)
         for i in leaking_subset
     ]
 

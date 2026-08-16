@@ -1,12 +1,21 @@
 # RQ2 — does a self-adaptive threshold (recalibrated on the target model's own
-# calibration data) preserve routing quality on held-out data where a fixed
-# (transferred) threshold does not?
+# calibration data) preserve routing quality where a fixed (transferred) threshold
+# does not?
 #
 # "Routing quality preserved" is operationalized as: how close the routing rate on
 # held-out data lands to the quantile's own target rate (1 - quantile), which is
 # what the threshold was calibrated to produce. A gate whose held-out routing rate
 # tracks its intended rate is behaving as calibrated; one that doesn't has failed to
 # transfer, whether or not that gap is due to a genuinely worse model fit.
-source_model: llama3
-target_model: mistral
+#
+# Same five pairs as configs/rq1.yaml (cross-family anchors + Qwen3 scale ladder,
+# CLAUDE.md's two transfer axes) — kept as a separate file since it's consumed by a
+# separate harness, not because the content differs.
+transfer_pairs:
+  - {source_model: llama3, target_model: mistral}
+  - {source_model: llama3, target_model: qwen3_8b}
+  - {source_model: mistral, target_model: qwen3_8b}
+  - {source_model: qwen3_8b, target_model: qwen3_4b}
+  - {source_model: qwen3_8b, target_model: qwen3_1_7b}
+
 eval_split: development

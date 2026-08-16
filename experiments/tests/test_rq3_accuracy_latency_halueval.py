@@ -1,6 +1,7 @@
 """Integration test for the RQ3 harness on a tiny subset — the real script runs
-against the full configured n_eval_examples. Starts a real local symbolic server,
-same as the harness itself, rather than mocking the round-trip.
+against the full configured n_eval_examples across all five checkpoints. Starts a
+real local symbolic server, same as the harness itself, rather than mocking the
+round-trip.
 """
 
 import asyncio
@@ -10,9 +11,10 @@ import uvicorn
 from sense_symbolic.app import app as symbolic_app
 from transformers import AutoModelForCausalLM, AutoTokenizer
 
-from rq3_accuracy_latency_truthful_qa import SYMBOLIC_BASE_URL, SYMBOLIC_HOST, SYMBOLIC_PORT
+from _common import build_generation_inputs
+from rq3_accuracy_latency_halueval import SYMBOLIC_BASE_URL, SYMBOLIC_HOST, SYMBOLIC_PORT
+from sense_data.halueval import load_halueval
 from sense_data.splits import generate_splits
-from sense_data.truthful_qa import load_truthful_qa
 from sense_eval.factuality import lexical_containment_verdict
 from sense_neural.entropy import TokenEntropyMonitor
 from sense_neural.latency import generate_with_latency
@@ -39,13 +41,14 @@ async def test_gated_and_ungated_generation_are_identical(running_symbolic_serve
     """The core RQ3 invariant: annotate-only merge-back must never change output."""
     model = AutoModelForCausalLM.from_pretrained(TINY_MODEL)
     tokenizer = AutoTokenizer.from_pretrained(TINY_MODEL)
-    examples = load_truthful_qa()
+    examples = load_halueval()
     question = examples[0].question
+    inputs = build_generation_inputs(tokenizer, question, {}).to(model.device)
 
-    ungated = generate_with_latency(model, tokenizer, question, DECODING_CFG)
+    ungated = generate_with_latency(model, tokenizer, inputs, DECODING_CFG)
 
     monitor = TokenEntropyMonitor(vocab_size=tokenizer.vocab_size)
-    gated = generate_with_latency(model, tokenizer, question, DECODING_CFG, logits_processor=[monitor])
+    gated = generate_with_latency(model, tokenizer, inputs, DECODING_CFG, logits_processor=[monitor])
 
     assert gated["text"] == ungated["text"]
 
@@ -66,16 +69,14 @@ async def test_gated_and_ungated_generation_are_identical(running_symbolic_serve
 
 
 def test_factuality_verdict_is_computed_on_ungated_text():
-    examples = load_truthful_qa()
+    examples = load_halueval()
     example = examples[0]
-    verdict = lexical_containment_verdict(
-        example.best_answer, example.best_answer, example.correct_answers, example.incorrect_answers
-    )
+    verdict = lexical_containment_verdict(example.right_answer, example.right_answer, (), (example.hallucinated_answer,))
     assert verdict.label == "correct"
 
 
 def test_eval_split_subsampling_respects_requested_count():
-    examples = load_truthful_qa()
+    examples = load_halueval()
     splits = generate_splits(n=len(examples), calibration_frac=0.4, development_frac=0.2, test_frac=0.4, seed=0)
     subset = splits.development[:5]
     assert len(subset) == 5

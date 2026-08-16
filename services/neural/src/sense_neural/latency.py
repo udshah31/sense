@@ -15,9 +15,12 @@ import time
 from transformers import TextIteratorStreamer
 
 
-def generate_with_latency(model, tokenizer, prompt: str, decoding_cfg: dict, logits_processor=None) -> dict:
+def generate_with_latency(model, tokenizer, inputs, decoding_cfg: dict, logits_processor=None) -> dict:
+    """`inputs` must come from `_common.build_generation_inputs(...).to(model.device)` —
+    the same call the calibration path uses — so Qwen3's non-thinking chat template
+    and 4-bit models' device placement are applied identically here.
+    """
     streamer = TextIteratorStreamer(tokenizer, skip_prompt=True, skip_special_tokens=True)
-    inputs = tokenizer(prompt, return_tensors="pt")
     generate_kwargs = dict(
         **inputs,
         max_new_tokens=decoding_cfg["max_new_tokens"],
