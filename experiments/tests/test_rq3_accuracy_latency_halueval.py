@@ -11,6 +11,7 @@ import uvicorn
 from sense_symbolic.app import app as symbolic_app
 from transformers import AutoModelForCausalLM, AutoTokenizer
 
+from _common import build_generation_inputs
 from rq3_accuracy_latency_halueval import SYMBOLIC_BASE_URL, SYMBOLIC_HOST, SYMBOLIC_PORT
 from sense_data.halueval import load_halueval
 from sense_data.splits import generate_splits
@@ -42,11 +43,12 @@ async def test_gated_and_ungated_generation_are_identical(running_symbolic_serve
     tokenizer = AutoTokenizer.from_pretrained(TINY_MODEL)
     examples = load_halueval()
     question = examples[0].question
+    inputs = build_generation_inputs(tokenizer, question, {}).to(model.device)
 
-    ungated = generate_with_latency(model, tokenizer, question, DECODING_CFG)
+    ungated = generate_with_latency(model, tokenizer, inputs, DECODING_CFG)
 
     monitor = TokenEntropyMonitor(vocab_size=tokenizer.vocab_size)
-    gated = generate_with_latency(model, tokenizer, question, DECODING_CFG, logits_processor=[monitor])
+    gated = generate_with_latency(model, tokenizer, inputs, DECODING_CFG, logits_processor=[monitor])
 
     assert gated["text"] == ungated["text"]
 

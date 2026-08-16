@@ -39,7 +39,7 @@ import torch
 import uvicorn
 from sense_symbolic.app import app as symbolic_app
 
-from _common import load_halueval_examples_and_splits, load_model, load_model_registry, load_yaml_config, mean_calibration_entropy, write_results
+from _common import build_generation_inputs, load_halueval_examples_and_splits, load_model, load_model_registry, load_yaml_config, mean_calibration_entropy, write_results
 from sense_eval.factuality import (
     PLACEHOLDER_FACTUALITY_METRIC_LABEL,
     FactualityVerdict,
@@ -98,14 +98,15 @@ async def run_experiment_for_model(config: dict, model_name: str, examples, spli
         per_example = []
         for index in eval_indices:
             example = examples[index]
+            inputs = build_generation_inputs(tokenizer, example.question, model_cfg).to(model.device)
 
             if index == eval_indices[0]:
-                generate_with_latency(model, tokenizer, example.question, decoding_cfg)
+                generate_with_latency(model, tokenizer, inputs, decoding_cfg)
 
-            ungated = generate_with_latency(model, tokenizer, example.question, decoding_cfg)
+            ungated = generate_with_latency(model, tokenizer, inputs, decoding_cfg)
 
             monitor = TokenEntropyMonitor(vocab_size=tokenizer.vocab_size)
-            gated = generate_with_latency(model, tokenizer, example.question, decoding_cfg, logits_processor=[monitor])
+            gated = generate_with_latency(model, tokenizer, inputs, decoding_cfg, logits_processor=[monitor])
 
             assert gated["text"] == ungated["text"], (
                 "annotate-only merge-back must not change generation output — gated and "
