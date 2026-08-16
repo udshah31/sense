@@ -11,16 +11,6 @@
 # Defaults to "all". Each stage is independent — a mid-run failure in RQ2, say,
 # does not block re-running RQ1's already-written results; just re-invoke with
 # that stage's name once the issue is fixed.
-#
-# Before trusting the numbers this produces:
-#   - configs/model.yaml's llama3/mistral entries currently point at the BASE
-#     checkpoints (meta-llama/Meta-Llama-3-8B, mistralai/Mistral-7B-v0.1), not
-#     the Instruct variants CLAUDE.md's model table specifies
-#     (Llama-3 8B Instruct, Mistral 7B Instruct v0.3). This script does not
-#     silently correct that — re-pinning to the Instruct repos + new revision
-#     SHAs is a config change requiring the same human sign-off CLAUDE.md asks
-#     for on anything touching the non-negotiable constraints, so it's flagged
-#     here and left to a deliberate follow-up commit, not fixed by this script.
 
 set -euo pipefail
 

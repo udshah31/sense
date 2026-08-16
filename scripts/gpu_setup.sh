@@ -20,7 +20,7 @@ REPO_DIR="${REPO_DIR:-$(pwd)}"
 if [ -z "${HF_TOKEN:-}" ]; then
     echo "WARNING: HF_TOKEN is not set. Llama-3 (gated) downloads will fail auth." >&2
     echo "Get a token at https://huggingface.co/settings/tokens and accept the" >&2
-    echo "Llama-3 license at https://huggingface.co/meta-llama/Meta-Llama-3-8B first." >&2
+    echo "Llama-3 license at https://huggingface.co/meta-llama/Meta-Llama-3-8B-Instruct first." >&2
 fi
 
 cd "$REPO_DIR"

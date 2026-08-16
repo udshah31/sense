@@ -9,7 +9,7 @@ separate GPU host. This doc covers getting that host ready with
 
 1. **A Hugging Face token** with read access: https://huggingface.co/settings/tokens
 2. **Accept the Llama-3 license** — visit
-   https://huggingface.co/meta-llama/Meta-Llama-3-8B while logged in and
+   https://huggingface.co/meta-llama/Meta-Llama-3-8B-Instruct while logged in and
    accept the gated-repo terms. Without this, downloads 403 regardless of
    token validity.
 3. Know your target CUDA version (`nvidia-smi` on the host, top-right corner)

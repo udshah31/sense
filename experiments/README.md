@@ -29,14 +29,6 @@ HF_TOKEN=... ./run_gpu_experiments.sh          # all four stages
 HF_TOKEN=... ./run_gpu_experiments.sh rq3      # one stage only
 ```
 
-**Before trusting the numbers this produces:** `../configs/model.yaml`'s `llama3`
-and `mistral` entries currently point at the base checkpoints
-(`meta-llama/Meta-Llama-3-8B`, `mistralai/Mistral-7B-v0.1`), not the Instruct
-variants `../CLAUDE.md`'s model table specifies (Llama-3 8B Instruct, Mistral 7B
-Instruct v0.3). Re-pinning to the Instruct repos + new revision SHAs needs the same
-sign-off CLAUDE.md requires for anything touching the non-negotiable constraints —
-flagged here, not silently fixed.
-
 ## calibrate_gate_truthful_qa.py
 
 Wires `GatePolicy` against real TruthfulQA calibration entropies: for each example
