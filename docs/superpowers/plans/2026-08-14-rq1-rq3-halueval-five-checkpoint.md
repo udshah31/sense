@@ -1,5 +1,11 @@
 # RQ1/RQ2/RQ3 → HaluEval, Five-Checkpoint Scope Implementation Plan
 
+> **Status: COMPLETE.** All 8 tasks implemented, reviewed, and merged to `master` via
+> PR #1 (`cc0f02b`, 2026-08-16). Final review escalated two bugs in
+> `generate_with_latency` to Critical (missing Qwen3 non-thinking chat template,
+> missing `.to(model.device)` for 4-bit models) — fixed and verified green in CI
+> before merge. See `git log --oneline` from `cc0f02b` for the full commit trail.
+
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** Re-point the RQ1 (fixed-threshold transfer), RQ2 (self-adaptive threshold), and RQ3 (accuracy-latency trade-off) experiment harnesses from TruthfulQA/two-model to HaluEval/five-checkpoint, matching the 2026-08-10 scope reconciliation already reflected in `configs/model.yaml`, `data/splits/halueval.json`, and CLAUDE.md — without touching TruthfulQA's loader/data (kept for the excluded-benchmark discussion) or dragging FActScore into these three RQs (it has no per-checkpoint calibration split and belongs to the symbolic backend's decomposition work, not gate calibration).
@@ -29,7 +35,7 @@
 **Interfaces:**
 - Produces: `load_halueval_examples_and_splits() -> tuple[list[HaluEvalExample], PerCheckpointSplitIndices]` in `experiments/_common.py`, used by every task after this one.
 
-- [ ] **Step 1: Write the failing test**
+- [x] **Step 1: Write the failing test**
 
 Add to `experiments/tests/test_common.py`:
 
@@ -50,12 +56,12 @@ def test_load_halueval_examples_and_splits_returns_real_data():
     assert set(splits.calibration.keys()) == {"llama3", "mistral", "qwen3_8b", "qwen3_4b", "qwen3_1_7b"}
 ```
 
-- [ ] **Step 2: Run test to verify it fails**
+- [x] **Step 2: Run test to verify it fails**
 
 Run: `cd experiments && .venv/bin/python -m pytest tests/test_common.py::test_load_halueval_examples_and_splits_returns_real_data -v`
 Expected: FAIL with `ImportError: cannot import name 'load_halueval_examples_and_splits'`
 
-- [ ] **Step 3: Implement the helper**
+- [x] **Step 3: Implement the helper**
 
 In `experiments/_common.py`, add near the existing `load_examples_and_splits`:
 
@@ -74,12 +80,12 @@ def load_halueval_examples_and_splits() -> tuple[list[HaluEvalExample], PerCheck
     return load_halueval(), load_per_checkpoint_splits(HALUEVAL_SPLIT_PATH)
 ```
 
-- [ ] **Step 4: Run test to verify it passes**
+- [x] **Step 4: Run test to verify it passes**
 
 Run: `cd experiments && .venv/bin/python -m pytest tests/test_common.py::test_load_halueval_examples_and_splits_returns_real_data -v`
 Expected: PASS (hits the real HF Hub — HaluEval is public, no token needed)
 
-- [ ] **Step 5: Dedupe `rag_baseline_halueval.py`**
+- [x] **Step 5: Dedupe `rag_baseline_halueval.py`**
 
 `experiments/rag_baseline_halueval.py` currently opens with (verified against the current file — these are the exact lines to change, nothing else in the file references `load_halueval`, `load_per_checkpoint_splits`, or `HALUEVAL_SPLIT_PATH`):
 
@@ -129,12 +135,12 @@ from _common import load_halueval_examples_and_splits as load_examples_and_split
 
 Either form is fine — pick whichever the linter/formatter in use doesn't flag.
 
-- [ ] **Step 6: Run the RAG baseline test suite to confirm the dedupe didn't break anything**
+- [x] **Step 6: Run the RAG baseline test suite to confirm the dedupe didn't break anything**
 
 Run: `cd experiments && .venv/bin/python -m pytest tests/test_rag_baseline_halueval.py -v`
 Expected: PASS (same tests as before — this step only moved code, didn't change behavior)
 
-- [ ] **Step 7: Commit**
+- [x] **Step 7: Commit**
 
 ```bash
 git add experiments/_common.py experiments/rag_baseline_halueval.py experiments/tests/test_common.py
@@ -151,7 +157,7 @@ git commit -m "Add shared load_halueval_examples_and_splits helper, dedupe RAG b
 **Interfaces:**
 - Produces: `config["rq1"]["transfer_pairs"]` (list of `{source_model, target_model}` dicts) and `config["rq1"]["eval_split"]` (string), consumed by Task 3.
 
-- [ ] **Step 1: Replace the file contents**
+- [x] **Step 1: Replace the file contents**
 
 ```yaml
 # RQ1 — does a fixed entropy-gating threshold, calibrated on one model, transfer to
@@ -179,12 +185,12 @@ transfer_pairs:
 eval_split: development
 ```
 
-- [ ] **Step 2: Verify it parses**
+- [x] **Step 2: Verify it parses**
 
 Run: `python3 -c "import yaml; c = yaml.safe_load(open('configs/rq1.yaml')); print(c['transfer_pairs']); print(c['eval_split'])"`
 Expected: prints the 5-item list and `development`
 
-- [ ] **Step 3: Commit**
+- [x] **Step 3: Commit**
 
 ```bash
 git add configs/rq1.yaml
@@ -205,7 +211,7 @@ git commit -m "Reshape RQ1 config to a five-pair transfer list over HaluEval"
 - Consumes: `load_model_registry()`, `load_yaml_config()`, `load_model()`, `calibration_entropies()`, `write_results()` from `experiments/_common.py`; `load_halueval_examples_and_splits()` from Task 1; `GatePolicy` from `sense_orchestrator.gate`; `PerCheckpointSplitIndices.for_checkpoint(name) -> SplitIndices` from `sense_data.splits`.
 - Produces: `run_pair(models_registry, examples, splits, decoding_cfg, quantile, eval_split, source_name, target_name) -> dict` and `run() -> list[dict]`, both importable by tests.
 
-- [ ] **Step 1: Write the failing test**
+- [x] **Step 1: Write the failing test**
 
 Create `experiments/tests/test_transfer_threshold_halueval.py`:
 
@@ -351,12 +357,12 @@ def test_run_pair_end_to_end_on_tiny_models_via_halueval_shaped_splits():
 
 Note: `test_run_pair_end_to_end_on_tiny_models_via_halueval_shaped_splits` passes plain string keys `"source"`/`"target"` (not real checkpoint names like `"llama3"`) — `run_pair` must not hardcode the five real checkpoint names anywhere; it only ever reads `source_name`/`target_name` as parameters and looks them up in `splits.calibration`/`models_registry`.
 
-- [ ] **Step 2: Run test to verify it fails**
+- [x] **Step 2: Run test to verify it fails**
 
 Run: `cd experiments && .venv/bin/python -m pytest tests/test_transfer_threshold_halueval.py -v`
 Expected: FAIL — `ModuleNotFoundError: No module named 'transfer_threshold_halueval'`
 
-- [ ] **Step 3: Write `experiments/transfer_threshold_halueval.py`**
+- [x] **Step 3: Write `experiments/transfer_threshold_halueval.py`**
 
 ```python
 """RQ1 harness: does a fixed entropy-gating threshold, calibrated on one model,
@@ -505,23 +511,23 @@ if __name__ == "__main__":
     run()
 ```
 
-- [ ] **Step 4: Delete the superseded TruthfulQA-scoped harness and test**
+- [x] **Step 4: Delete the superseded TruthfulQA-scoped harness and test**
 
 ```bash
 rm experiments/transfer_threshold_truthful_qa.py experiments/tests/test_transfer_threshold_truthful_qa.py
 ```
 
-- [ ] **Step 5: Run tests to verify they pass**
+- [x] **Step 5: Run tests to verify they pass**
 
 Run: `cd experiments && .venv/bin/python -m pytest tests/test_transfer_threshold_halueval.py -v`
 Expected: PASS (4 tests)
 
-- [ ] **Step 6: Run the full experiments suite to check nothing else references the deleted file**
+- [x] **Step 6: Run the full experiments suite to check nothing else references the deleted file**
 
 Run: `cd experiments && .venv/bin/python -m pytest tests/ -q`
 Expected: no collection errors, all non-GPU tests pass
 
-- [ ] **Step 7: Commit**
+- [x] **Step 7: Commit**
 
 ```bash
 git add experiments/transfer_threshold_halueval.py experiments/tests/test_transfer_threshold_halueval.py
@@ -539,7 +545,7 @@ git commit -m "Re-point RQ1 harness to HaluEval, five-checkpoint transfer pairs"
 **Interfaces:**
 - Produces: `config["rq2"]["transfer_pairs"]`, `config["rq2"]["eval_split"]` — same shape as Task 2, consumed by Task 5.
 
-- [ ] **Step 1: Replace the file contents**
+- [x] **Step 1: Replace the file contents**
 
 ```yaml
 # RQ2 — does a self-adaptive threshold (recalibrated on the target model's own
@@ -565,12 +571,12 @@ transfer_pairs:
 eval_split: development
 ```
 
-- [ ] **Step 2: Verify it parses**
+- [x] **Step 2: Verify it parses**
 
 Run: `python3 -c "import yaml; c = yaml.safe_load(open('configs/rq2.yaml')); print(c['transfer_pairs']); print(c['eval_split'])"`
 Expected: prints the 5-item list and `development`
 
-- [ ] **Step 3: Commit**
+- [x] **Step 3: Commit**
 
 ```bash
 git add configs/rq2.yaml
@@ -591,7 +597,7 @@ git commit -m "Reshape RQ2 config to a five-pair transfer list over HaluEval"
 - Consumes: same as Task 3, plus `routing_rate(gate, entropies) -> float` (unchanged helper, moves with the file).
 - Produces: `routing_rate(gate, entropies) -> float`, `run_pair(models_registry, examples, splits, decoding_cfg, quantile, eval_split, source_name, target_name) -> dict`, `run() -> list[dict]`.
 
-- [ ] **Step 1: Write the failing test**
+- [x] **Step 1: Write the failing test**
 
 Create `experiments/tests/test_adaptive_threshold_halueval.py`:
 
@@ -714,12 +720,12 @@ def test_run_pair_end_to_end_on_tiny_models_via_halueval_shaped_splits():
     assert result["n_eval_examples"] == 10
 ```
 
-- [ ] **Step 2: Run test to verify it fails**
+- [x] **Step 2: Run test to verify it fails**
 
 Run: `cd experiments && .venv/bin/python -m pytest tests/test_adaptive_threshold_halueval.py -v`
 Expected: FAIL — `ModuleNotFoundError: No module named 'adaptive_threshold_halueval'`
 
-- [ ] **Step 3: Write `experiments/adaptive_threshold_halueval.py`**
+- [x] **Step 3: Write `experiments/adaptive_threshold_halueval.py`**
 
 ```python
 """RQ2 harness: does a self-adaptive threshold — recalibrated on the target model's
@@ -859,23 +865,23 @@ if __name__ == "__main__":
     run()
 ```
 
-- [ ] **Step 4: Delete the superseded TruthfulQA-scoped harness and test**
+- [x] **Step 4: Delete the superseded TruthfulQA-scoped harness and test**
 
 ```bash
 rm experiments/adaptive_threshold_truthful_qa.py experiments/tests/test_adaptive_threshold_truthful_qa.py
 ```
 
-- [ ] **Step 5: Run tests to verify they pass**
+- [x] **Step 5: Run tests to verify they pass**
 
 Run: `cd experiments && .venv/bin/python -m pytest tests/test_adaptive_threshold_halueval.py -v`
 Expected: PASS (3 tests)
 
-- [ ] **Step 6: Run the full experiments suite**
+- [x] **Step 6: Run the full experiments suite**
 
 Run: `cd experiments && .venv/bin/python -m pytest tests/ -q`
 Expected: no collection errors, all non-GPU tests pass
 
-- [ ] **Step 7: Commit**
+- [x] **Step 7: Commit**
 
 ```bash
 git add experiments/adaptive_threshold_halueval.py experiments/tests/test_adaptive_threshold_halueval.py
@@ -893,7 +899,7 @@ git commit -m "Re-point RQ2 harness to HaluEval, five-checkpoint transfer pairs"
 **Interfaces:**
 - Produces: `config["rq3"]["models"]` (list of model-key strings), `config["rq3"]["eval_split"]`, `config["rq3"]["n_eval_examples"]`, `config["rq3"]["symbolic_probe"]` — consumed by Task 7.
 
-- [ ] **Step 1: Replace the file contents**
+- [x] **Step 1: Replace the file contents**
 
 ```yaml
 # RQ3 — what accuracy-latency trade-off does routing introduce, and does it hold
@@ -927,12 +933,12 @@ symbolic_probe:
   object_label: physicist
 ```
 
-- [ ] **Step 2: Verify it parses**
+- [x] **Step 2: Verify it parses**
 
 Run: `python3 -c "import yaml; c = yaml.safe_load(open('configs/rq3.yaml')); print(c['models']); print(c['n_eval_examples'])"`
 Expected: prints the 5-item list and `1000`
 
-- [ ] **Step 3: Commit**
+- [x] **Step 3: Commit**
 
 ```bash
 git add configs/rq3.yaml
@@ -953,7 +959,7 @@ git commit -m "Reshape RQ3 config to loop over all five checkpoints on HaluEval"
 - Consumes: `load_halueval_examples_and_splits()`, `load_model()`, `load_model_registry()`, `load_yaml_config()`, `write_results()` from `_common.py`; `summarize_factuality`, `FactualityVerdict`, `lexical_containment_verdict`, `PLACEHOLDER_FACTUALITY_METRIC_LABEL` from `sense_eval.factuality`; `TokenEntropyMonitor` from `sense_neural.entropy`; `generate_with_latency` from `sense_neural.latency`; `GatePolicy`, `route_and_annotate` from `sense_orchestrator`.
 - Produces: `SYMBOLIC_HOST`, `SYMBOLIC_PORT`, `SYMBOLIC_BASE_URL` module constants (unchanged names — Task 7's test imports these, same as the old file); `run_experiment_for_model(config, model_name) -> dict`; `run_all(config) -> list[dict]`; `main() -> list[dict]`.
 
-- [ ] **Step 1: Write the failing test**
+- [x] **Step 1: Write the failing test**
 
 Create `experiments/tests/test_rq3_accuracy_latency_halueval.py`:
 
@@ -1041,12 +1047,12 @@ def test_eval_split_subsampling_respects_requested_count():
     assert set(subset).issubset(set(splits.development))
 ```
 
-- [ ] **Step 2: Run test to verify it fails**
+- [x] **Step 2: Run test to verify it fails**
 
 Run: `cd experiments && .venv/bin/python -m pytest tests/test_rq3_accuracy_latency_halueval.py -v`
 Expected: FAIL — `ModuleNotFoundError: No module named 'rq3_accuracy_latency_halueval'`
 
-- [ ] **Step 3: Write `experiments/rq3_accuracy_latency_halueval.py`**
+- [x] **Step 3: Write `experiments/rq3_accuracy_latency_halueval.py`**
 
 ```python
 """RQ3 harness: what accuracy-latency trade-off does routing introduce, and does it
@@ -1270,23 +1276,23 @@ if __name__ == "__main__":
     asyncio.run(main())
 ```
 
-- [ ] **Step 4: Delete the superseded TruthfulQA-scoped harness and test**
+- [x] **Step 4: Delete the superseded TruthfulQA-scoped harness and test**
 
 ```bash
 rm experiments/rq3_accuracy_latency_truthful_qa.py experiments/tests/test_rq3_accuracy_latency_truthful_qa.py
 ```
 
-- [ ] **Step 5: Run tests to verify they pass**
+- [x] **Step 5: Run tests to verify they pass**
 
 Run: `cd experiments && .venv/bin/python -m pytest tests/test_rq3_accuracy_latency_halueval.py -v`
 Expected: PASS (3 tests)
 
-- [ ] **Step 6: Run the full experiments suite**
+- [x] **Step 6: Run the full experiments suite**
 
 Run: `cd experiments && .venv/bin/python -m pytest tests/ -q`
 Expected: no collection errors, all non-GPU tests pass, same pass count as before this plan started (module renames are 1:1)
 
-- [ ] **Step 7: Commit**
+- [x] **Step 7: Commit**
 
 ```bash
 git add experiments/rq3_accuracy_latency_halueval.py experiments/tests/test_rq3_accuracy_latency_halueval.py
@@ -1300,21 +1306,21 @@ git commit -m "Re-point RQ3 harness to HaluEval, loop over all five checkpoints"
 
 **Files:** none (verification only)
 
-- [ ] **Step 1: Run the full experiments suite once more from a clean state**
+- [x] **Step 1: Run the full experiments suite once more from a clean state**
 
 Run: `cd experiments && uv sync -q && .venv/bin/python -m pytest tests/ -q`
 Expected: all pass (or the same pre-existing skips as before this plan — e.g. the bitsandbytes-not-on-macOS skip), zero failures, zero collection errors
 
-- [ ] **Step 2: Confirm no stray references to the deleted files remain**
+- [x] **Step 2: Confirm no stray references to the deleted files remain**
 
 Run: `grep -rln "transfer_threshold_truthful_qa\|adaptive_threshold_truthful_qa\|rq3_accuracy_latency_truthful_qa" --include="*.py" --include="*.yaml" --include="*.md" . | grep -v .venv`
 Expected: only CLAUDE.md's historical "Current status" narrative (if it mentions the old filenames) — no live code or config references. If CLAUDE.md does mention them, that's a docs-update note for the user, not something this plan's tests should touch.
 
-- [ ] **Step 3: Confirm the five-checkpoint quantization guard still passes with the new configs in place**
+- [x] **Step 3: Confirm the five-checkpoint quantization guard still passes with the new configs in place**
 
 Run: `cd experiments && .venv/bin/python -c "from _common import load_model_registry; load_model_registry(); print('ok')"`
 Expected: prints `ok` (raises loudly if this ever regresses, per the existing `assert_pinned_gpu_quantization` guard)
 
-- [ ] **Step 4: Report status to the user**
+- [x] **Step 4: Report status to the user**
 
 No commit for this task — it's verification only. Summarize: which of RQ1/RQ2/RQ3 are wired to HaluEval and five checkpoints, test results, and that the actual GPU run (real llama3/mistral/qwen3 weights) has NOT happened yet — this plan only wires the harnesses; running them against real 8B/7B/4B/1.7B checkpoints is separate GPU-environment work (Colab, per prior session history) and each run should be reported with real output or reported as failed/incomplete, never estimated.
