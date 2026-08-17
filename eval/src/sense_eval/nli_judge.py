@@ -19,6 +19,7 @@ calibration is unvalidated. State this wherever its numbers are reported.
 """
 
 import re
+from dataclasses import dataclass
 
 import torch
 from transformers import AutoModelForSequenceClassification, AutoTokenizer
@@ -89,3 +90,53 @@ def nli_verdict_short_answer(
     if wrong_clears and not right_clears:
         return FactualityVerdict(label="incorrect")
     return FactualityVerdict(label="unknown")
+
+
+@dataclass(frozen=True)
+class FActScoreVerdictDetail:
+    claims: tuple[str, ...]
+    claim_entailment_scores: tuple[float, ...]
+    supported_fraction: float | None
+
+
+def factscore_style_verdict(
+    model,
+    tokenizer,
+    generated_text: str,
+    reference_text: str,
+    claim_supported_threshold: float,
+    fraction_correct_threshold: float,
+    fraction_incorrect_threshold: float,
+) -> tuple[FactualityVerdict, FActScoreVerdictDetail]:
+    """Splits `generated_text` into atomic claims, scores each claim's
+    entailment against `reference_text` (does the reference support this
+    claim), computes the supported fraction, and discretizes it into a
+    tri-state verdict: "correct" if supported_fraction >=
+    fraction_correct_threshold, "incorrect" if supported_fraction <=
+    fraction_incorrect_threshold, "unknown" otherwise (including when there
+    are no claims to score at all). Returns the verdict plus a detail record
+    for per-example logging — the aggregate number alone would hide exactly
+    the kind of nuance CLAUDE.md's abstention-rate warning is about."""
+    claims = split_into_atomic_claims(generated_text)
+    if not claims:
+        return FactualityVerdict(label="unknown"), FActScoreVerdictDetail(
+            claims=(), claim_entailment_scores=(), supported_fraction=None
+        )
+
+    claim_scores = tuple(
+        entailment_scores(model, tokenizer, reference_text, claim)["entailment"] for claim in claims
+    )
+    n_supported = sum(1 for score in claim_scores if score >= claim_supported_threshold)
+    supported_fraction = n_supported / len(claims)
+
+    if supported_fraction >= fraction_correct_threshold:
+        label = "correct"
+    elif supported_fraction <= fraction_incorrect_threshold:
+        label = "incorrect"
+    else:
+        label = "unknown"
+
+    detail = FActScoreVerdictDetail(
+        claims=tuple(claims), claim_entailment_scores=claim_scores, supported_fraction=supported_fraction
+    )
+    return FactualityVerdict(label=label), detail

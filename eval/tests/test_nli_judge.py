@@ -102,3 +102,66 @@ def test_nli_verdict_short_answer_unknown_when_neither_entailed(nli_model_and_to
     )
 
     assert verdict.label == "unknown"
+
+
+from sense_eval.nli_judge import factscore_style_verdict
+
+
+def test_factscore_style_verdict_correct_when_all_claims_supported(nli_model_and_tokenizer):
+    model, tokenizer = nli_model_and_tokenizer
+
+    verdict, detail = factscore_style_verdict(
+        model,
+        tokenizer,
+        generated_text="Albert Einstein was a theoretical physicist. He was born in Germany.",
+        reference_text=(
+            "Albert Einstein was a German-born theoretical physicist, widely "
+            "acknowledged to be one of the greatest physicists of all time."
+        ),
+        claim_supported_threshold=0.5,
+        fraction_correct_threshold=0.8,
+        fraction_incorrect_threshold=0.2,
+    )
+
+    assert verdict.label == "correct"
+    assert detail.supported_fraction == 1.0
+    assert len(detail.claims) == 2
+    assert len(detail.claim_entailment_scores) == 2
+
+
+def test_factscore_style_verdict_incorrect_when_no_claims_supported(nli_model_and_tokenizer):
+    model, tokenizer = nli_model_and_tokenizer
+
+    verdict, detail = factscore_style_verdict(
+        model,
+        tokenizer,
+        generated_text="Albert Einstein was a professional basketball player.",
+        reference_text=(
+            "Albert Einstein was a German-born theoretical physicist, widely "
+            "acknowledged to be one of the greatest physicists of all time."
+        ),
+        claim_supported_threshold=0.5,
+        fraction_correct_threshold=0.8,
+        fraction_incorrect_threshold=0.2,
+    )
+
+    assert verdict.label == "incorrect"
+    assert detail.supported_fraction == 0.0
+
+
+def test_factscore_style_verdict_unknown_when_no_claims_to_score(nli_model_and_tokenizer):
+    model, tokenizer = nli_model_and_tokenizer
+
+    verdict, detail = factscore_style_verdict(
+        model,
+        tokenizer,
+        generated_text="   ",
+        reference_text="Albert Einstein was a German-born theoretical physicist.",
+        claim_supported_threshold=0.5,
+        fraction_correct_threshold=0.8,
+        fraction_incorrect_threshold=0.2,
+    )
+
+    assert verdict.label == "unknown"
+    assert detail.claims == ()
+    assert detail.supported_fraction is None
