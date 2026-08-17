@@ -54,3 +54,51 @@ def test_split_into_atomic_claims_drops_empty_fragments():
 def test_split_into_atomic_claims_handles_empty_text():
     assert split_into_atomic_claims("") == []
     assert split_into_atomic_claims("   ") == []
+
+
+from sense_eval.nli_judge import nli_verdict_short_answer
+
+
+def test_nli_verdict_short_answer_correct_when_generated_entails_right_answer(nli_model_and_tokenizer):
+    model, tokenizer = nli_model_and_tokenizer
+
+    verdict = nli_verdict_short_answer(
+        model,
+        tokenizer,
+        generated_text="The watermelon seeds pass through your digestive system without effect.",
+        right_answer="Nothing happens, the seeds just pass through your digestive system.",
+        hallucinated_answer="You die if you eat watermelon seeds.",
+        entailment_threshold=0.7,
+    )
+
+    assert verdict.label == "correct"
+
+
+def test_nli_verdict_short_answer_incorrect_when_generated_entails_hallucinated_answer(nli_model_and_tokenizer):
+    model, tokenizer = nli_model_and_tokenizer
+
+    verdict = nli_verdict_short_answer(
+        model,
+        tokenizer,
+        generated_text="You die if you eat watermelon seeds.",
+        right_answer="Nothing happens, the seeds just pass through your digestive system.",
+        hallucinated_answer="You die if you eat watermelon seeds.",
+        entailment_threshold=0.7,
+    )
+
+    assert verdict.label == "incorrect"
+
+
+def test_nli_verdict_short_answer_unknown_when_neither_entailed(nli_model_and_tokenizer):
+    model, tokenizer = nli_model_and_tokenizer
+
+    verdict = nli_verdict_short_answer(
+        model,
+        tokenizer,
+        generated_text="Watermelons are a delicious summer fruit.",
+        right_answer="Nothing happens, the seeds just pass through your digestive system.",
+        hallucinated_answer="You die if you eat watermelon seeds.",
+        entailment_threshold=0.7,
+    )
+
+    assert verdict.label == "unknown"

@@ -23,6 +23,8 @@ import re
 import torch
 from transformers import AutoModelForSequenceClassification, AutoTokenizer
 
+from sense_eval.factuality import FactualityVerdict
+
 NLI_METRIC_LABEL_TEMPLATE = "nli_entailment ({hf_repo} @ {revision})"
 
 
@@ -61,3 +63,29 @@ def split_into_atomic_claims(text: str) -> list[str]:
     if not stripped:
         return []
     return [s.strip() for s in _SENTENCE_BOUNDARY.split(stripped) if s.strip()]
+
+
+def nli_verdict_short_answer(
+    model,
+    tokenizer,
+    generated_text: str,
+    right_answer: str,
+    hallucinated_answer: str,
+    entailment_threshold: float,
+) -> FactualityVerdict:
+    """"correct" if the generated text entails the right answer (and doesn't
+    also entail the hallucinated one at/above threshold), "incorrect" the
+    symmetric case, "unknown" otherwise (including both or neither clearing
+    threshold) — same tri-state contract the retired lexical_containment_verdict
+    had, so call sites don't change shape, only semantics."""
+    right_entailment = entailment_scores(model, tokenizer, generated_text, right_answer)["entailment"]
+    wrong_entailment = entailment_scores(model, tokenizer, generated_text, hallucinated_answer)["entailment"]
+
+    right_clears = right_entailment >= entailment_threshold
+    wrong_clears = wrong_entailment >= entailment_threshold
+
+    if right_clears and not wrong_clears:
+        return FactualityVerdict(label="correct")
+    if wrong_clears and not right_clears:
+        return FactualityVerdict(label="incorrect")
+    return FactualityVerdict(label="unknown")
