@@ -62,6 +62,35 @@ def test_verify_claim_occupation_membership():
     assert verify_claim(claim) is True
 
 
+def test_verify_claim_occupation_non_membership_is_false_not_none():
+    # Distinct from the unknown-fact case below: the KB DOES have Newton's
+    # occupations, "politician" just isn't among them — a determined False, not
+    # an unresolved None.
+    claim = AtomicClaim(subject_label="Isaac Newton", relation_kind="occupation", object_label="politician")
+    assert verify_claim(claim) is False
+
+
 def test_verify_claim_employer_unknown_fact_yields_none():
     claim = AtomicClaim(subject_label="Isaac Newton", relation_kind="employer", object_label="royal society")
+    assert verify_claim(claim) is None
+
+
+def test_verify_claim_death_year_true_via_z3_equality_entailment():
+    claim = AtomicClaim(subject_label="Isaac Newton", relation_kind="death_year", object_label="1727")
+    assert verify_claim(claim) is True
+
+
+def test_verify_claim_death_year_false_via_z3_equality_entailment():
+    claim = AtomicClaim(subject_label="Isaac Newton", relation_kind="death_year", object_label="1600")
+    assert verify_claim(claim) is False
+
+
+def test_verify_claim_before_year_unresolved_object_yields_none():
+    claim = AtomicClaim(subject_label="Arthur's Magazine", relation_kind="before_year", object_label="not a real entity")
+    assert verify_claim(claim) is None
+
+
+def test_verify_claim_nationality_unknown_fact_yields_none():
+    # Arthur's Magazine is in the KB but has no nationality recorded.
+    claim = AtomicClaim(subject_label="Arthur's Magazine", relation_kind="nationality", object_label="american")
     assert verify_claim(claim) is None
