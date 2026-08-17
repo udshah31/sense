@@ -29,6 +29,11 @@ async def test_run_experiment_end_to_end_on_fixture_corpus(tmp_path):
         "models": {"cpu_test": {"hf_repo": "sshleifer/tiny-gpt2", "revision": "5f91d94bd9cd7190a9f3216ff93cd1dd95f2c7be"}},
         "gate": {"decoding": {"do_sample": False, "max_new_tokens": 5}},
         "rag": {"model": "cpu_test", "top_k": 1, "corpus_path": str(corpus_path), "eval_split": "test", "n_eval_examples": 2},
+        "nli_judge": {
+            "hf_repo": "cliang1453/deberta-v3-xsmall-mnli",
+            "revision": "d1ca70f9ece4d8afd33015893a69df9a6e45a672",
+            "short_answer_entailment_threshold": 0.7,
+        },
     }
 
     result = await run_experiment(config)
@@ -72,6 +77,11 @@ async def test_run_experiment_does_not_crash_on_overlong_prompt(tmp_path):
         "models": {"cpu_test": {"hf_repo": "sshleifer/tiny-gpt2", "revision": TINY_GPT2_REVISION}},
         "gate": {"decoding": {"do_sample": False, "max_new_tokens": 5}},
         "rag": {"model": "cpu_test", "top_k": 3, "corpus_path": str(corpus_path), "eval_split": "test", "n_eval_examples": 1},
+        "nli_judge": {
+            "hf_repo": "cliang1453/deberta-v3-xsmall-mnli",
+            "revision": "d1ca70f9ece4d8afd33015893a69df9a6e45a672",
+            "short_answer_entailment_threshold": 0.7,
+        },
     }
 
     result = await run_experiment(config)
@@ -128,6 +138,11 @@ async def test_run_experiment_handles_zero_examples_without_zero_division(tmp_pa
         "models": {"cpu_test": {"hf_repo": "sshleifer/tiny-gpt2", "revision": TINY_GPT2_REVISION}},
         "gate": {"decoding": {"do_sample": False, "max_new_tokens": 5}},
         "rag": {"model": "cpu_test", "top_k": 1, "corpus_path": str(corpus_path), "eval_split": "test", "n_eval_examples": 0},
+        "nli_judge": {
+            "hf_repo": "cliang1453/deberta-v3-xsmall-mnli",
+            "revision": "d1ca70f9ece4d8afd33015893a69df9a6e45a672",
+            "short_answer_entailment_threshold": 0.7,
+        },
     }
 
     result = await run_experiment(config)

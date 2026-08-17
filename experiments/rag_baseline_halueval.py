@@ -16,6 +16,8 @@ pre-built and committed, and the embedding model is loaded from the local HF
 cache after its first download. Same decoding config and model (tiny-gpt2) as
 RQ1-RQ3, so this baseline's number sits in the same honest "pipeline-mechanics
 validation, not a scientific finding" category until Llama-3/Mistral GPU runs.
+Factuality is scored by the NLI judge (`sense_eval.nli_judge`), not the
+retired lexical-containment placeholder — see `eval/README.md`.
 
 Reports task_accuracy/hallucination_rate/abstention_rate together (never a
 subset — write_results enforces this); abstention_rate is always 0 here, since
@@ -24,12 +26,8 @@ this baseline has no routing/merge-back policy to abstain with at all.
 
 from _common import REPO_ROOT, load_model, load_model_registry, load_yaml_config, write_results
 from _common import load_halueval_examples_and_splits as load_examples_and_splits
-from sense_eval.factuality import (
-    PLACEHOLDER_FACTUALITY_METRIC_LABEL,
-    FactualityVerdict,
-    lexical_containment_verdict,
-    summarize_factuality,
-)
+from sense_eval.factuality import FactualityVerdict, summarize_factuality
+from sense_eval.nli_judge import NLI_METRIC_LABEL_TEMPLATE, load_nli_model, nli_verdict_short_answer
 from sense_rag.index import PassageIndex
 from sense_rag.retrieve import retrieve
 
@@ -39,6 +37,7 @@ def load_config() -> dict:
         "models": load_model_registry(),
         "gate": load_yaml_config("gate.yaml"),
         "rag": load_yaml_config("rag.yaml"),
+        "nli_judge": load_yaml_config("nli_judge.yaml"),
     }
 
 
@@ -84,6 +83,7 @@ async def run_experiment(config: dict) -> dict:
     top_k = config["rag"]["top_k"]
 
     model, tokenizer = load_model(model_cfg)
+    nli_model, nli_tokenizer = load_nli_model(config["nli_judge"]["hf_repo"], config["nli_judge"]["revision"])
     index = PassageIndex.from_file(REPO_ROOT / config["rag"]["corpus_path"])
 
     # tokenizer.model_max_length can report a placeholder (e.g. 1e30) for models
@@ -135,8 +135,13 @@ async def run_experiment(config: dict) -> dict:
         )
         generated_text = tokenizer.decode(output_ids[0][inputs["input_ids"].shape[1] :], skip_special_tokens=True)
 
-        verdict = lexical_containment_verdict(
-            generated_text, example.right_answer, (), (example.hallucinated_answer,)
+        verdict = nli_verdict_short_answer(
+            nli_model,
+            nli_tokenizer,
+            generated_text,
+            example.right_answer,
+            example.hallucinated_answer,
+            config["nli_judge"]["short_answer_entailment_threshold"],
         )
 
         per_example.append(
@@ -175,7 +180,9 @@ async def run_experiment(config: dict) -> dict:
         "hallucination_rate": factuality_report["hallucination_rate"],
         "abstention_rate": factuality_report["abstention_rate"],
         "factuality_report": factuality_report,
-        "factuality_metric": PLACEHOLDER_FACTUALITY_METRIC_LABEL,
+        "factuality_metric": NLI_METRIC_LABEL_TEMPLATE.format(
+            hf_repo=config["nli_judge"]["hf_repo"], revision=config["nli_judge"]["revision"]
+        ),
         "n_examples_with_truncated_prompt": n_examples_with_truncated_prompt,
         "per_example": per_example,
     }
