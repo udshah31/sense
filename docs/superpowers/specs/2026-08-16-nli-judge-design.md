@@ -47,11 +47,23 @@ task. It's actually two, and only one is blocked:
 
 ## Model choice
 
-`MoritzLaurer/DeBERTa-v3-xsmall-mnli-fever-anli-ling-wanli`, ~70M parameters,
-purpose-trained for NLI. Chosen over `facebook/bart-large-mnli` (10x larger,
-no CPU-testability benefit for this project's scale) and over building a
-from-scratch classifier (real, unfinished work with no clear payoff over an
-existing pinned NLI model).
+`cliang1453/deberta-v3-xsmall-mnli`, revision `d1ca70f9ece4d8afd33015893a69df9a6e45a672`
+(pinned commit SHA, verified to exist and load via `HfApi.model_info` before
+this design was finalized — CLAUDE.md #5). ~70M parameters, standard 3-way
+MNLI labels (`{0: 'entailment', 1: 'neutral', 2: 'contradiction'}`, confirmed
+from `model.config.id2label` directly, not assumed). Verified functional
+before committing to it: a true-paraphrase pair scored 99.7% entailment, a
+false pair scored 99.4% contradiction.
+
+(An earlier draft of this design named a different, misremembered repo ID
+that turned out not to exist on the Hub — corrected here before any code
+referenced it, per CLAUDE.md's "never fabricate" standard extending to
+identifiers, not just numbers.)
+
+Chosen over `facebook/bart-large-mnli` (10x larger, no CPU-testability
+benefit for this project's scale) and over building a from-scratch classifier
+(real, unfinished work with no clear payoff over an existing pinned NLI
+model).
 
 Precedent: `services/rag/src/sense_rag/index.py` already uses one small real
 model (`all-MiniLM-L6-v2`) directly in both production code and
@@ -59,13 +71,12 @@ model (`all-MiniLM-L6-v2`) directly in both production code and
 LLM generation checkpoints have `cpu_test`. This design follows that same
 pattern — one small model, used everywhere, real behavior in tests.
 
-Commit SHA: pinned at implementation time (CLAUDE.md #5 — never pin `main`),
-looked up from the model's actual HF repo, not fabricated in this doc.
-
 Label ordering: NLI models don't share one canonical label order for
 entailment/neutral/contradiction. Read `model.config.id2label` at load time
 and map by string name, never by hardcoded index — same principle CLAUDE.md
-already states for `tokenizer.vocab_size`.
+already states for `tokenizer.vocab_size`. (This model's ordering happens to
+be `{0: entailment, 1: neutral, 2: contradiction}`, but the code must not
+assume that.)
 
 ## Module: `eval/src/sense_eval/nli_judge.py`
 
