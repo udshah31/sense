@@ -1,4 +1,4 @@
-name: experiments tests
+name: python tests
 
 on:
   push:
@@ -8,9 +8,19 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: experiments
+            dir: experiments
+          - name: symbolic
+            dir: services/symbolic
+          - name: orchestrator
+            dir: services/orchestrator
     defaults:
       run:
-        working-directory: experiments
+        working-directory: ${{ matrix.dir }}
     steps:
       - uses: actions/checkout@v4
 
@@ -20,5 +30,5 @@ jobs:
       - name: Sync environment (CPU only)
         run: uv sync --group dev --python 3.13
 
-      - name: Run experiments test suite
+      - name: Run ${{ matrix.name }} test suite
         run: uv run pytest -q
