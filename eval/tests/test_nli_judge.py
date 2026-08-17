@@ -28,3 +28,29 @@ def test_entailment_scores_false_pair_scores_high_contradiction(nli_model_and_to
     )
 
     assert scores["contradiction"] > 0.9
+
+
+from sense_eval.nli_judge import split_into_atomic_claims
+
+
+def test_split_into_atomic_claims_splits_on_sentence_boundaries():
+    claims = split_into_atomic_claims(
+        "Albert Einstein was a physicist. He was born in 1879. He developed relativity."
+    )
+
+    assert claims == [
+        "Albert Einstein was a physicist.",
+        "He was born in 1879.",
+        "He developed relativity.",
+    ]
+
+
+def test_split_into_atomic_claims_drops_empty_fragments():
+    claims = split_into_atomic_claims("One sentence.   \n\n  Another sentence.")
+
+    assert claims == ["One sentence.", "Another sentence."]
+
+
+def test_split_into_atomic_claims_handles_empty_text():
+    assert split_into_atomic_claims("") == []
+    assert split_into_atomic_claims("   ") == []

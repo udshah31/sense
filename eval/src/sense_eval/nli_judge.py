@@ -18,6 +18,8 @@ is real (semantic entailment, not substring matching) but its threshold
 calibration is unvalidated. State this wherever its numbers are reported.
 """
 
+import re
+
 import torch
 from transformers import AutoModelForSequenceClassification, AutoTokenizer
 
@@ -44,3 +46,18 @@ def entailment_scores(model, tokenizer, premise: str, hypothesis: str) -> dict[s
         logits = model(**inputs).logits
     probs = torch.softmax(logits, dim=-1)[0]
     return {model.config.id2label[i]: probs[i].item() for i in range(len(probs))}
+
+
+_SENTENCE_BOUNDARY = re.compile(r"(?<=[.!?])\s+")
+
+
+def split_into_atomic_claims(text: str) -> list[str]:
+    """A simple sentence-level splitter, not an LLM extractor (see the design
+    doc's "Two problems, not one" section) — splits on sentence-ending
+    punctuation followed by whitespace, drops empty/whitespace-only
+    fragments. This is a deliberate simplification of FActScore's real
+    atomic-fact decomposition, not a claim to reproduce it exactly."""
+    stripped = text.strip()
+    if not stripped:
+        return []
+    return [s.strip() for s in _SENTENCE_BOUNDARY.split(stripped) if s.strip()]
