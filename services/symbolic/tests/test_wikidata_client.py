@@ -22,12 +22,18 @@ OCCUPATION_PID = "P106"
 
 
 async def test_search_entity_qid_finds_known_entity():
-    qid = await search_entity_qid("Albert Einstein")
+    try:
+        qid = await search_entity_qid("Albert Einstein")
+    except WikidataUnavailableError as e:
+        pytest.skip(f"Wikidata search service unavailable: {e}")
     assert qid == EINSTEIN_QID
 
 
 async def test_search_entity_qid_returns_none_for_nonsense_label():
-    qid = await search_entity_qid("xyzzy-not-a-real-entity-qqq123")
+    try:
+        qid = await search_entity_qid("xyzzy-not-a-real-entity-qqq123")
+    except WikidataUnavailableError as e:
+        pytest.skip(f"Wikidata search service unavailable: {e}")
     assert qid is None
 
 
