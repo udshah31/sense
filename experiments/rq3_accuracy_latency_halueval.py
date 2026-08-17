@@ -25,11 +25,13 @@ free-text-to-triple extractor yet (out of scope, tied to the undecided merge-bac
 "replace" policy). It measures real network/round-trip cost against the real
 backend; it is not a factuality check of the question and must not be read as one.
 
-Factuality is scored with eval/'s lexical-containment proxy — a placeholder, not a
-paper-grade judge (see eval/README.md). Reported as task_accuracy/hallucination_rate/
-abstention_rate together (never a subset — write_results enforces this), even
-though abstention_rate is always 0 here: merge-back is annotate-only for now, so
-nothing in this harness can abstain.
+Factuality is scored with eval/'s NLI-based judge (see eval/README.md; its
+threshold calibration is a named, unvalidated first cut — not a paper-grade
+judge yet, but real semantic entailment, not substring matching). Reported
+as task_accuracy/hallucination_rate/abstention_rate together (never a subset
+— write_results enforces this), even though abstention_rate is always 0
+here: merge-back is annotate-only for now, so nothing in this harness can
+abstain.
 """
 
 import asyncio
@@ -40,12 +42,8 @@ import uvicorn
 from sense_symbolic.app import app as symbolic_app
 
 from _common import build_generation_inputs, load_halueval_examples_and_splits, load_model, load_model_registry, load_yaml_config, mean_calibration_entropy, write_results
-from sense_eval.factuality import (
-    PLACEHOLDER_FACTUALITY_METRIC_LABEL,
-    FactualityVerdict,
-    lexical_containment_verdict,
-    summarize_factuality,
-)
+from sense_eval.factuality import FactualityVerdict, summarize_factuality
+from sense_eval.nli_judge import NLI_METRIC_LABEL_TEMPLATE, load_nli_model, nli_verdict_short_answer
 from sense_neural.entropy import TokenEntropyMonitor
 from sense_neural.latency import generate_with_latency
 from sense_orchestrator.gate import GatePolicy
@@ -61,10 +59,11 @@ def load_config() -> dict:
         "models": load_model_registry(),
         "gate": load_yaml_config("gate.yaml"),
         "rq3": load_yaml_config("rq3.yaml"),
+        "nli_judge": load_yaml_config("nli_judge.yaml"),
     }
 
 
-async def run_experiment_for_model(config: dict, model_name: str, examples, splits) -> dict:
+async def run_experiment_for_model(config: dict, model_name: str, examples, splits, nli_model, nli_tokenizer) -> dict:
     model_cfg = config["models"][model_name]
     decoding_cfg = config["gate"]["decoding"]
     quantile = config["gate"]["quantile"]
@@ -124,8 +123,13 @@ async def run_experiment_for_model(config: dict, model_name: str, examples, spli
                 object_label=probe["object_label"],
             )
 
-            verdict = lexical_containment_verdict(
-                ungated["text"], example.right_answer, (), (example.hallucinated_answer,)
+            verdict = nli_verdict_short_answer(
+                nli_model,
+                nli_tokenizer,
+                ungated["text"],
+                example.right_answer,
+                example.hallucinated_answer,
+                config["nli_judge"]["short_answer_entailment_threshold"],
             )
 
             per_example.append(
@@ -167,7 +171,9 @@ async def run_experiment_for_model(config: dict, model_name: str, examples, spli
             "hallucination_rate": factuality_report["hallucination_rate"],
             "abstention_rate": factuality_report["abstention_rate"],
             "factuality_report": factuality_report,
-            "factuality_metric": PLACEHOLDER_FACTUALITY_METRIC_LABEL,
+            "factuality_metric": NLI_METRIC_LABEL_TEMPLATE.format(
+                hf_repo=config["nli_judge"]["hf_repo"], revision=config["nli_judge"]["revision"]
+            ),
             "mean_ungated_total_ms": sum(r["ungated_total_ms"] for r in per_example) / n,
             "mean_gated_total_ms": sum(r["gated_total_ms"] for r in per_example) / n,
             "mean_gate_eval_latency_ms": sum(r["gate_eval_latency_ms"] for r in per_example) / n,
@@ -186,9 +192,10 @@ async def run_experiment_for_model(config: dict, model_name: str, examples, spli
 
 async def run_all(config: dict) -> list[dict]:
     examples, splits = load_halueval_examples_and_splits()
+    nli_model, nli_tokenizer = load_nli_model(config["nli_judge"]["hf_repo"], config["nli_judge"]["revision"])
     results = []
     for model_name in config["rq3"]["models"]:
-        result = await run_experiment_for_model(config, model_name, examples, splits)
+        result = await run_experiment_for_model(config, model_name, examples, splits, nli_model, nli_tokenizer)
         write_results(
             f"rq3_accuracy_latency_halueval_{model_name}.json",
             result,
