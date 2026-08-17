@@ -6,22 +6,24 @@ Metrics: factuality + latency.
 uv sync
 ```
 
-## factuality.py
+## factuality.py / nli_judge.py
 
-`lexical_containment_verdict` is a **placeholder** factuality proxy: "correct" if
-generated text contains the best/a correct answer, "incorrect" if it contains a
-known incorrect answer, "unknown" otherwise (used against both TruthfulQA's
-best/correct/incorrect answers and HaluEval's right/hallucinated answer). This is
-not the project's eventual factuality judge — no fine-tuned judge model or
-LLM-as-judge API is wired in yet; that's unfinished work, not a design choice. It
-exists to exercise the RQ3 and RAG-baseline harnesses end-to-end on a tiny CPU
-model; any number this metric produces measures whether the pipeline plumbing
-works, not paper-grade accuracy. Every result scored with it carries
-`PLACEHOLDER_FACTUALITY_METRIC_LABEL` verbatim in its `factuality_metric` field,
-and `write_results` (`experiments/_common.py`) prints a loud stderr warning
-whenever it sees that label — so a pipeline-mechanics number can't quietly sit in
-`results/` looking like a final one. Replace `lexical_containment_verdict` (not the
-reporting layer below it) once a real judge is ready to wire in.
+`nli_judge.py` is the real factuality scorer: a pinned NLI model
+(`configs/nli_judge.yaml` — `cliang1453/deberta-v3-xsmall-mnli`) scores
+semantic entailment rather than substring containment.
+`nli_verdict_short_answer` handles HaluEval-shaped short-answer QA;
+`factscore_style_verdict` handles FActScore-shaped open-ended generation by
+splitting it into atomic (sentence-level) claims and scoring the supported
+fraction against a reference text, matching FActScore's own methodology.
+Every result reports a `factuality_metric` field naming the model and
+pinned revision that produced it (`NLI_METRIC_LABEL_TEMPLATE`).
+
+**Named limitation** (see `docs/superpowers/specs/2026-08-16-nli-judge-design.md`):
+the entailment/fraction thresholds in `configs/nli_judge.yaml` are a first
+cut chosen for reasonable behavior on manual spot checks, not calibrated
+against a human-labeled validation set — none exists yet for this project.
+This judge is real (semantic entailment, not substring matching), but treat
+its threshold calibration as unvalidated until that ground truth exists.
 
 `summarize_factuality` and `assert_factuality_metrics_reported_together` are the
 reporting layer, and apply regardless of which scorer eventually produces the

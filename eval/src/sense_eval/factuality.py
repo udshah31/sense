@@ -1,57 +1,21 @@
-"""Factuality metrics: a placeholder verdict scorer, and the reporting layer that
-turns per-example verdicts into the three numbers CLAUDE.md/the proposal require to
-always be reported together — task accuracy, hallucination rate, and abstention
-rate. Reporting hallucination rate alone is misleading: abstaining trivially drives
-it toward zero at the cost of accuracy, so a hallucination-reduction number with no
-accuracy or abstention figure next to it hides exactly the trade-off this project
-studies.
+"""Factuality metrics: the reporting layer that turns per-example verdicts into
+the three numbers CLAUDE.md/the proposal require to always be reported together —
+task accuracy, hallucination rate, and abstention rate. Reporting hallucination
+rate alone is misleading: abstaining trivially drives it toward zero at the cost
+of accuracy, so a hallucination-reduction number with no accuracy or abstention
+figure next to it hides exactly the trade-off this project studies.
+
+The verdict scorers that produce FactualityVerdict instances live in
+sense_eval.nli_judge (an NLI-based semantic judge) — this module is agnostic to
+which scorer produced them.
 """
 
 from dataclasses import dataclass
-
-# No fine-tuned judge model or LLM-as-judge API is wired into this project yet — that
-# is real, unfinished work, not a design choice, so lexical_containment_verdict below
-# stays the only scorer for now. Every result produced with it MUST carry this label
-# verbatim in its "factuality_metric" field (write_results checks for the
-# "placeholder" substring and prints a loud warning if it's missing) so a
-# pipeline-mechanics number can never quietly read as a paper-grade one.
-PLACEHOLDER_FACTUALITY_METRIC_LABEL = "lexical_containment_placeholder (NOT a judge — see eval/README.md)"
 
 
 @dataclass(frozen=True)
 class FactualityVerdict:
     label: str  # "correct" | "incorrect" | "unknown"
-
-
-def lexical_containment_verdict(
-    generated_text: str,
-    best_answer: str,
-    correct_answers: tuple[str, ...],
-    incorrect_answers: tuple[str, ...],
-) -> FactualityVerdict:
-    """"correct" if the generated text contains the best/any correct answer,
-    "incorrect" if it contains a known incorrect answer (and no correct one),
-    "unknown" otherwise — the generated text didn't clearly match either list.
-
-    This is a simplified lexical-containment placeholder, NOT the project's
-    eventual factuality judge — real TruthfulQA/HaluEval evaluation typically uses
-    a fine-tuned judge model or human annotation, which is out of scope for
-    exercising the pipeline on a tiny CPU model. Any number this function's
-    verdicts roll up into measures whether the harness plumbing works end-to-end,
-    not paper-grade accuracy. Replace before any number derived from it is
-    reported as a result (see PLACEHOLDER_FACTUALITY_METRIC_LABEL above).
-    """
-    text = generated_text.lower()
-
-    correct_candidates = [a for a in (best_answer, *correct_answers) if a]
-    if any(candidate.lower() in text for candidate in correct_candidates):
-        return FactualityVerdict(label="correct")
-
-    incorrect_candidates = [a for a in incorrect_answers if a]
-    if any(candidate.lower() in text for candidate in incorrect_candidates):
-        return FactualityVerdict(label="incorrect")
-
-    return FactualityVerdict(label="unknown")
 
 
 # The three keys CLAUDE.md/the proposal require to always be reported together.
