@@ -124,12 +124,15 @@ def load_model(model_cfg: dict):
 
 
 def build_generation_inputs(tokenizer, question: str, model_cfg: dict):
-    """Tokenize `question` for generation. Qwen3 is a hybrid thinking/non-thinking
-    family (model.yaml's `thinking_mode: false` on every qwen3_* entry) — forcing
-    non-thinking mode requires routing through the chat template with
-    enable_thinking=False, since that's the only interface Qwen3 exposes for it.
-    Models without a `thinking_mode` entry keep the plain-completion tokenization
-    the rest of the pipeline (llama3, mistral, cpu_test) already used.
+    """Tokenize `question` for generation. Any model whose tokenizer carries a
+    chat_template is Instruct-tuned against that template (llama3, mistral, the
+    qwen3 ladder) — generating via plain-completion tokenization instead would
+    feed it a format it wasn't fine-tuned on. Qwen3 additionally sets
+    model.yaml's `thinking_mode: false` on every qwen3_* entry, since forcing
+    non-thinking mode requires the enable_thinking=False kwarg on
+    apply_chat_template — the only interface Qwen3 exposes for it. Models with
+    no chat_template at all (the tiny CPU-test stand-ins) keep the plain-
+    completion tokenization the pipeline always used for them.
     """
     if model_cfg.get("thinking_mode") is False:
         if tokenizer.chat_template is None:
@@ -142,6 +145,14 @@ def build_generation_inputs(tokenizer, question: str, model_cfg: dict):
             tokenize=True,
             add_generation_prompt=True,
             enable_thinking=False,
+            return_tensors="pt",
+            return_dict=True,
+        )
+    if tokenizer.chat_template is not None:
+        return tokenizer.apply_chat_template(
+            [{"role": "user", "content": question}],
+            tokenize=True,
+            add_generation_prompt=True,
             return_tensors="pt",
             return_dict=True,
         )

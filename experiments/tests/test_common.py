@@ -202,6 +202,27 @@ def test_build_generation_inputs_routes_through_chat_template_when_thinking_mode
 
     assert captured["messages"] == [{"role": "user", "content": "question"}]
     assert captured["kwargs"]["enable_thinking"] is False
+
+
+def test_build_generation_inputs_routes_through_chat_template_when_present_without_thinking_mode(monkeypatch):
+    """llama3/mistral are Instruct-tuned checkpoints with a chat_template but no
+    thinking_mode key — they must still go through the template, not plain
+    tokenization, or generation feeds them a format they weren't tuned on."""
+    tokenizer = AutoTokenizer.from_pretrained(TINY_GPT2["hf_repo"])
+    tokenizer.chat_template = "fake-template"
+    captured = {}
+
+    def fake_apply_chat_template(self, messages, **kwargs):
+        captured["messages"] = messages
+        captured["kwargs"] = kwargs
+        return {"input_ids": torch.tensor([[1, 2, 3]])}
+
+    monkeypatch.setattr(type(tokenizer), "apply_chat_template", fake_apply_chat_template)
+
+    build_generation_inputs(tokenizer, "question", TINY_GPT2)
+
+    assert captured["messages"] == [{"role": "user", "content": "question"}]
+    assert "enable_thinking" not in captured["kwargs"]
     assert captured["kwargs"]["add_generation_prompt"] is True
 
 
