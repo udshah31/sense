@@ -3,7 +3,10 @@ name = "sense-eval"
 version = "0.1.0"
 description = "Metrics: factuality + latency."
 requires-python = ">=3.13.5"
-dependencies = []
+dependencies = [
+    "transformers>=4.46",
+    "torch>=2.5",
+]
 
 [dependency-groups]
 dev = [

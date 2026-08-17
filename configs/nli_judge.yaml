@@ -1,0 +1,20 @@
+# NLI-based factuality judge (eval/src/sense_eval/nli_judge.py), replacing
+# the retired lexical-containment placeholder. See
+# docs/superpowers/specs/2026-08-16-nli-judge-design.md for the full design
+# and its named limitation: these thresholds are a first cut, not calibrated
+# against human-labeled ground truth (none exists yet for this project).
+hf_repo: cliang1453/deberta-v3-xsmall-mnli
+revision: d1ca70f9ece4d8afd33015893a69df9a6e45a672
+
+# nli_verdict_short_answer (HaluEval-shaped harnesses): entailment probability
+# at or above which a generated answer counts as entailing right_answer or
+# hallucinated_answer.
+short_answer_entailment_threshold: 0.7
+
+# factscore_style_verdict (FActScore-shaped harness): per-claim entailment
+# threshold for "this atomic claim is supported by the reference text" ...
+claim_supported_threshold: 0.7
+# ... and the two thresholds the resulting supported_fraction is discretized
+# against.
+fraction_correct_threshold: 0.8
+fraction_incorrect_threshold: 0.2
