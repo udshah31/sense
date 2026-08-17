@@ -129,6 +129,29 @@ uv run python rag_baseline_halueval.py
 
 Writes `../results/rag_baseline_halueval_<model_name>.json`.
 
+## factscore_symbolic_verification.py
+
+Not an RQ1-RQ3 harness. Exercises the decomposition front-end -> Z3 backend
+round-trip (`services/symbolic`) against FActScore's biography-prompt entities
+(`../data/splits/factscore.json`), generating a biography per example (same
+decoding config as the other harnesses) for pipeline exercise but never scoring
+it — this project has no free-text-to-triple extractor yet (out of scope, same
+reason `rq3_accuracy_latency_halueval.py`'s probe triple isn't derived from the
+question either). For each entity that resolves against the Z3 backend's small
+fixed domain KB (`services/symbolic/src/sense_symbolic/domain.py`), it builds a
+known ground-truth probe claim (e.g. Einstein's birth year) and checks the
+backend verifies its own fact correctly; entities that don't resolve — most of
+FActScore's 500, since the KB is deliberately small — are recorded as abstained,
+not guessed at. So `task_accuracy` here means "entity resolved and its
+ground-truth probe claim verified correctly," not "generated biography was
+non-hallucinatory." Model and eval split come from `../configs/factscore_symbolic.yaml`.
+
+```
+uv run python factscore_symbolic_verification.py
+```
+
+Writes `../results/factscore_symbolic_verification_<model_name>.json`.
+
 ## Tests
 
 ```

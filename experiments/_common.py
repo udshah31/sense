@@ -12,6 +12,7 @@ import torch
 import yaml
 from transformers import AutoModelForCausalLM, AutoTokenizer, BitsAndBytesConfig
 
+from sense_data.factscore import FActScoreExample, load_factscore
 from sense_data.halueval import HaluEvalExample, load_halueval
 from sense_data.splits import SplitIndices, load_splits, PerCheckpointSplitIndices, load_per_checkpoint_splits
 from sense_data.truthful_qa import TruthfulQAExample, load_truthful_qa
@@ -22,6 +23,7 @@ REPO_ROOT = Path(__file__).parent.parent
 CONFIGS_DIR = REPO_ROOT / "configs"
 SPLIT_PATH = REPO_ROOT / "data" / "splits" / "truthful_qa.json"
 HALUEVAL_SPLIT_PATH = REPO_ROOT / "data" / "splits" / "halueval.json"
+FACTSCORE_SPLIT_PATH = REPO_ROOT / "data" / "splits" / "factscore.json"
 RESULTS_DIR = REPO_ROOT / "results"
 
 
@@ -181,6 +183,10 @@ def load_examples_and_splits() -> tuple[list[TruthfulQAExample], SplitIndices]:
 
 def load_halueval_examples_and_splits() -> tuple[list[HaluEvalExample], PerCheckpointSplitIndices]:
     return load_halueval(), load_per_checkpoint_splits(HALUEVAL_SPLIT_PATH)
+
+
+def load_factscore_examples_and_splits() -> tuple[list[FActScoreExample], SplitIndices]:
+    return load_factscore(), load_splits(FACTSCORE_SPLIT_PATH)
 
 
 def write_results(filename: str, result: dict, *, print_exclude_keys: frozenset[str] = frozenset()) -> None:

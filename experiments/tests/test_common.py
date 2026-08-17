@@ -17,6 +17,7 @@ from _common import (
     load_model_registry,
     write_results,
 )
+from sense_data.factscore import FActScoreExample
 from sense_data.halueval import HaluEvalExample
 from sense_data.splits import SplitIndices, PerCheckpointSplitIndices
 from sense_data.truthful_qa import TruthfulQAExample
@@ -46,6 +47,19 @@ def test_load_halueval_examples_and_splits_returns_real_data():
     assert len(splits.development) > 0
     assert len(splits.test) > 0
     assert set(splits.calibration.keys()) == {"llama3", "mistral", "qwen3_8b", "qwen3_4b", "qwen3_1_7b"}
+
+
+def test_load_factscore_examples_and_splits_returns_real_data():
+    from _common import load_factscore_examples_and_splits
+
+    examples, splits = load_factscore_examples_and_splits()
+
+    assert len(examples) == 500
+    assert isinstance(examples[0], FActScoreExample)
+    assert isinstance(splits, SplitIndices)
+    assert len(splits.calibration) > 0
+    assert len(splits.development) > 0
+    assert len(splits.test) > 0
 
 
 def test_write_results_writes_full_json_to_results_dir(tmp_path, monkeypatch):

@@ -322,49 +322,67 @@ together, don't leave the doc stale.
 ## Current status
 
 Phase 0, built under the **retired** two-model/TruthfulQA/SPARQL scope (decided
-2026-07-26), then the **title and RQ wording** were reconciled to the current
-five-checkpoint/HaluEval+FActScore/Z3 scope on 2026-08-10 — the code below has *not*
-yet been migrated to match. Nothing here is thrown away or wrong; it's
-pipeline-mechanics validation that needs re-pointing, not a redo.
+2026-07-26); the **title, RQ wording, and code** were then reconciled to the
+five-checkpoint/HaluEval+FActScore/Z3 scope starting 2026-08-10. As of 2026-08-16,
+the reconciliation is mostly complete — see the checklist below for what's left.
+TruthfulQA's loader/split/`calibrate_gate_truthful_qa.py` are kept deliberately
+(the excluded-benchmark limitation citation), not migrated.
 
-**What works today, as built:** end-to-end on CPU against `sshleifer/tiny-gpt2` and
-real TruthfulQA data (committed split: 327/163/327 calibration/development/test,
-seed 42): token entropy monitor with no-op verification, generation latency
-instrumentation (TTFT, inter-token, via `services/neural/src/sense_neural/latency.py`),
-split machinery with a leakage guard, the entropy-gating policy that refuses to run
-uncalibrated, the truncated-vs-exact entropy bounds check, a symbolic backend
-(SPARQL/Wikidata, `services/symbolic`), and the gate-to-symbolic router
-(`services/orchestrator`, annotate-only merge-back). All four required correctness
-checks pass. All three research-question harnesses (`experiments/`) run end-to-end
-on real data: RQ1 (fixed-threshold transfer), RQ2 (self-adaptive threshold), RQ3
-(accuracy-latency trade-off — factuality scored via a placeholder lexical-containment
-metric, `eval/src/sense_eval/factuality.py`, not the eventual judge). A RAG comparison
-baseline (`services/rag`, FAISS + all-MiniLM-L6-v2 over a committed, curated
-Wikipedia passage corpus tied to the TruthfulQA test questions) also ran end-to-end
-on the full 327-example test split (`experiments/rag_baseline_truthful_qa.py`,
-315/327 passages resolved, `factuality_accuracy_proxy` scored via the same
-lexical-containment placeholder, accuracy-only — no latency instrumentation).
+**What works today, as built:** end-to-end on CPU against `sshleifer/tiny-gpt2`,
+against real data: token entropy monitor with no-op verification, generation
+latency instrumentation (TTFT, inter-token, via
+`services/neural/src/sense_neural/latency.py`), split machinery with a leakage
+guard (including HaluEval's per-checkpoint calibration shape and FActScore's
+three-way split), the entropy-gating policy that refuses to run uncalibrated, the
+truncated-vs-exact entropy bounds check, the Z3 symbolic backend with its
+atomic-claim decomposition front-end (`services/symbolic`, SPARQL/Wikidata kept
+as the swappable fallback, not deleted), and the gate-to-symbolic router
+(`services/orchestrator`, annotate-only merge-back). All four required
+correctness checks pass. `configs/model.yaml` carries all five checkpoints
+(Llama-3 8B Instruct, Mistral 7B Instruct v0.3, Qwen3 8B/4B/1.7B), pinned to
+4-bit quantization and enforced by `experiments/_common.py`'s
+`assert_pinned_gpu_quantization` (constraint #2, non-negotiable — every GPU
+harness calls this before running). `eval/src/sense_eval/factuality.py` requires
+task_accuracy/hallucination_rate/abstention_rate to always be reported together
+(`assert_factuality_metrics_reported_together`, called from every harness's
+`write_results`) — enforced, not just documented.
 
-**What's needed to reach the reconciled scope** (see "Design decisions" for the
-rationale behind each):
-1. **Models** — add Qwen3 8B/4B/1.7B configs alongside Llama-3 8B Instruct and
-   Mistral 7B Instruct v0.3 (`configs/model.yaml`); the GPU run that just completed
-   used only the two-model bf16 setup and needs re-pinning to 4-bit across all five.
-2. **Quantization** — re-pin the GPU configs from bf16 to 4-bit (constraint #2).
-3. **Benchmark** — swap TruthfulQA data/splits for HaluEval + FActScore; TruthfulQA
-   stays in the repo as the excluded-benchmark limitation citation, not deleted.
-4. **Symbolic backend** — replace `services/symbolic`'s SPARQL/Wikidata client with
-   Z3 constraint checking behind an atomic-claim decomposition front-end; keep the
-   existing HTTP contract shape, keep SPARQL/Wikidata reachable as the swappable
-   fallback rather than deleting it.
-5. **RAG baseline** — re-point `services/rag`'s corpus at HaluEval/FActScore
-   questions once that data is in place.
-6. **Metrics** — `eval/src/sense_eval/factuality.py`'s placeholder lexical-containment
-   scorer needs to report hallucination rate, task accuracy, and abstention rate
-   together (design-decisions reporting requirement), not accuracy alone.
+All three research-question harnesses (`experiments/`) are re-pointed to HaluEval
+with per-checkpoint calibration splits (`data/splits/halueval.json`) and run
+end-to-end on real data: RQ1 `transfer_threshold_halueval.py` (fixed-threshold
+transfer), RQ2 `adaptive_threshold_halueval.py` (self-adaptive threshold), RQ3
+`rq3_accuracy_latency_halueval.py` (accuracy-latency trade-off — factuality still
+scored via a placeholder lexical-containment metric, not the eventual judge; see
+`eval/README.md`). This migration (plan
+`docs/superpowers/plans/2026-08-14-rq1-rq3-halueval-five-checkpoint.md`) is
+complete and merged. The RAG comparison baseline is re-pointed to HaluEval too
+(`experiments/rag_baseline_halueval.py`, `services/rag`'s corpus tied to
+HaluEval's test-split questions).
+
+FActScore's loader and committed three-way split (`data/src/sense_data/factscore.py`,
+`data/splits/factscore.json`, 500 entities) are built and tested, but nothing
+consumed them until `experiments/factscore_symbolic_verification.py`
+(2026-08-16): it generates a biography per FActScore entity and runs the
+decomposition -> Z3 round-trip against a *known ground-truth* probe claim for any
+entity that resolves against the backend's small fixed domain KB — most don't
+(the KB is deliberately small, per CLAUDE.md's scope-containment decision), and
+are recorded as abstained rather than guessed at. This is real, non-fabricated
+pipeline-mechanics validation of the decomposition/Z3 path against FActScore
+data, **not** a factuality judgment of the generated biography — the project
+still has no free-text-to-triple extractor (same reason RQ3's symbolic probe
+triple isn't derived from the question either; extracting claims from arbitrary
+generated prose is real, unscoped future work, tied to the still-undecided
+"replace" merge-back policy). Do not read this script's `task_accuracy` as a
+FActScore benchmark number.
+
+**What's still needed to fully close out the reconciled scope:**
+1. **Free-text claim extraction** — until this exists, FActScore (and RQ3's
+   symbolic round-trip) can only be exercised against known/probe claims, not the
+   model's own generated text. This is its own scoped task, not a quick addition.
+2. **Real judge for factuality** — `eval/src/sense_eval/factuality.py`'s
+   lexical-containment scorer is still a placeholder (loudly labeled as such in
+   every result it produces); replacing it with a fine-tuned judge or
+   FActScore-style atomic-fact scoring is unstarted.
 
 Not yet built regardless of scope: real-model GPU runs against the reconciled
-five-checkpoint lineup (the completed Llama-3/Mistral GPU run predates the scope
-reconciliation and used the retired two-model config; current results remain
-pipeline-mechanics validation, not scientific findings, until re-run against the
 current scope).
