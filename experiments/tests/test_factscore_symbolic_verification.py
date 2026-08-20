@@ -4,6 +4,13 @@ from factscore_symbolic_verification import build_probe_claim, run_experiment
 from sense_data.factscore import FActScoreExample
 
 TINY_GPT2 = {"hf_repo": "sshleifer/tiny-gpt2", "revision": "5f91d94bd9cd7190a9f3216ff93cd1dd95f2c7be"}
+NLI_MODEL_CFG = {
+    "hf_repo": "cliang1453/deberta-v3-xsmall-mnli",
+    "revision": "d1ca70f9ece4d8afd33015893a69df9a6e45a672",
+    "claim_supported_threshold": 0.5,
+    "fraction_correct_threshold": 0.8,
+    "fraction_incorrect_threshold": 0.2,
+}
 
 
 def test_build_probe_claim_uses_birth_year_when_known():
@@ -14,11 +21,6 @@ def test_build_probe_claim_uses_birth_year_when_known():
 
 
 def test_build_probe_claim_falls_back_to_nationality_without_birth_year():
-    # arthur's magazine only has a birth_year (founding year) in the fixed KB, so
-    # exercise a case in domain.py's KB that lacks both to hit the None fallback
-    # instead: no such entity exists, so assert the documented contract directly
-    # via an entity that only has nationality (none in the KB lack birth_year but
-    # have nationality) is not exercisable here — cover via unresolvable key.
     with pytest.raises(KeyError):
         build_probe_claim("not a real entity")
 
@@ -42,7 +44,7 @@ async def test_run_experiment_verifies_known_entity_as_correct():
             factscore_prompt="Tell me about Some Unresolvable Person.",
             hundredw_prompt="Write 100 words about Some Unresolvable Person.",
             around_100="",
-            wikipedia_text="",
+            wikipedia_text="Some Unresolvable Person was a fictional test fixture.",
         ),
     ]
 
@@ -52,23 +54,34 @@ async def test_run_experiment_verifies_known_entity_as_correct():
             "model": "cpu_test",
             "decoding": {"do_sample": False, "max_new_tokens": 5},
         },
+        "nli_judge": NLI_MODEL_CFG,
     }
 
     result = await run_experiment(config, examples, list(range(len(examples))))
 
     assert result["dataset"] == "factscore"
     assert result["n_eval_examples"] == 2
+    # Z3 round-trip numbers (against known entities only) — unchanged behavior.
     assert result["factuality_report"]["n_correct"] == 1
     assert result["factuality_report"]["n_abstained"] == 1
     assert result["task_accuracy"] == 0.5
     assert result["hallucination_rate"] == 0.0
     assert result["abstention_rate"] == 0.5
 
+    # NLI-judge numbers (against every example's own reference text) — new.
+    assert "factscore_task_accuracy" in result
+    assert "factscore_hallucination_rate" in result
+    assert "factscore_abstention_rate" in result
+    assert result["factscore_factuality_report"]["n_examples"] == 2
+
     resolved_record = next(r for r in result["per_example"] if r["entity"] == "Albert Einstein")
     assert resolved_record["resolved"] is True
     assert resolved_record["factuality"] == "correct"
-    assert "generated_text" in resolved_record
+    assert "factscore_factuality" in resolved_record
+    assert "factscore_supported_fraction" in resolved_record
 
     unresolved_record = next(r for r in result["per_example"] if r["entity"] == "Some Unresolvable Person")
     assert unresolved_record["resolved"] is False
     assert unresolved_record["factuality"] is None
+    # NLI scoring runs regardless of Z3 entity resolution — it's independent.
+    assert "factscore_factuality" in unresolved_record

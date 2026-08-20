@@ -22,6 +22,15 @@ claim the backend verified correctly," not "fraction of generations that were
 non-hallucinatory." Still reports task_accuracy/hallucination_rate/abstention_rate
 together (write_results enforces this), per CLAUDE.md's reporting requirement.
 
+Separately, every example's generated biography IS now scored for real against
+its own FActScore reference text (`example.wikipedia_text`), using the NLI
+judge's atomic-decomposition-based verdict (`sense_eval.nli_judge.factscore_style_verdict`)
+— reported under the `factscore_*`-prefixed keys, kept distinct from the
+Z3-round-trip keys above so the two different things this script measures are
+never confused with each other. This is this project's first real (non-placeholder)
+FActScore factuality number, though its threshold calibration is a named,
+unvalidated first cut (see `docs/superpowers/specs/2026-08-16-nli-judge-design.md`).
+
 The biography itself is still generated (from `factscore_prompt`, same decoding
 config as every other harness) and included per-example for inspection, exercising
 the CPU-testable generation path this pipeline will eventually need for a real
@@ -30,6 +39,7 @@ extractor — it just isn't scored.
 
 from _common import build_generation_inputs, load_factscore_examples_and_splits, load_model, load_model_registry, load_yaml_config, write_results
 from sense_eval.factuality import FactualityVerdict, summarize_factuality
+from sense_eval.nli_judge import NLI_METRIC_LABEL_TEMPLATE, factscore_style_verdict, load_nli_model
 from sense_symbolic.decomposition import decompose_claim
 from sense_symbolic.domain import facts_for, resolve_entity
 from sense_symbolic.z3_verifier import verify_claim
@@ -39,6 +49,7 @@ def load_config() -> dict:
     return {
         "models": load_model_registry(),
         "factscore_symbolic": load_yaml_config("factscore_symbolic.yaml"),
+        "nli_judge": load_yaml_config("nli_judge.yaml"),
     }
 
 
@@ -69,6 +80,7 @@ async def run_experiment(config: dict, examples=None, eval_indices=None) -> dict
         eval_indices = all_eval_indices[:n_requested]
 
     model, tokenizer = load_model(model_cfg)
+    nli_model, nli_tokenizer = load_nli_model(config["nli_judge"]["hf_repo"], config["nli_judge"]["revision"])
 
     per_example = []
     for index_i in eval_indices:
@@ -82,6 +94,16 @@ async def run_experiment(config: dict, examples=None, eval_indices=None) -> dict
         )
         generated_text = tokenizer.decode(output_ids[0][inputs["input_ids"].shape[1] :], skip_special_tokens=True)
 
+        factscore_verdict, factscore_detail = factscore_style_verdict(
+            nli_model,
+            nli_tokenizer,
+            generated_text,
+            example.wikipedia_text,
+            config["nli_judge"]["claim_supported_threshold"],
+            config["nli_judge"]["fraction_correct_threshold"],
+            config["nli_judge"]["fraction_incorrect_threshold"],
+        )
+
         resolved_key = resolve_entity(example.entity)
         if resolved_key is None:
             per_example.append(
@@ -91,6 +113,8 @@ async def run_experiment(config: dict, examples=None, eval_indices=None) -> dict
                     "generated_text": generated_text,
                     "resolved": False,
                     "factuality": None,
+                    "factscore_factuality": factscore_verdict.label,
+                    "factscore_supported_fraction": factscore_detail.supported_fraction,
                 }
             )
             continue
@@ -109,6 +133,8 @@ async def run_experiment(config: dict, examples=None, eval_indices=None) -> dict
                 "predicate_pid": predicate_pid,
                 "probe_object_label": probe_object_label,
                 "factuality": label,
+                "factscore_factuality": factscore_verdict.label,
+                "factscore_supported_fraction": factscore_detail.supported_fraction,
             }
         )
 
@@ -116,6 +142,9 @@ async def run_experiment(config: dict, examples=None, eval_indices=None) -> dict
     n_abstained = len(per_example) - len(resolved_records)
     verdicts = [FactualityVerdict(label=r["factuality"]) for r in resolved_records]
     factuality_report = summarize_factuality(verdicts, n_abstained=n_abstained)
+
+    factscore_verdicts = [FactualityVerdict(label=r["factscore_factuality"]) for r in per_example]
+    factscore_factuality_report = summarize_factuality(factscore_verdicts, n_abstained=0)
 
     return {
         "research_question": "FActScore symbolic-verification pipeline check (not RQ1-RQ3)",
@@ -132,6 +161,13 @@ async def run_experiment(config: dict, examples=None, eval_indices=None) -> dict
         "factuality_metric": (
             "decomposition_z3_roundtrip_against_known_probe_claim "
             "(NOT a factuality judgment of the generated biography — see module docstring)"
+        ),
+        "factscore_task_accuracy": factscore_factuality_report["task_accuracy"],
+        "factscore_hallucination_rate": factscore_factuality_report["hallucination_rate"],
+        "factscore_abstention_rate": factscore_factuality_report["abstention_rate"],
+        "factscore_factuality_report": factscore_factuality_report,
+        "factscore_factuality_metric": NLI_METRIC_LABEL_TEMPLATE.format(
+            hf_repo=config["nli_judge"]["hf_repo"], revision=config["nli_judge"]["revision"]
         ),
         "per_example": per_example,
     }
