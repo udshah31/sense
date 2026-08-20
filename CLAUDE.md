@@ -381,9 +381,17 @@ unprefixed `task_accuracy` above is still the Z3-known-entity check, not a
 factuality judgment.
 
 **What's still needed to fully close out the reconciled scope:**
-1. **Free-text claim extraction** — until this exists, FActScore (and RQ3's
-   symbolic round-trip) can only be exercised against known/probe claims, not the
-   model's own generated text. This is its own scoped task, not a quick addition.
+1. **Free-text claim extraction** — done for FActScore (2026-08-20). A
+   rule-based extractor (`services/symbolic/src/sense_symbolic/extraction.py`)
+   turns generated biography sentences into `AtomicClaim`s across the same
+   five relation kinds the fixed KB can verify, reported under
+   `factscore_symbolic_verification.py`'s `extracted_*`-prefixed keys — see
+   `docs/superpowers/specs/2026-08-20-freetext-claim-extraction-design.md`.
+   Named limitations: precision-biased fixed patterns (no negation handling,
+   no coreference resolution), and **RQ3's symbolic round-trip still has this
+   gap** — the extractor is built shared/reusable but was deliberately not
+   wired into `rq3_accuracy_latency_halueval.py` in this pass, per the
+   design's own scoping; that remains a small, separate follow-on task.
 2. **Real judge for factuality** — done (2026-08-17). The lexical-containment
    placeholder is retired; `eval/src/sense_eval/nli_judge.py` scores semantic
    entailment with a pinned local NLI model

@@ -135,10 +135,10 @@ Writes `../results/rag_baseline_halueval_<model_name>.json`.
 Not an RQ1-RQ3 harness. Exercises the decomposition front-end -> Z3 backend
 round-trip (`services/symbolic`) against FActScore's biography-prompt entities
 (`../data/splits/factscore.json`), generating a biography per example (same
-decoding config as the other harnesses) — this project has no free-text-to-triple
-extractor yet (out of scope, same reason `rq3_accuracy_latency_halueval.py`'s
-probe triple isn't derived from the question either), so the Z3 round-trip below
-doesn't extract claims from the generated biography. For each entity that resolves against the Z3 backend's small
+decoding config as the other harnesses). The Z3 round-trip below does not
+extract claims from the generated biography — it checks a known ground-truth
+probe claim instead (see below for the separate measurement that does extract
+from the generated text). For each entity that resolves against the Z3 backend's small
 fixed domain KB (`services/symbolic/src/sense_symbolic/domain.py`), it builds a
 known ground-truth probe claim (e.g. Einstein's birth year) and checks the
 backend verifies its own fact correctly; entities that don't resolve — most of
@@ -153,6 +153,16 @@ atomic-decomposition verdict against its own FActScore reference text
 (`example.wikipedia_text`) — this project's first real FActScore factuality
 number, kept separate from the Z3-round-trip keys above so the two are never
 confused.
+
+And a third, independent result under `extracted_*`-prefixed keys: claims are
+now extracted directly from the generated biography's own text via a
+rule-based extractor (`sense_symbolic.extraction.extract_claims`, see
+`../docs/superpowers/specs/2026-08-20-freetext-claim-extraction-design.md`)
+and verified through the same Z3 backend as the round-trip check above — this
+is real symbolic verification of the model's own claims, not a hand-built
+probe or an NLI entailment score, though the extractor is a first cut
+(precision-biased fixed patterns, no negation handling, no RQ3 integration
+yet).
 
 ```
 uv run python factscore_symbolic_verification.py
