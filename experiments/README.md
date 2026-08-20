@@ -94,8 +94,9 @@ annotate-only (CLAUDE.md's design decisions) and must never change output. Each
 checkpoint calibrates its own gate on its own disjoint calibration subset, then is
 loaded, run, and freed before the next checkpoint loads. Reports routing rate,
 per-stage latency (ungated/gated generation, gate evaluation, symbolic round-trip
-when routed), and a factuality proxy score (`eval/`'s lexical-containment
-placeholder — see its README; not a paper-grade judge) as
+when routed), and a factuality score from `eval/`'s NLI-based judge (see its README;
+real semantic entailment scoring, though its threshold calibration is a
+named, unvalidated first cut) as
 task_accuracy/hallucination_rate/abstention_rate together. The symbolic round-trip
 uses a fixed, always-resolvable probe triple (`../configs/rq3.yaml`) rather than one
 derived from the question — there's no free-text-to-triple extractor yet, so this
@@ -118,10 +119,10 @@ instrumentation and no gate/symbolic interaction, deliberately, per CLAUDE.md
 ("a comparison baseline, not the contribution — capped effort on purpose"). For each
 example in the eval split, retrieves the top-`k` passages, prepends them as context,
 and generates greedily under the same model and decoding config as RQ1-RQ3. Model,
-`top_k`, corpus path, and eval split come from `../configs/rag.yaml`. Reports a
-`factuality_accuracy_proxy` using the same lexical-containment placeholder metric as
-RQ3 (`eval/src/sense_eval/factuality.py`, see its README), not a paper-grade judge —
-a pipeline sanity check, not a reportable accuracy figure.
+`top_k`, corpus path, and eval split come from `../configs/rag.yaml`. Reports task_accuracy/hallucination_rate/abstention_rate scored by the real
+NLI judge (`eval/src/sense_eval/nli_judge.py`, see its README) — semantic
+entailment, not substring matching, though its threshold calibration is a
+named, unvalidated first cut.
 
 ```
 uv run python rag_baseline_halueval.py
@@ -145,6 +146,13 @@ FActScore's 500, since the KB is deliberately small — are recorded as abstaine
 not guessed at. So `task_accuracy` here means "entity resolved and its
 ground-truth probe claim verified correctly," not "generated biography was
 non-hallucinatory." Model and eval split come from `../configs/factscore_symbolic.yaml`.
+
+Also reports a second, independent factuality result under `factscore_*`-prefixed
+keys: every example's generated biography is scored by the NLI judge's
+atomic-decomposition verdict against its own FActScore reference text
+(`example.wikipedia_text`) — this project's first real FActScore factuality
+number, kept separate from the Z3-round-trip keys above so the two are never
+confused.
 
 ```
 uv run python factscore_symbolic_verification.py

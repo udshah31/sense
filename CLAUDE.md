@@ -373,16 +373,27 @@ still has no free-text-to-triple extractor (same reason RQ3's symbolic probe
 triple isn't derived from the question either; extracting claims from arbitrary
 generated prose is real, unscoped future work, tied to the still-undecided
 "replace" merge-back policy). Do not read this script's `task_accuracy` as a
-FActScore benchmark number.
+FActScore benchmark number. As of 2026-08-17, the same script's `factscore_*`-prefixed keys ARE a real
+FActScore factuality number — scored by the NLI judge's atomic-decomposition
+verdict against each example's own reference text, independent of the Z3
+round-trip check this paragraph describes. Don't conflate the two: the
+unprefixed `task_accuracy` above is still the Z3-known-entity check, not a
+factuality judgment.
 
 **What's still needed to fully close out the reconciled scope:**
 1. **Free-text claim extraction** — until this exists, FActScore (and RQ3's
    symbolic round-trip) can only be exercised against known/probe claims, not the
    model's own generated text. This is its own scoped task, not a quick addition.
-2. **Real judge for factuality** — `eval/src/sense_eval/factuality.py`'s
-   lexical-containment scorer is still a placeholder (loudly labeled as such in
-   every result it produces); replacing it with a fine-tuned judge or
-   FActScore-style atomic-fact scoring is unstarted.
+2. **Real judge for factuality** — done (2026-08-17). The lexical-containment
+   placeholder is retired; `eval/src/sense_eval/nli_judge.py` scores semantic
+   entailment with a pinned local NLI model
+   (`cliang1453/deberta-v3-xsmall-mnli`), used by every harness that produces
+   factuality numbers, including `factscore_symbolic_verification.py`'s
+   FActScore biographies (atomic-decomposition + supported-fraction, matching
+   FActScore's own methodology). Named limitation, not yet resolved: the
+   entailment/fraction thresholds (`configs/nli_judge.yaml`) are a first cut,
+   not calibrated against human-labeled ground truth — none exists yet for
+   this project. See `docs/superpowers/specs/2026-08-16-nli-judge-design.md`.
 
 Not yet built regardless of scope: real-model GPU runs against the reconciled
 current scope).
