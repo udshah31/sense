@@ -20,13 +20,16 @@ before the next checkpoint loads — so peak GPU memory only ever holds one
 checkpoint at a time regardless of how many the config lists.
 
 The symbolic round-trip uses a fixed, always-resolvable probe triple
-(configs/rq3.yaml) rather than one derived from the question — RQ3's symbolic
-probe doesn't extract claims from the model's own generated text yet (see
-`services/symbolic/src/sense_symbolic/extraction.py` for the extractor
-FActScore's harness already uses; wiring it into RQ3 is a separate follow-on,
-tied to the undecided merge-back "replace" policy). It measures real
-network/round-trip cost against the real backend; it is not a factuality check
-of the question and must not be read as one.
+(configs/rq3.yaml) rather than one derived from the question. This project does
+have a free-text claim extractor (`services/symbolic/src/sense_symbolic/
+extraction.py`, already used by FActScore's harness), but it's deliberately not
+wired in here — see configs/rq3.yaml's comment for why: extraction needs a
+subject entity to anchor claims to, and HaluEval's QA examples (unlike
+FActScore's biography examples) have no such field, so extraction against the
+model's answer would return zero claims on most questions and defeat the point
+of this measurement, which needs a real round-trip on every routed example. It
+measures real network/round-trip cost against the real backend; it is not a
+factuality check of the question and must not be read as one.
 
 Factuality is scored with eval/'s NLI-based judge (see eval/README.md; its
 threshold calibration is a named, unvalidated first cut — not a paper-grade

@@ -392,10 +392,17 @@ keys described above — don't conflate any of the three.
    `factscore_symbolic_verification.py`'s `extracted_*`-prefixed keys — see
    `docs/superpowers/specs/2026-08-20-freetext-claim-extraction-design.md`.
    Named limitations: precision-biased fixed patterns (no negation handling,
-   no coreference resolution), and **RQ3's symbolic round-trip still has this
-   gap** — the extractor is built shared/reusable but was deliberately not
-   wired into `rq3_accuracy_latency_halueval.py` in this pass, per the
-   design's own scoping; that remains a small, separate follow-on task.
+   no coreference resolution). **Does not apply to RQ3** (2026-08-20,
+   revised from an earlier "small follow-on" framing): HaluEval's QA
+   examples have no title-entity field the way FActScore's biography
+   examples do (`example.entity`), so the extractor would have no reliable
+   subject to anchor claims to and would return zero claims on most
+   open-domain questions — that would silently turn most routed examples
+   into "nothing to verify," defeating RQ3's actual purpose (a real
+   round-trip against the real backend on every routed example, regardless
+   of question content). `rq3_accuracy_latency_halueval.py`'s fixed,
+   always-resolvable probe triple is intentional, not a gap — see
+   `configs/rq3.yaml`'s comment.
 2. **Real judge for factuality** — done (2026-08-17). The lexical-containment
    placeholder is retired; `eval/src/sense_eval/nli_judge.py` scores semantic
    entailment with a pinned local NLI model

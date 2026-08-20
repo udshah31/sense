@@ -12,15 +12,23 @@ models: [llama3, mistral, qwen3_8b, qwen3_4b, qwen3_1_7b]
 eval_split: development
 n_eval_examples: 1000
 
-# The symbolic backend verifies (subject, predicate, object) triples, but this
-# project has no entity/relation extractor yet to turn a free-text HaluEval
-# question into one (that's future work, tied to the still-undecided merge-back
-# "replace" policy). This fixed, always-resolvable triple stands in for "some real
-# claim" so the round-trip latency measured is real cost against the real backend
-# (the Z3 symbolic backend by default — see services/symbolic) — it is NOT a claim
-# about the HaluEval question being verified. Do not read symbolic_result content
-# from this harness as a factuality signal. (Chosen deliberately: Albert
-# Einstein/physicist/P106 is also a fact in the Z3 backend's fixed domain KB —
+# The symbolic backend verifies (subject, predicate, object) triples. This project
+# does have a free-text claim extractor now (services/symbolic/src/sense_symbolic/
+# extraction.py, used by experiments/factscore_symbolic_verification.py), but it's
+# deliberately NOT wired in here: extraction needs a subject_label to anchor
+# claims to (FActScore supplies one per example via example.entity, its biography
+# title entity), and HaluEval's QA examples have no equivalent field — just
+# question/right_answer/hallucinated_answer text. Extracting against the model's
+# generated answer with no reliable subject would return zero claims on most of
+# HaluEval's open-domain questions, silently turning most "routed" examples into
+# "nothing to verify" and undermining the one thing this harness needs: a
+# real round-trip against the real backend on every routed example. So this fixed,
+# always-resolvable triple stands in for "some real claim" instead — the round-trip
+# latency measured is real cost against the real backend (the Z3 symbolic backend
+# by default — see services/symbolic) — it is NOT a claim about the HaluEval
+# question being verified. Do not read symbolic_result content from this harness
+# as a factuality signal. (Chosen deliberately: Albert Einstein/physicist/P106 is
+# also a fact in the Z3 backend's fixed domain KB —
 # services/symbolic/src/sense_symbolic/domain.py — so it resolves to verified=true
 # under the default backend, not just a latency no-op.)
 symbolic_probe:
