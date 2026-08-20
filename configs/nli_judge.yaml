@@ -1,18 +1,25 @@
 # NLI-based factuality judge (eval/src/sense_eval/nli_judge.py), replacing
 # the retired lexical-containment placeholder. See
-# docs/superpowers/specs/2026-08-16-nli-judge-design.md for the full design
-# and its named limitation: these thresholds are a first cut, not calibrated
-# against human-labeled ground truth (none exists yet for this project).
+# docs/superpowers/specs/2026-08-16-nli-judge-design.md for the full design.
 hf_repo: cliang1453/deberta-v3-xsmall-mnli
 revision: d1ca70f9ece4d8afd33015893a69df9a6e45a672
 
 # nli_verdict_short_answer (HaluEval-shaped harnesses): entailment probability
 # at or above which a generated answer counts as entailing right_answer or
-# hallucinated_answer.
+# hallucinated_answer. Calibrated 2026-08-20
+# (experiments/calibrate_nli_short_answer_threshold.py) against HaluEval's own
+# right_answer/hallucinated_answer construction as ground truth — 0.7 scored
+# 98.7%/98.2% verdict-accuracy on the fit/held-out calibration-pool split (see
+# results/nli_short_answer_calibration.json). Honest limitation of that
+# calibration: it uses the canonical answer text as a stand-in generation
+# (self-entailment), not a real paraphrased model output — see eval/README.md.
 short_answer_entailment_threshold: 0.7
 
 # factscore_style_verdict (FActScore-shaped harness): per-claim entailment
 # threshold for "this atomic claim is supported by the reference text" ...
+# Still an uncalibrated first cut (unlike short_answer_entailment_threshold
+# above) — FActScore has no equivalent free known-right/known-wrong pair to
+# calibrate against; see eval/README.md.
 claim_supported_threshold: 0.7
 # ... and the two thresholds the resulting supported_fraction is discretized
 # against.

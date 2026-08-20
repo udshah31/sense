@@ -409,10 +409,19 @@ keys described above — don't conflate any of the three.
    (`cliang1453/deberta-v3-xsmall-mnli`), used by every harness that produces
    factuality numbers, including `factscore_symbolic_verification.py`'s
    FActScore biographies (atomic-decomposition + supported-fraction, matching
-   FActScore's own methodology). Named limitation, not yet resolved: the
-   entailment/fraction thresholds (`configs/nli_judge.yaml`) are a first cut,
-   not calibrated against human-labeled ground truth — none exists yet for
-   this project. See `docs/superpowers/specs/2026-08-16-nli-judge-design.md`.
+   FActScore's own methodology). `short_answer_entailment_threshold`
+   (HaluEval-shaped harnesses: RQ1-RQ3, RAG baseline) is calibrated
+   (2026-08-20, `experiments/calibrate_nli_short_answer_threshold.py`)
+   against HaluEval's own real right_answer/hallucinated_answer construction
+   — no human labeling needed; 0.7 (unchanged) scores 98.7%/98.2%
+   verdict-accuracy fit/held-out (`results/nli_short_answer_calibration.json`).
+   Honest limitation of that calibration: it uses canonical answer text as a
+   stand-in generation, not a real paraphrased model output. **Still
+   unresolved**: FActScore's three thresholds (`claim_supported_threshold`,
+   `fraction_correct_threshold`, `fraction_incorrect_threshold`) remain an
+   uncalibrated first cut — FActScore has no equivalent free known-right/
+   known-wrong pair, so that calibration needs real model generations judged
+   by a human. See `docs/superpowers/specs/2026-08-16-nli-judge-design.md`.
 
 Not yet built regardless of scope: real-model GPU runs against the reconciled
 current scope).

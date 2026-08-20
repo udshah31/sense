@@ -1,0 +1,159 @@
+{
+  "calibration_target": "nli_verdict_short_answer's short_answer_entailment_threshold (configs/nli_judge.yaml)",
+  "hf_repo": "cliang1453/deberta-v3-xsmall-mnli",
+  "revision": "d1ca70f9ece4d8afd33015893a69df9a6e45a672",
+  "n_calibration_pool_examples": 5000,
+  "n_fit_examples": 4000,
+  "n_holdout_examples": 1000,
+  "candidate_thresholds": [
+    0.05,
+    0.1,
+    0.15,
+    0.2,
+    0.25,
+    0.3,
+    0.35,
+    0.4,
+    0.45,
+    0.5,
+    0.55,
+    0.6,
+    0.65,
+    0.7,
+    0.75,
+    0.8,
+    0.85,
+    0.9,
+    0.95
+  ],
+  "fit_sweep": [
+    {
+      "threshold": 0.05,
+      "n_cases": 8000,
+      "verdict_accuracy": 0.82125,
+      "unknown_rate": 0.17875
+    },
+    {
+      "threshold": 0.1,
+      "n_cases": 8000,
+      "verdict_accuracy": 0.87625,
+      "unknown_rate": 0.12375
+    },
+    {
+      "threshold": 0.15,
+      "n_cases": 8000,
+      "verdict_accuracy": 0.907375,
+      "unknown_rate": 0.092625
+    },
+    {
+      "threshold": 0.2,
+      "n_cases": 8000,
+      "verdict_accuracy": 0.926875,
+      "unknown_rate": 0.073125
+    },
+    {
+      "threshold": 0.25,
+      "n_cases": 8000,
+      "verdict_accuracy": 0.939125,
+      "unknown_rate": 0.060875
+    },
+    {
+      "threshold": 0.3,
+      "n_cases": 8000,
+      "verdict_accuracy": 0.9485,
+      "unknown_rate": 0.0515
+    },
+    {
+      "threshold": 0.35,
+      "n_cases": 8000,
+      "verdict_accuracy": 0.955875,
+      "unknown_rate": 0.044125
+    },
+    {
+      "threshold": 0.4,
+      "n_cases": 8000,
+      "verdict_accuracy": 0.9625,
+      "unknown_rate": 0.0375
+    },
+    {
+      "threshold": 0.45,
+      "n_cases": 8000,
+      "verdict_accuracy": 0.968375,
+      "unknown_rate": 0.031625
+    },
+    {
+      "threshold": 0.5,
+      "n_cases": 8000,
+      "verdict_accuracy": 0.9735,
+      "unknown_rate": 0.0265
+    },
+    {
+      "threshold": 0.55,
+      "n_cases": 8000,
+      "verdict_accuracy": 0.978875,
+      "unknown_rate": 0.021125
+    },
+    {
+      "threshold": 0.6,
+      "n_cases": 8000,
+      "verdict_accuracy": 0.982375,
+      "unknown_rate": 0.017625
+    },
+    {
+      "threshold": 0.65,
+      "n_cases": 8000,
+      "verdict_accuracy": 0.985625,
+      "unknown_rate": 0.014375
+    },
+    {
+      "threshold": 0.7,
+      "n_cases": 8000,
+      "verdict_accuracy": 0.986875,
+      "unknown_rate": 0.013125
+    },
+    {
+      "threshold": 0.75,
+      "n_cases": 8000,
+      "verdict_accuracy": 0.9665,
+      "unknown_rate": 0.0335
+    },
+    {
+      "threshold": 0.8,
+      "n_cases": 8000,
+      "verdict_accuracy": 0.951,
+      "unknown_rate": 0.049
+    },
+    {
+      "threshold": 0.85,
+      "n_cases": 8000,
+      "verdict_accuracy": 0.906,
+      "unknown_rate": 0.093875
+    },
+    {
+      "threshold": 0.9,
+      "n_cases": 8000,
+      "verdict_accuracy": 0.8165,
+      "unknown_rate": 0.18325
+    },
+    {
+      "threshold": 0.95,
+      "n_cases": 8000,
+      "verdict_accuracy": 0.648625,
+      "unknown_rate": 0.35075
+    }
+  ],
+  "recommended_threshold": 0.7,
+  "recommended_threshold_fit_metrics": {
+    "threshold": 0.7,
+    "n_cases": 8000,
+    "verdict_accuracy": 0.986875,
+    "unknown_rate": 0.013125
+  },
+  "recommended_threshold_holdout_metrics": {
+    "threshold": 0.7,
+    "n_cases": 2000,
+    "verdict_accuracy": 0.982,
+    "unknown_rate": 0.018
+  },
+  "method": "proxy ground truth from HaluEval's own right_answer/hallucinated_answer construction (self-entailment against the canonical answer text, not a real model generation) \u2014 see module docstring for the honest limitation"
+}

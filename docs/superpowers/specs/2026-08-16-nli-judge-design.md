@@ -123,13 +123,31 @@ Thresholds live in `configs/nli_judge.yaml`, not as function defaults —
 explicit and reviewable, not a silent magic number baked into code.
 
 **Named limitation, stated in the module docstring and `eval/README.md`:**
-these thresholds are a first cut, chosen for reasonable behavior on manual
-spot checks, not calibrated against a human-labeled validation set (none
-exists yet for this project). This judge is real (not a placeholder — it
+these thresholds started as a first cut, chosen for reasonable behavior on
+manual spot checks, not calibrated against a human-labeled validation set
+(none exists for this project). This judge is real (not a placeholder — it
 does semantic entailment, not substring matching) but its threshold
-calibration is unvalidated. State this plainly wherever its numbers are
+calibration was unvalidated. State this plainly wherever its numbers are
 reported, the same way the lexical-containment placeholder's limitation was
 stated.
+
+**Update, 2026-08-20:** `short_answer_entailment_threshold` (the HaluEval-
+shaped verdict's threshold) is now calibrated — see
+`experiments/calibrate_nli_short_answer_threshold.py` and
+`eval/README.md`'s "Threshold calibration status" section. HaluEval's own
+`right_answer`/`hallucinated_answer` construction supplies ground truth
+without any human labeling: the calibration scored 0.7 (the value already
+in use) at 98.7%/98.2% verdict-accuracy on a fit/held-out split of the
+5,000-example calibration pool. Still an honest limitation, not a fully
+resolved one: this method uses the canonical answer text as a stand-in
+generation (self-entailment), not a real paraphrased model output — it
+confirms the threshold correctly ranks the matching answer over the wrong
+one, not how it performs on realistic hedged/partial-credit generations.
+`claim_supported_threshold`/`fraction_correct_threshold`/`fraction_incorrect_threshold`
+(the FActScore-shaped verdict's thresholds) remain uncalibrated — FActScore
+has no equivalent free known-right/known-wrong pair; that calibration needs
+either real model generations judged by a human, or reused human
+annotations for different models' outputs.
 
 ## Integration (full replacement)
 
