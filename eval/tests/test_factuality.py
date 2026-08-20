@@ -96,3 +96,28 @@ def test_assert_factuality_metrics_reported_together_raises_on_prefixed_partial_
                 "factscore_task_accuracy": 0.7,
             }
         )
+
+
+def test_assert_factuality_metrics_reported_together_passes_when_extracted_triple_present():
+    result = {
+        "task_accuracy": 1.0,
+        "hallucination_rate": 0.0,
+        "abstention_rate": 0.0,
+        "extracted_task_accuracy": 0.5,
+        "extracted_hallucination_rate": 0.5,
+        "extracted_abstention_rate": 0.0,
+    }
+    assert_factuality_metrics_reported_together(result)  # must not raise
+
+
+def test_assert_factuality_metrics_reported_together_raises_on_extracted_partial_subset():
+    result = {
+        "task_accuracy": 1.0,
+        "hallucination_rate": 0.0,
+        "abstention_rate": 0.0,
+        "extracted_task_accuracy": 0.5,
+        "extracted_hallucination_rate": 0.5,
+        # extracted_abstention_rate missing
+    }
+    with pytest.raises(IncompleteFactualityReportError):
+        assert_factuality_metrics_reported_together(result)

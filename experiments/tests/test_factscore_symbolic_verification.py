@@ -85,3 +85,51 @@ async def test_run_experiment_verifies_known_entity_as_correct():
     assert unresolved_record["factuality"] is None
     # NLI scoring runs regardless of Z3 entity resolution — it's independent.
     assert "factscore_factuality" in unresolved_record
+
+    # Extracted-claims numbers (from the generated biography's own text) — new,
+    # independent of both the Z3-probe-claim trio and the factscore_* NLI trio.
+    assert "extracted_task_accuracy" in result
+    assert "extracted_hallucination_rate" in result
+    assert "extracted_abstention_rate" in result
+    assert result["extracted_factuality_report"]["n_examples"] == 2
+    assert "extracted_claims_count" in resolved_record
+    assert "extracted_factuality" in resolved_record
+    assert "extracted_claims_count" in unresolved_record
+    assert "extracted_factuality" in unresolved_record
+
+
+from factscore_symbolic_verification import extracted_claims_verdict
+
+
+def test_extracted_claims_verdict_correct_when_claim_verifies_true():
+    verdict, count = extracted_claims_verdict("Albert Einstein", "Albert Einstein was born in 1879.")
+    assert verdict.label == "correct"
+    assert count == 1
+
+
+def test_extracted_claims_verdict_incorrect_when_claim_verifies_false():
+    verdict, count = extracted_claims_verdict("Albert Einstein", "Albert Einstein was born in 1900.")
+    assert verdict.label == "incorrect"
+    assert count == 1
+
+
+def test_extracted_claims_verdict_unknown_when_no_claims_extracted():
+    verdict, count = extracted_claims_verdict("Albert Einstein", "Albert Einstein enjoyed music.")
+    assert verdict.label == "unknown"
+    assert count == 0
+
+
+def test_extracted_claims_verdict_unknown_when_subject_unresolved():
+    verdict, count = extracted_claims_verdict("Some Unresolvable Person", "Some Unresolvable Person was born in 1900.")
+    assert verdict.label == "unknown"
+    assert count == 1
+
+
+def test_extracted_claims_verdict_prioritizes_incorrect_over_correct():
+    # Two sentences: one true claim, one false claim about the same subject —
+    # any False must make the whole verdict "incorrect".
+    verdict, count = extracted_claims_verdict(
+        "Albert Einstein", "Albert Einstein was born in 1879. Albert Einstein was born in 1900."
+    )
+    assert verdict.label == "incorrect"
+    assert count == 2

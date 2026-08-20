@@ -31,6 +31,17 @@ never confused with each other. This is this project's first real (non-placehold
 FActScore factuality number, though its threshold calibration is a named,
 unvalidated first cut (see `docs/superpowers/specs/2026-08-16-nli-judge-design.md`).
 
+A third, independent measurement now also extracts claims from the generated
+biography's own text (not a hand-built probe claim) via a rule-based extractor
+(`sense_symbolic.extraction.extract_claims`) and verifies each through the same
+Z3 backend as the round-trip check above — reported under the
+`extracted_*`-prefixed keys. This is this project's first real symbolic
+verification of the model's *own* generated claims (as opposed to a
+known-ground-truth probe or an NLI entailment score), though the extractor
+itself is a first cut: precision-biased fixed patterns over five relation
+kinds, no negation handling, no coreference resolution (see
+`docs/superpowers/specs/2026-08-20-freetext-claim-extraction-design.md`).
+
 The biography itself is still generated (from `factscore_prompt`, same decoding
 config as every other harness) and included per-example for inspection, exercising
 the CPU-testable generation path this pipeline will eventually need for a real
@@ -40,9 +51,10 @@ via the NLI judge, under the `factscore_*`-prefixed keys.
 
 from _common import build_generation_inputs, load_factscore_examples_and_splits, load_model, load_model_registry, load_yaml_config, write_results
 from sense_eval.factuality import FactualityVerdict, summarize_factuality
-from sense_eval.nli_judge import NLI_METRIC_LABEL_TEMPLATE, factscore_style_verdict, load_nli_model
+from sense_eval.nli_judge import NLI_METRIC_LABEL_TEMPLATE, factscore_style_verdict, load_nli_model, split_into_atomic_claims
 from sense_symbolic.decomposition import decompose_claim
 from sense_symbolic.domain import facts_for, resolve_entity
+from sense_symbolic.extraction import extract_claims
 from sense_symbolic.z3_verifier import verify_claim
 
 
@@ -67,6 +79,35 @@ def build_probe_claim(entity_key: str) -> tuple[str, str]:
     if facts.nationality is not None:
         return "P27", facts.nationality
     raise ValueError(f"entity {entity_key!r} has no probe-able fact (birth_year or nationality) in the fixed domain KB")
+
+
+def extracted_claims_verdict(subject_label: str, generated_text: str) -> tuple[FactualityVerdict, int]:
+    """Splits generated_text into sentences, extracts AtomicClaims from each
+    via extract_claims (services/symbolic's rule-based extractor), and
+    verifies each through the existing Z3 verify_claim. Aggregates: any
+    verified-False claim makes the whole verdict "incorrect"; else any
+    verified-True claim makes it "correct"; else "unknown" — including when
+    zero claims were extracted, or every extracted claim's subject failed to
+    resolve against the fixed KB. Returns the verdict plus the number of
+    claims extracted (for per_example transparency, regardless of whether
+    they verified) — see
+    docs/superpowers/specs/2026-08-20-freetext-claim-extraction-design.md.
+    """
+    claims = [
+        claim
+        for sentence in split_into_atomic_claims(generated_text)
+        for claim in extract_claims(subject_label, sentence)
+    ]
+    results = [verify_claim(claim) for claim in claims]
+
+    if any(result is False for result in results):
+        label = "incorrect"
+    elif any(result is True for result in results):
+        label = "correct"
+    else:
+        label = "unknown"
+
+    return FactualityVerdict(label=label), len(claims)
 
 
 async def run_experiment(config: dict, examples=None, eval_indices=None) -> dict:
@@ -105,6 +146,8 @@ async def run_experiment(config: dict, examples=None, eval_indices=None) -> dict
             config["nli_judge"]["fraction_incorrect_threshold"],
         )
 
+        extracted_verdict, extracted_claims_count = extracted_claims_verdict(example.entity, generated_text)
+
         resolved_key = resolve_entity(example.entity)
         if resolved_key is None:
             per_example.append(
@@ -116,6 +159,8 @@ async def run_experiment(config: dict, examples=None, eval_indices=None) -> dict
                     "factuality": None,
                     "factscore_factuality": factscore_verdict.label,
                     "factscore_supported_fraction": factscore_detail.supported_fraction,
+                    "extracted_factuality": extracted_verdict.label,
+                    "extracted_claims_count": extracted_claims_count,
                 }
             )
             continue
@@ -136,6 +181,8 @@ async def run_experiment(config: dict, examples=None, eval_indices=None) -> dict
                 "factuality": label,
                 "factscore_factuality": factscore_verdict.label,
                 "factscore_supported_fraction": factscore_detail.supported_fraction,
+                "extracted_factuality": extracted_verdict.label,
+                "extracted_claims_count": extracted_claims_count,
             }
         )
 
@@ -146,6 +193,9 @@ async def run_experiment(config: dict, examples=None, eval_indices=None) -> dict
 
     factscore_verdicts = [FactualityVerdict(label=r["factscore_factuality"]) for r in per_example]
     factscore_factuality_report = summarize_factuality(factscore_verdicts, n_abstained=0)
+
+    extracted_verdicts = [FactualityVerdict(label=r["extracted_factuality"]) for r in per_example]
+    extracted_factuality_report = summarize_factuality(extracted_verdicts, n_abstained=0)
 
     return {
         "research_question": "FActScore symbolic-verification pipeline check (not RQ1-RQ3)",
@@ -169,6 +219,14 @@ async def run_experiment(config: dict, examples=None, eval_indices=None) -> dict
         "factscore_factuality_report": factscore_factuality_report,
         "factscore_factuality_metric": NLI_METRIC_LABEL_TEMPLATE.format(
             hf_repo=config["nli_judge"]["hf_repo"], revision=config["nli_judge"]["revision"]
+        ),
+        "extracted_task_accuracy": extracted_factuality_report["task_accuracy"],
+        "extracted_hallucination_rate": extracted_factuality_report["hallucination_rate"],
+        "extracted_abstention_rate": extracted_factuality_report["abstention_rate"],
+        "extracted_factuality_report": extracted_factuality_report,
+        "extracted_factuality_metric": (
+            "z3_verified_claims_extracted_from_generated_text (rule-based extraction; "
+            "see docs/superpowers/specs/2026-08-20-freetext-claim-extraction-design.md)"
         ),
         "per_example": per_example,
     }
