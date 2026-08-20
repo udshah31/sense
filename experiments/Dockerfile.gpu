@@ -1,0 +1,53 @@
+# GPU-environment image for the real five-checkpoint runs
+# (`run_gpu_experiments.sh` — CLAUDE.md's "one command reproduces the headline
+# result" requirement). Not used by the CPU dev environment; every component
+# there runs against tiny models directly via each package's own uv venv, no
+# container needed. This image exists solely to give the GPU environment a
+# reproducible, pinned Python 3.13 + CUDA runtime, matching CLAUDE.md's
+# reproducibility requirements ("pinned Docker images by digest, not tag" —
+# base image below is pinned by tag for now; re-pin by digest once this image
+# has actually run once and its digest is known, per the "Model weights are
+# never baked into images" comment's neighbor rule of not inventing values
+# ahead of a real run).
+#
+# There is deliberately ONE image for the whole repo, not one per service
+# (services/neural, services/orchestrator have no HTTP entrypoint — they are
+# plain Python libraries the experiments/ scripts import in-process; only
+# services/symbolic has an HTTP contract, and even that is started in-process
+# by each harness via uvicorn.Server, not as a separate container — see
+# experiments/rq3_accuracy_latency_halueval.py's module docstring). Splitting
+# this into per-service containers would require adding HTTP entrypoints to
+# neural/orchestrator that don't exist and the current architecture doesn't
+# call for.
+
+FROM nvidia/cuda:12.4.1-runtime-ubuntu22.04
+
+# Python 3.13 via deadsnakes — Ubuntu 22.04's default python3 is 3.10, and
+# every pyproject.toml in this repo pins requires-python = ">=3.13.5".
+RUN apt-get update && apt-get install -y --no-install-recommends \
+        software-properties-common \
+        curl \
+        git \
+    && add-apt-repository -y ppa:deadsnakes/ppa \
+    && apt-get update && apt-get install -y --no-install-recommends \
+        python3.13 \
+        python3.13-venv \
+    && rm -rf /var/lib/apt/lists/*
+
+# uv manages every package's own venv (each services/*, eval/, experiments/
+# directory has its own pyproject.toml + uv.lock) — same tool the CPU dev
+# environment uses, so the dependency-resolution path is identical on both.
+COPY --from=ghcr.io/astral-sh/uv:0.5.11 /uv /usr/local/bin/uv
+
+WORKDIR /sense
+COPY . .
+
+# experiments/pyproject.toml declares every sibling package (sense_data,
+# sense_neural, sense_orchestrator, sense_symbolic, sense_eval, sense_rag) as
+# an editable path dependency — one `uv sync` here resolves and installs the
+# whole tree, matching how a developer runs it locally (see experiments/README.md).
+WORKDIR /sense/experiments
+RUN uv sync --python python3.13
+
+ENTRYPOINT ["./run_gpu_experiments.sh"]
+CMD ["all"]

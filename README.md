@@ -41,5 +41,8 @@ sense/
 ## Setup
 
 1. Copy `.env.example` to `.env` and fill in `HF_TOKEN` (required for gated Llama-3 access).
-2. `docker-compose.yml` defines the service containers; see individual service READMEs
-   for local (non-Docker) development.
+2. Local (CPU) development doesn't need Docker — see individual service READMEs
+   and `experiments/README.md`. `docker-compose.yml` defines a single GPU-capable
+   `experiments` service for the real five-checkpoint runs
+   (`docker compose run experiments [rq1|rq2|rq3|rag|all]`), matching
+   `experiments/run_gpu_experiments.sh`.

@@ -1,29 +1,39 @@
 # SENSE service containers.
 # Model weights are never baked into images — mount a host cache volume instead.
-# Image digests, not tags, are pinned once each service has a Dockerfile (Phase 0: none yet).
+# Image digests, not tags, are pinned once each service has run once and its
+# digest is known (Phase 0: not yet run for real).
+#
+# One GPU-capable "experiments" service, not a per-component split. The
+# original three-service split here (neural/orchestrator/symbolic, each its
+# own container talking HTTP) predates the current architecture: only
+# services/symbolic has an HTTP contract (app.py), and even that gets started
+# in-process by each experiments/ harness (uvicorn.Server inside the same
+# Python process — see experiments/rq3_accuracy_latency_halueval.py), not run
+# as a separate container. services/neural and services/orchestrator have no
+# server entrypoint at all; experiments/ imports both as plain Python
+# libraries. This service matches what the code actually does: one
+# GPU-resident process per run, importing every sibling package in-process.
 
 services:
-  neural:
-    build: ./services/neural
+  experiments:
+    build:
+      context: .
+      dockerfile: experiments/Dockerfile.gpu
     env_file: .env
     volumes:
       - ${HF_CACHE_DIR:-~/.cache/huggingface}:/root/.cache/huggingface
-    # GPU access (Phase 0 placeholder — uncomment on the GPU environment):
-    # deploy:
-    #   resources:
-    #     reservations:
-    #       devices:
-    #         - driver: nvidia
-    #           count: all
-    #           capabilities: [gpu]
-
-  orchestrator:
-    build: ./services/orchestrator
-    depends_on:
-      - neural
-      - symbolic
-
-  symbolic:
-    build: ./services/symbolic
-    ports:
-      - "8001:8001"
+      - ./results:/sense/results
+    # GPU access — required; run_gpu_experiments.sh's own preflight check
+    # fails fast if CUDA isn't visible, so this reservation isn't optional the
+    # way earlier drafts left it commented out.
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+    # Defaults to running all four stages (rq1, rq2, rq3, rag). Override with
+    # e.g. `docker compose run experiments rq3` for one stage only, matching
+    # run_gpu_experiments.sh's own usage.
+    command: ["all"]
