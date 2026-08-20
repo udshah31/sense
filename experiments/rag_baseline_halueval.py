@@ -7,9 +7,9 @@ contribution — capped effort on purpose").
 Re-pointed from TruthfulQA to HaluEval (2026-08-13 scope reconciliation) —
 TruthfulQA stays in the repo for the excluded-benchmark discussion (CLAUDE.md),
 but is no longer what this baseline is scored against. HaluEval gives each
-example a `right_answer` and a model-authored `hallucinated_answer`; the
-lexical-containment verdict below treats those the same way the TruthfulQA
-version treated best/correct vs. incorrect answers.
+example a `right_answer` and a model-authored `hallucinated_answer`; the NLI
+judge verdict below treats those the same way the TruthfulQA version treated
+best/correct vs. incorrect answers.
 
 Retrieval and generation never touch the network at run time: the corpus is
 pre-built and committed, and the embedding model is loaded from the local HF

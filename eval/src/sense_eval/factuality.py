@@ -31,17 +31,41 @@ class IncompleteFactualityReportError(ValueError):
     that none of the three may be reported alone."""
 
 
+def _grouped_by_prefix(keys: frozenset) -> dict:
+    """Group result keys by prefix (possibly empty) for each required-together
+    suffix present. A harness that reports a second, independently-scored triple
+    under a prefix (e.g. FActScore's `factscore_task_accuracy`,
+    `factscore_hallucination_rate`, `factscore_abstention_rate`) must obey the
+    same all-or-nothing rule as the unprefixed triple — this groups keys by
+    prefix so each group can be checked independently.
+    """
+    groups: dict = {}
+    for key in keys:
+        for suffix in REQUIRED_TOGETHER_KEYS:
+            if key == suffix:
+                prefix = ""
+            elif key.endswith("_" + suffix):
+                prefix = key[: -(len(suffix) + 1)]
+            else:
+                continue
+            groups.setdefault(prefix, set()).add(suffix)
+    return groups
+
+
 def assert_factuality_metrics_reported_together(result: dict) -> None:
-    present = REQUIRED_TOGETHER_KEYS & result.keys()
-    if present and present != REQUIRED_TOGETHER_KEYS:
-        missing = REQUIRED_TOGETHER_KEYS - present
-        raise IncompleteFactualityReportError(
-            f"result reports {sorted(present)} but is missing {sorted(missing)} — "
-            "task_accuracy, hallucination_rate, and abstention_rate must always be "
-            "reported together, never a subset (a hallucination-rate number alone "
-            "is misleading: abstaining trivially drives it toward zero at the cost "
-            "of accuracy)"
-        )
+    groups = _grouped_by_prefix(frozenset(result.keys()))
+    for prefix, present in groups.items():
+        if present != REQUIRED_TOGETHER_KEYS:
+            missing = REQUIRED_TOGETHER_KEYS - present
+            label = lambda s: f"{prefix}_{s}" if prefix else s  # noqa: E731
+            raise IncompleteFactualityReportError(
+                f"result reports {sorted(label(s) for s in present)} but is missing "
+                f"{sorted(label(s) for s in missing)} — task_accuracy, "
+                "hallucination_rate, and abstention_rate must always be reported "
+                "together, never a subset (a hallucination-rate number alone is "
+                "misleading: abstaining trivially drives it toward zero at the cost "
+                "of accuracy)"
+            )
 
 
 def summarize_factuality(verdicts: list[FactualityVerdict], n_abstained: int) -> dict:

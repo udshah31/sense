@@ -34,7 +34,8 @@ unvalidated first cut (see `docs/superpowers/specs/2026-08-16-nli-judge-design.m
 The biography itself is still generated (from `factscore_prompt`, same decoding
 config as every other harness) and included per-example for inspection, exercising
 the CPU-testable generation path this pipeline will eventually need for a real
-extractor — it just isn't scored.
+extractor — and, as described above, it IS now scored against the reference text
+via the NLI judge, under the `factscore_*`-prefixed keys.
 """
 
 from _common import build_generation_inputs, load_factscore_examples_and_splits, load_model, load_model_registry, load_yaml_config, write_results

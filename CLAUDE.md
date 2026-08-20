@@ -351,9 +351,9 @@ All three research-question harnesses (`experiments/`) are re-pointed to HaluEva
 with per-checkpoint calibration splits (`data/splits/halueval.json`) and run
 end-to-end on real data: RQ1 `transfer_threshold_halueval.py` (fixed-threshold
 transfer), RQ2 `adaptive_threshold_halueval.py` (self-adaptive threshold), RQ3
-`rq3_accuracy_latency_halueval.py` (accuracy-latency trade-off — factuality still
-scored via a placeholder lexical-containment metric, not the eventual judge; see
-`eval/README.md`). This migration (plan
+`rq3_accuracy_latency_halueval.py` (accuracy-latency trade-off — factuality now
+scored by the NLI judge, not a placeholder; see `eval/README.md`). This migration
+(plan
 `docs/superpowers/plans/2026-08-14-rq1-rq3-halueval-five-checkpoint.md`) is
 complete and merged. The RAG comparison baseline is re-pointed to HaluEval too
 (`experiments/rag_baseline_halueval.py`, `services/rag`'s corpus tied to

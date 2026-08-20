@@ -69,3 +69,30 @@ def test_assert_factuality_metrics_reported_together_raises_when_only_hallucinat
     # alone, with no accuracy or abstention figure next to it.
     with pytest.raises(IncompleteFactualityReportError):
         assert_factuality_metrics_reported_together({"hallucination_rate": 0.02})
+
+
+def test_assert_factuality_metrics_reported_together_passes_when_prefixed_triple_present():
+    # FActScore's factscore_symbolic_verification.py reports a SECOND, independent
+    # triple under factscore_-prefixed keys alongside the unprefixed one.
+    assert_factuality_metrics_reported_together(
+        {
+            "task_accuracy": 0.5,
+            "hallucination_rate": 0.1,
+            "abstention_rate": 0.0,
+            "factscore_task_accuracy": 0.7,
+            "factscore_hallucination_rate": 0.2,
+            "factscore_abstention_rate": 0.1,
+        }
+    )  # must not raise
+
+
+def test_assert_factuality_metrics_reported_together_raises_on_prefixed_partial_subset():
+    with pytest.raises(IncompleteFactualityReportError, match="factscore_hallucination_rate"):
+        assert_factuality_metrics_reported_together(
+            {
+                "task_accuracy": 0.5,
+                "hallucination_rate": 0.1,
+                "abstention_rate": 0.0,
+                "factscore_task_accuracy": 0.7,
+            }
+        )

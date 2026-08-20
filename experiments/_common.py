@@ -196,10 +196,12 @@ def write_results(filename: str, result: dict, *, print_exclude_keys: frozenset[
     Every result funnels through here, so this is the one place that enforces
     task_accuracy/hallucination_rate/abstention_rate always being reported
     together (CLAUDE.md/the proposal) — raises rather than writing a result that
-    reports a subset. It also warns loudly (not silently) whenever a result's
-    factuality_metric is the lexical-containment placeholder, so a
-    pipeline-mechanics number can't quietly read as a final one in a results
-    directory full of otherwise-real numbers.
+    reports a subset. It also carries a dead-code safety net: a warning that
+    fires if a result's factuality_metric ever names itself "placeholder". The
+    lexical-containment placeholder scorer this originally guarded against is
+    fully retired (every harness now scores with the real NLI judge), so this
+    branch should never fire today — it's left in place as a tripwire in case a
+    future scorer is ever added under a name containing "placeholder".
     """
     assert_factuality_metrics_reported_together(result)
     factuality_metric = result.get("factuality_metric", "")
