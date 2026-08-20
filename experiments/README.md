@@ -99,9 +99,11 @@ real semantic entailment scoring, though its threshold calibration is a
 named, unvalidated first cut) as
 task_accuracy/hallucination_rate/abstention_rate together. The symbolic round-trip
 uses a fixed, always-resolvable probe triple (`../configs/rq3.yaml`) rather than one
-derived from the question — there's no free-text-to-triple extractor yet, so this
-measures real round-trip cost against the real backend, not a factuality check of
-the question itself. `n_eval_examples` deliberately subsamples the split when it's
+derived from the question — RQ3's symbolic probe doesn't extract claims from the
+model's own generated text yet (see `services/symbolic/src/sense_symbolic/extraction.py`
+for the extractor FActScore's harness already uses), so this measures real
+round-trip cost against the real backend, not a factuality check of the question
+itself. `n_eval_examples` deliberately subsamples the split when it's
 below the available size and logs that it's doing so, never silently.
 
 ```

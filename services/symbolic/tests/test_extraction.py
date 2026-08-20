@@ -49,13 +49,29 @@ def test_extracts_employer_claim():
     assert AtomicClaim(
         subject_label="Alan Turing",
         relation_kind="employer",
-        object_label="the Government Code and Cypher School",
+        object_label="government code and cypher school",
     ) in claims
 
 
-def test_employer_pattern_requires_worked_at_or_for():
+def test_employer_pattern_requires_known_employer():
+    # "Cambridge" is not in the closed employer vocabulary, so no employer claim
+    # should be produced from studying there (only recognized KB employers match).
     claims = extract_claims("Alan Turing", "Alan Turing studied at Cambridge.")
     assert not any(c.relation_kind == "employer" for c in claims)
+
+
+def test_nationality_extracts_all_matches_in_hyphenated_compound():
+    # A hyphen is a non-word boundary, so both whole-word nationality patterns
+    # match inside "German-American" — a defensible outcome for a first-cut,
+    # closed-vocabulary extractor per the design's precision/recall tradeoff.
+    claims = extract_claims("Test Subject", "He was a German-American physicist.")
+    nationalities = {c.object_label for c in claims if c.relation_kind == "nationality"}
+    assert nationalities == {"german", "american"}
+
+
+def test_nationality_no_match_returns_empty_list():
+    claims = extract_claims("Test Subject", "Test Subject enjoyed sailing.")
+    assert not any(c.relation_kind == "nationality" for c in claims)
 
 
 def test_extracts_multiple_claims_from_one_sentence():

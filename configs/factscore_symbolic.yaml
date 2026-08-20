@@ -2,8 +2,10 @@
 #
 # Not an RQ1-RQ3 harness — it exercises the decomposition-front-end -> Z3
 # round-trip (CLAUDE.md's design decisions) against FActScore's biography-prompt
-# entities, since this project has no free-text-to-triple extractor yet
-# (documented in configs/rq3.yaml's symbolic_probe, same reason it applies here).
+# entities, using a known ground-truth probe claim rather than one extracted
+# from the generated biography's own text — that path exists now
+# (services/symbolic/src/sense_symbolic/extraction.py, exercised by this same
+# harness's extracted_* keys) but this probe check predates it and doesn't use it.
 # Verification checks a known ground-truth probe claim built from the Z3 backend's
 # own fixed domain KB (services/symbolic/src/sense_symbolic/domain.py) for any
 # FActScore entity that resolves against it — most won't, and are recorded as

@@ -368,17 +368,21 @@ entity that resolves against the backend's small fixed domain KB — most don't
 (the KB is deliberately small, per CLAUDE.md's scope-containment decision), and
 are recorded as abstained rather than guessed at. This is real, non-fabricated
 pipeline-mechanics validation of the decomposition/Z3 path against FActScore
-data, **not** a factuality judgment of the generated biography — the project
-still has no free-text-to-triple extractor (same reason RQ3's symbolic probe
-triple isn't derived from the question either; extracting claims from arbitrary
-generated prose is real, unscoped future work, tied to the still-undecided
-"replace" merge-back policy). Do not read this script's `task_accuracy` as a
-FActScore benchmark number. As of 2026-08-17, the same script's `factscore_*`-prefixed keys ARE a real
+data, **not** a factuality judgment of the generated biography — this
+Z3-known-entity probe check predates the free-text claim extractor and does
+not use it (same reason RQ3's symbolic probe triple isn't derived from the
+question either; RQ3 wiring remains real, unscoped future work, tied to the
+still-undecided "replace" merge-back policy). Do not read this script's
+`task_accuracy` as a FActScore benchmark number. As of 2026-08-17, the same script's `factscore_*`-prefixed keys ARE a real
 FActScore factuality number — scored by the NLI judge's atomic-decomposition
 verdict against each example's own reference text, independent of the Z3
 round-trip check this paragraph describes. Don't conflate the two: the
 unprefixed `task_accuracy` above is still the Z3-known-entity check, not a
-factuality judgment.
+factuality judgment. As of 2026-08-20, the same script's `extracted_*`-prefixed
+keys ARE real symbolic verification of claims extracted from the model's own
+generated biography text (via `services/symbolic/src/sense_symbolic/extraction.py`),
+independent of both the Z3-known-entity probe and the NLI-judge `factscore_*`
+keys described above — don't conflate any of the three.
 
 **What's still needed to fully close out the reconciled scope:**
 1. **Free-text claim extraction** — done for FActScore (2026-08-20). A

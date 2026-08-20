@@ -133,3 +133,18 @@ def test_extracted_claims_verdict_prioritizes_incorrect_over_correct():
     )
     assert verdict.label == "incorrect"
     assert count == 2
+
+
+def test_extracted_claims_verdict_correct_for_employer_round_trip():
+    # Regression test for the final-review bug: employer extraction used to
+    # capture a free span ("the Government Code and Cypher School") that never
+    # matched domain.py's closed-vocabulary fact ("government code and cypher
+    # school"), so a correctly-employed person's biography verified as
+    # "incorrect" purely from parser mismatch. Now the extractor matches the
+    # same closed vocabulary verify_claim checks against, so this must verify
+    # "correct".
+    verdict, count = extracted_claims_verdict(
+        "Alan Turing", "Alan Turing worked at the Government Code and Cypher School."
+    )
+    assert verdict.label == "correct"
+    assert count == 1

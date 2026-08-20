@@ -2,12 +2,11 @@
 front-end -> Z3 backend round-trip (CLAUDE.md's design decisions) against
 FActScore's biography-prompt entities.
 
-Not an RQ1-RQ3 harness. This project has no free-text-to-triple extractor yet
-(documented in configs/rq3.yaml's symbolic_probe: out of scope, tied to the
-undecided merge-back "replace" policy) — so, like RQ3's symbolic round-trip, this
-does not extract claims from the generated biography and does not read the
-generated text as a factuality signal. Instead, for each FActScore entity that
-resolves against the Z3 backend's fixed domain KB
+Not an RQ1-RQ3 harness. The known-ground-truth probe check below predates this
+project's free-text claim extractor and does not use it — it does not extract
+claims from the generated biography and does not read the generated text as a
+factuality signal. Instead, for each FActScore entity that resolves against the
+Z3 backend's fixed domain KB
 (services/symbolic/src/sense_symbolic/domain.py), it builds a *known ground-truth*
 probe claim from that KB (e.g. "Albert Einstein" born "1879"), decomposes it, and
 checks that the Z3 backend correctly verifies its own fact as true. Entities that

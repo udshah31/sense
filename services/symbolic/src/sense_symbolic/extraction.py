@@ -30,13 +30,13 @@ from sense_symbolic.domain import KNOWN_ENTITIES
 
 _BIRTH_YEAR_PATTERN = re.compile(r"\bborn\b.*?\b(1[0-9]{3}|20[0-9]{2})\b", re.IGNORECASE)
 _DEATH_YEAR_PATTERN = re.compile(r"\bdied\b.*?\b(1[0-9]{3}|20[0-9]{2})\b", re.IGNORECASE)
-_EMPLOYER_PATTERN = re.compile(r"\bworked (?:at|for)\b\s+(.+?)(?=[.,]|$)", re.IGNORECASE)
 
 # Closed vocabularies seeded from domain.py's own KNOWN_ENTITIES — extraction
-# only ever needs to recognize a nationality/occupation the fixed KB could
-# actually confirm or refute, not general adjective/noun detection.
+# only ever needs to recognize a nationality/occupation/employer the fixed KB
+# could actually confirm or refute, not general adjective/noun/span detection.
 _NATIONALITIES = sorted({facts.nationality for facts in KNOWN_ENTITIES.values() if facts.nationality})
 _OCCUPATIONS = sorted({occupation for facts in KNOWN_ENTITIES.values() for occupation in facts.occupations})
+_EMPLOYERS = sorted({employer for facts in KNOWN_ENTITIES.values() for employer in facts.employers})
 
 
 def _extract_birth_year(sentence: str) -> str | None:
@@ -49,12 +49,9 @@ def _extract_death_year(sentence: str) -> str | None:
     return match.group(1) if match else None
 
 
-def _extract_nationality(sentence: str) -> str | None:
+def _extract_nationalities(sentence: str) -> list[str]:
     lowered = sentence.lower()
-    for nationality in _NATIONALITIES:
-        if re.search(rf"\b{re.escape(nationality)}\b", lowered):
-            return nationality
-    return None
+    return [nationality for nationality in _NATIONALITIES if re.search(rf"\b{re.escape(nationality)}\b", lowered)]
 
 
 def _extract_occupations(sentence: str) -> list[str]:
@@ -62,9 +59,9 @@ def _extract_occupations(sentence: str) -> list[str]:
     return [occupation for occupation in _OCCUPATIONS if re.search(rf"\b{re.escape(occupation)}\b", lowered)]
 
 
-def _extract_employer(sentence: str) -> str | None:
-    match = _EMPLOYER_PATTERN.search(sentence)
-    return match.group(1).strip() if match else None
+def _extract_employers(sentence: str) -> list[str]:
+    lowered = sentence.lower()
+    return [employer for employer in _EMPLOYERS if re.search(rf"\b{re.escape(employer)}\b", lowered)]
 
 
 def extract_claims(subject_label: str, sentence: str) -> list[AtomicClaim]:
@@ -83,8 +80,7 @@ def extract_claims(subject_label: str, sentence: str) -> list[AtomicClaim]:
     if death_year is not None:
         claims.append(AtomicClaim(subject_label=subject_label, relation_kind="death_year", object_label=death_year))
 
-    nationality = _extract_nationality(sentence)
-    if nationality is not None:
+    for nationality in _extract_nationalities(sentence):
         claims.append(
             AtomicClaim(subject_label=subject_label, relation_kind="nationality", object_label=nationality)
         )
@@ -92,8 +88,7 @@ def extract_claims(subject_label: str, sentence: str) -> list[AtomicClaim]:
     for occupation in _extract_occupations(sentence):
         claims.append(AtomicClaim(subject_label=subject_label, relation_kind="occupation", object_label=occupation))
 
-    employer = _extract_employer(sentence)
-    if employer is not None:
+    for employer in _extract_employers(sentence):
         claims.append(AtomicClaim(subject_label=subject_label, relation_kind="employer", object_label=employer))
 
     return claims
