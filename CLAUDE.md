@@ -148,25 +148,6 @@ The HTTP serving path (vLLM, OpenAI-compatible) exposes only truncated top-*k* l
 and no hidden states. It is usable for baseline throughput, **not** for the gated
 pipeline.
 
-### Repository layout
-
-```
-sense/
-├── CLAUDE.md
-├── README.md
-├── docker-compose.yml
-├── .env.example              # HF_TOKEN placeholder
-├── configs/                  # YAML: model, thresholds, dataset, splits
-├── services/
-│   ├── neural/               # Python: model loading, LogitsProcessor, entropy, probes
-│   ├── symbolic/             # TBD backend behind an HTTP contract
-│   └── orchestrator/         # Python: gate policy, routing, instrumentation
-├── experiments/              # one script per table/figure in the paper
-├── eval/                     # metrics: factuality + latency
-├── data/                     # loaders and split index files (no large datasets)
-└── results/                  # logged runs, metrics, plots
-```
-
 ---
 
 ## Development environment vs. GPU environment
