@@ -14,6 +14,16 @@ dependencies = [
     # "none" quantization with tiny-gpt2), so this doesn't break CPU-testability.
     "bitsandbytes==0.45.3; sys_platform == 'linux'",
     "accelerate==1.6.0",
+    # mistralai/Mistral-7B-Instruct-v0.3's tokenizer has no fast (tokenizer.json)
+    # variant and falls back to the slow SentencePiece-based one, which raises
+    # ValueError without this installed — found by actually loading Mistral on
+    # the GPU environment, not by inspection; Llama-3/Qwen3 ship fast tokenizers
+    # and never hit this path, which is why it went unnoticed until now.
+    "sentencepiece==0.2.2",
+    # sentencepiece's slow-tokenizer path above additionally needs protobuf
+    # (transformers/convert_slow_tokenizer.py imports google.protobuf directly)
+    # — same Mistral-only code path, same discovery route.
+    "protobuf==7.36.0",
 ]
 
 [dependency-groups]
