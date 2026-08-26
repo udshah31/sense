@@ -13,6 +13,7 @@ import yaml
 from transformers import AutoModelForCausalLM, AutoTokenizer, BitsAndBytesConfig
 
 from sense_data.factscore import FActScoreExample, load_factscore
+from sense_data.factscore_labeled import FActScoreLabeledExample, load_factscore_labeled
 from sense_data.halueval import HaluEvalExample, load_halueval
 from sense_data.splits import SplitIndices, load_splits, PerCheckpointSplitIndices, load_per_checkpoint_splits
 from sense_data.truthful_qa import TruthfulQAExample, load_truthful_qa
@@ -24,6 +25,7 @@ CONFIGS_DIR = REPO_ROOT / "configs"
 SPLIT_PATH = REPO_ROOT / "data" / "splits" / "truthful_qa.json"
 HALUEVAL_SPLIT_PATH = REPO_ROOT / "data" / "splits" / "halueval.json"
 FACTSCORE_SPLIT_PATH = REPO_ROOT / "data" / "splits" / "factscore.json"
+FACTSCORE_LABELED_DIR = REPO_ROOT / "data" / "fixtures" / "factscore_labeled"
 RESULTS_DIR = REPO_ROOT / "results"
 
 
@@ -187,6 +189,14 @@ def load_halueval_examples_and_splits() -> tuple[list[HaluEvalExample], PerCheck
 
 def load_factscore_examples_and_splits() -> tuple[list[FActScoreExample], SplitIndices]:
     return load_factscore(), load_splits(FACTSCORE_SPLIT_PATH)
+
+
+def load_factscore_labeled_examples() -> list[FActScoreLabeledExample]:
+    """The FActScore paper's own 183-entity human-annotated set (InstructGPT /
+    ChatGPT / PerplexityAI generations, S/NS/IR labels) — disjoint from the
+    500-entity `dskar/FActScore` prompt set above and its committed split.
+    Used only by experiments/calibrate_factscore_thresholds.py."""
+    return load_factscore_labeled(FACTSCORE_LABELED_DIR)
 
 
 def write_results(filename: str, result: dict, *, print_exclude_keys: frozenset[str] = frozenset()) -> None:

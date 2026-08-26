@@ -16,6 +16,11 @@ results/**/*.parquet
 !data/**/.gitkeep
 !results/**/.gitkeep
 
+# exception: factscore_labeled's human-annotated jsonl release has no pinned
+# HF Hub revision to re-fetch by (see data/fixtures/factscore_labeled/PROVENANCE.md)
+# — committed directly, like the split index lists in data/splits/*.json.
+!data/fixtures/factscore_labeled/*.jsonl
+
 # os
 .DS_Store
 

@@ -17,11 +17,34 @@ short_answer_entailment_threshold: 0.7
 
 # factscore_style_verdict (FActScore-shaped harness): per-claim entailment
 # threshold for "this atomic claim is supported by the reference text" ...
-# Still an uncalibrated first cut (unlike short_answer_entailment_threshold
-# above) — FActScore has no equivalent free known-right/known-wrong pair to
-# calibrate against; see eval/README.md.
-claim_supported_threshold: 0.7
+# Calibrated 2026-08-26 (experiments/calibrate_factscore_thresholds.py)
+# against the original FActScore paper's own 183-entity human-annotated set
+# (InstructGPT/ChatGPT/PerplexityAI generations, real human S/NS/IR labels —
+# see sense_data.factscore_labeled) — FActScore has no free known-right/
+# known-wrong pair the way HaluEval does, so this reuses real human labels
+# for different models' outputs instead of a self-entailment proxy. 0.02
+# scored 80.7% claim-level verdict accuracy fit/held-out on real S/NS labels
+# (results/factscore_threshold_calibration.json) — a genuine interior peak
+# in the swept range (0.0 -> 68.2%, 0.02 -> 79.5%, declining monotonically
+# above that), not a boundary artifact; the low absolute value reflects this
+# small NLI model's entailment-class probabilities running compressed toward
+# 0 on short single-sentence premises, not near-random discrimination (false
+# positive/negative rates are both ~17-27%, well off a degenerate always-S
+# predictor). Honest limitations: 2026 Wikipedia reference-text snapshot vs.
+# the 2023-vintage text the human annotators actually verified against, and
+# the judged generations are InstructGPT/ChatGPT/PerplexityAI (2023), not any
+# of this project's five checkpoints — real progress over an arbitrary
+# spot-check value, not a substitute for calibrating against this project's
+# own model outputs. See eval/README.md and the calibration script's
+# docstring for the full limitation list.
+claim_supported_threshold: 0.02
 # ... and the two thresholds the resulting supported_fraction is discretized
-# against.
-fraction_correct_threshold: 0.8
-fraction_incorrect_threshold: 0.2
+# against — same calibration run, swept over a binarized
+# human_supported_fraction ground truth (n=196 fit / 53 holdout examples).
+# 0.09/0.0 sits on a genuine accuracy plateau (90.8% fit, 94.3% holdout,
+# flat across fraction_incorrect_threshold in [0.0, 0.09] before declining
+# above that) — not a runaway edge value, though the low absolute levels mean
+# this discretization treats even modest partial support as "correct" and
+# only a claim set with essentially no supported facts as "incorrect."
+fraction_correct_threshold: 0.09
+fraction_incorrect_threshold: 0.0

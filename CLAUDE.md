@@ -18,11 +18,18 @@ Working reference and drafting material live outside the repo, in
   incrementally as advisor feedback lands.
 - **`SENSE_starred_paper_writing_guide.md`** — draft and writing guide: paper structure
   (IEEE format), section-by-section guidance, committee/procedure notes.
-- **`SENSE_starred_paper_proposal_v4.docx`** — the written proposal document (v4).
+- **`SENSE_starred_paper_proposal_v5.docx`** — the current written proposal document
+  (v5, revised 2026-08-25). Supersedes `SENSE_starred_paper_proposal_v4.docx` (kept
+  alongside it for history) — v5's only substantive changes from v4 are marking the
+  benchmark pair, symbolic backend, and merge-back policy as confirmed with the
+  advisor in person on 2026-08-25 (v4 had them as `[PROPOSED — pending advisor
+  confirmation]`); RQs, model table, and phase plan are unchanged between the two.
 
 Title updated 2026-08-10 to match the reference doc's adopted title (was "...Real-Time
 Hallucination Mitigation", retired the same day per advisor feedback — see the
-reference doc §3). RQ1–RQ3 already matched verbatim, no change needed there.
+reference doc §3). RQ1–RQ3 already matched verbatim, no change needed there. Title
+formally confirmed in person 2026-08-25 (proposal v5 §8.1) — no wording change, just
+sign-off.
 
 **Scope reconciled 2026-08-10** against the reference doc's §5 scoping (confirmed
 with advisor the same day): five checkpoints across three families, 4-bit
@@ -32,6 +39,12 @@ constraints," "Design decisions," and "Current status." The code and configs bui
 under the retired scope (TruthfulQA data, SPARQL backend, Llama-3/Mistral-only,
 bf16) still work and are not thrown away — see "Current status" for exactly what
 still needs to move to match the reconciled decisions.
+
+**Benchmark pair, symbolic backend, and merge-back policy confirmed with the advisor
+in person on 2026-08-25** (proposal v5 §4.3, §5, §8.1) — the "still PROPOSED pending
+advisor confirmation" hedge that applied to the benchmark and symbolic-backend
+choices from 2026-08-10 through 2026-08-25 no longer applies. See "Design decisions"
+below.
 
 ---
 
@@ -233,11 +246,9 @@ reference doc's advice (§6, open items).
 
 Decided 2026-07-26 as a working proposal; **benchmark, symbolic backend, and scope
 reconfirmed/superseded 2026-08-10** per the reference doc's advisor-response pass
-(§5, §7). The benchmark and symbolic-backend choices below are still marked
-`PROPOSED` in the reference doc pending final advisor sign-off at the Wednesday
-meeting — build against them in the meantime rather than stubbing further, per the
-advisor's own general instruction, but don't treat them as more final than the
-source document does.
+(§5, §7). **Benchmark and symbolic backend confirmed with the advisor in person on
+2026-08-25** (proposal v5 §4.3, §5, §8.1) — no longer `PROPOSED`; the two bullets
+below have been updated accordingly.
 
 - **Uncertainty signal: token entropy.** The sole online gating signal — the only
   option cheap enough to sit in the per-step decoding loop. Optionally aggregated
@@ -248,7 +259,8 @@ source document does.
 - **Quantization: 4-bit, all five checkpoints** (2026-08-10, supersedes the earlier
   bf16-only plan). See "Non-negotiable scientific constraints" #2 — this is a hard
   constraint, not a convenience.
-- **Merge-back policy: annotate-only first, replace as a later follow-on.** Run the
+- **Merge-back policy: annotate-only first, replace as a later follow-on** (confirmed
+  with the advisor in person 2026-08-25, proposal v5 §4.3). Run the
   RQ1–RQ3 routing/latency experiments on annotate-only so routing cost is measured
   without confounding it with a correction strategy. Add a replace condition only
   once the symbolic backend is stable. **Replace is out of scope entirely**, not just
@@ -268,9 +280,8 @@ source document does.
   imitative falsehoods (confidently-held misconceptions), which is exactly the
   regime where entropy is *low* and the gate will not fire. State this as a named
   limitation, not a silent gap — it's more informative than a weak number against a
-  benchmark the mechanism isn't built to catch. (Still `PROPOSED` pending advisor
-  confirmation — advisor said "I'd choose any two" of TruthfulQA/HaluEval/FActScore;
-  this is the recommended pair, not yet confirmed in person.)
+  benchmark the mechanism isn't built to catch. **Confirmed with the advisor in
+  person on 2026-08-25** (proposal v5 §5, §8.1) — no longer `PROPOSED`.
 - **Symbolic backend: Z3 SMT constraint checking with an atomic-claim decomposition
   front-end** (2026-08-10, supersedes SPARQL/Wikidata). Decompose the generation into
   atomic claims first, then verify with Z3 — decomposition-first matters because the
@@ -284,9 +295,10 @@ source document does.
   swappable — KG lookup (the retired SPARQL/Wikidata approach) remains available as a
   fallback if the solver-based verifier proves brittle. **Contain scope**: fixed
   constraint set, one benchmark domain — the symbolic backend can quietly become a
-  research project of its own and eat the 3-credit budget. (Also still `PROPOSED`
-  pending advisor confirmation, though the advisor's own question — "what other
-  structured verifiers are there?" — now has a concrete, citable answer.)
+  research project of its own and eat the 3-credit budget. **Confirmed with the
+  advisor in person on 2026-08-25** (proposal v5 §4.3, §8.1) — no longer `PROPOSED`;
+  the advisor's own question ("what other structured verifiers are there?") now has
+  a concrete, citable answer.
 - **Baseline RAG stack: FAISS + all-MiniLM-L6-v2 + a small Wikipedia passage subset.**
   In-memory vector store (no server), small CPU-friendly embedding model, modest
   reproducible corpus. This is a comparison baseline, not the contribution — capped
@@ -397,12 +409,28 @@ keys described above — don't conflate any of the three.
    — no human labeling needed; 0.7 (unchanged) scores 98.7%/98.2%
    verdict-accuracy fit/held-out (`results/nli_short_answer_calibration.json`).
    Honest limitation of that calibration: it uses canonical answer text as a
-   stand-in generation, not a real paraphrased model output. **Still
-   unresolved**: FActScore's three thresholds (`claim_supported_threshold`,
-   `fraction_correct_threshold`, `fraction_incorrect_threshold`) remain an
-   uncalibrated first cut — FActScore has no equivalent free known-right/
-   known-wrong pair, so that calibration needs real model generations judged
-   by a human. See `docs/superpowers/specs/2026-08-16-nli-judge-design.md`.
+   stand-in generation, not a real paraphrased model output. FActScore's
+   three thresholds (`claim_supported_threshold`, `fraction_correct_threshold`,
+   `fraction_incorrect_threshold`) are now calibrated too (2026-08-26,
+   `experiments/calibrate_factscore_thresholds.py`) — closing the gap noted
+   above, since FActScore has no HaluEval-style free known-right/known-wrong
+   pair. Took the human-labeling route via the original FActScore paper's own
+   released 183-entity human-annotated set (InstructGPT/ChatGPT/PerplexityAI
+   generations, real human S/NS/IR labels — `sense_data.factscore_labeled`,
+   provenance in `data/fixtures/factscore_labeled/PROVENANCE.md`), not
+   this project's own five checkpoints' generations. `claim_supported_threshold`
+   = 0.02 (80.7% claim-level verdict accuracy fit/held-out — a genuine
+   interior peak, not a swept-range boundary artifact: the first calibration
+   attempt landed exactly on its sweep's lower edge and was rejected and
+   re-run with an extended range before trusting the result).
+   `fraction_correct_threshold`/`fraction_incorrect_threshold` = 0.09/0.0
+   (90.8%/94.3% fit/held-out, a genuine accuracy plateau across
+   `fraction_incorrect_threshold` in [0.0, 0.09], not a runaway edge value).
+   Full sweep results and honest limitations (2026 Wikipedia reference-text
+   snapshot vs. the annotators' 2023-vintage text; judged generations aren't
+   this project's own models) in `results/factscore_threshold_calibration.json`
+   and `configs/nli_judge.yaml`'s comments. See
+   `docs/superpowers/specs/2026-08-16-nli-judge-design.md`.
 
 Not yet built regardless of scope: real-model GPU runs against the reconciled
 current scope).
