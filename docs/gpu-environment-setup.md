@@ -90,25 +90,41 @@ os.environ["REPO_DIR"] = "/content/drive/MyDrive/sense"
   `uv` each session, which is fast and fine, just don't expect it to skip
   that step on a fresh runtime.
 
-## Running an experiment once the host is set up
+## Running experiments once the host is set up
 
-The experiment scripts are model-agnostic (CLAUDE.md's config-driven rule) —
-switching from the CPU-test model to Llama-3/Mistral is a config change, not
-a code change:
+Run everything through `experiments/run_gpu_experiments.sh` from the repo root. It
+checks that CUDA and `HF_TOKEN` are present, writes a run-metadata sidecar
+(`results/run_metadata_<timestamp>.json`: GPU, driver, CUDA, git commit, etc.), then
+runs the requested stage. Every harness pins the 4-bit scheme and the model revisions
+in `configs/model.yaml`, and stamps the seed from `configs/run.yaml` into its result
+file.
 
-1. `configs/model.yaml`: change `active: cpu_test` to `active: llama3` (used
-   by `calibrate_gate_truthful_qa.py`).
-2. `configs/rq1.yaml`, `configs/rq2.yaml`: change `source_model`/`target_model`
-   from `cpu_test`/`cpu_test_transfer_target` to the real models (e.g.
-   `source_model: llama3`, `target_model: mistral` — this is the actual
-   cross-family transfer test the RQ1/RQ2 harnesses exist to run).
-3. `configs/rq3.yaml`, `configs/rag.yaml`: change `model: cpu_test` to
-   `model: llama3` (or `mistral`), and remove or raise `n_eval_examples` —
-   the CPU-tractability subsampling those configs currently apply doesn't
-   apply on real GPU hardware.
-4. Run from `experiments/`: `uv run python transfer_threshold_truthful_qa.py`
-   (etc. for each harness).
+```bash
+export HF_TOKEN=hf_...
+./experiments/run_gpu_experiments.sh characterize   # run this first, on its own
+./experiments/run_gpu_experiments.sh all            # rq1, rq2, rq3, rag, selfcheck
+```
 
-Results still write to `results/*.json` with the same schema as the CPU-test
-runs, just without the "pipeline-mechanics validation, not a scientific
-finding" caveat once real models are involved.
+Stages: `characterize`, `rq1`, `rq2`, `rq3`, `rag`, `selfcheck`, `all`. Stages are
+independent, so re-run a single one after fixing a failure; earlier results are not
+touched.
+
+**Run `characterize` first.** It is the RQ1 pre-flight diagnostic
+(`configs/characterize.yaml`: Llama-3, Qwen3 8B and Qwen3 1.7B on 200 development
+examples) and it is deliberately not part of `all`. It is also the first time any real
+checkpoint loads, so it doubles as a smoke test of 4-bit loading and the entropy
+monitor. Read `threshold_spread.raw.max_over_min_ratio` and `summary_by_axis` in
+`results/`. If the raw-scale spread is near 1.0, RQ1's premise does not hold as the
+proposal states it; revisit the framing before paying for `all`.
+
+**Config changes needed: one.** The RQ1/RQ2/RQ3/SelfCheck configs already name the real
+checkpoints, so no model edits are needed there. `configs/rag.yaml` still has
+`model: cpu_test`; change it to a real checkpoint key (e.g. `llama3`) before running
+the `rag` stage. Do not edit `configs/model.yaml`'s `active` key for these runs; the
+harnesses select checkpoints by key.
+
+The test split is touched only for reported numbers (CLAUDE.md, constraint 1). The
+`characterize` harness refuses to run on it.
+
+Alternatively, `docker compose run experiments <stage>` runs the same script in the
+GPU container defined in `docker-compose.yml`.
