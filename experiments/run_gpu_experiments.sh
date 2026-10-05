@@ -6,7 +6,7 @@
 # on CPU with a tiny model, but the five real checkpoints only ever run here.
 #
 # Usage:
-#   HF_TOKEN=... ./run_gpu_experiments.sh [characterize|rq1|rq2|rq3|rag|all]
+#   HF_TOKEN=... ./run_gpu_experiments.sh [characterize|rq1|rq2|rq3|rag|selfcheck|all]
 #
 # RUN `characterize` FIRST, on its own, before paying for `all`. It is the RQ1
 # pre-flight diagnostic (experiments/characterize_entropy_distributions.py): it
@@ -128,14 +128,18 @@ case "$STAGE" in
     rag)
         run_stage "RAG baseline" rag_baseline_halueval.py
         ;;
+    selfcheck)
+        run_stage "SelfCheckGPT-NLI baseline (post-hoc verification)" selfcheck_baseline_halueval.py
+        ;;
     all)
         run_stage "RQ1 (fixed-threshold transfer)" transfer_threshold_halueval.py
         run_stage "RQ2 (self-adaptive threshold)" adaptive_threshold_halueval.py
         run_stage "RQ3 (accuracy-latency trade-off)" rq3_accuracy_latency_halueval.py
         run_stage "RAG baseline" rag_baseline_halueval.py
+        run_stage "SelfCheckGPT-NLI baseline (post-hoc verification)" selfcheck_baseline_halueval.py
         ;;
     *)
-        fail "unknown stage '$STAGE' — expected one of: characterize, rq1, rq2, rq3, rag, all"
+        fail "unknown stage '$STAGE' — expected one of: characterize, rq1, rq2, rq3, rag, selfcheck, all"
         ;;
 esac
 

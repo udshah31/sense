@@ -521,6 +521,44 @@ code-level and are addressed here; the third is document-level and is not yet do
   scale. Different task and a different fitting procedure, so treat it as a prediction
   to test, not evidence to cite.
 
+### The post-hoc verification baseline (M2)
+
+`experiments/selfcheck_baseline_halueval.py` + `eval/src/sense_eval/selfcheck.py` +
+`configs/selfcheck.yaml`, added 2026-10-04. SelfCheckGPT-NLI: sample N stochastic
+continuations per prompt, score the main greedy answer's inconsistency against them as
+the mean probability that a sample contradicts each of its sentences, and flag above a
+calibrated threshold.
+
+This is the baseline the proposal's central framing depends on. "Neither always on, as
+in retrieval, nor applied after the fact, as in post-hoc verification, but invoked
+selectively during generation" is a claim *relative to* after-the-fact checking, and
+until now nothing quantitative stood behind the second half of it.
+
+**Run at matched budget.** The flag threshold is calibrated at the same quantile the
+entropy gate uses, so both flag the same fraction of examples and their precision,
+recall and AUROC are directly comparable — `detection` in the baseline's result file
+against `routing_quality`/`routing_detection` in RQ1-RQ3. Comparing detectors at
+different rates would confound signal quality with intervention rate. `GatePolicy` is
+reused for the thresholding (it provides exactly what is wanted — a
+quantile-calibrated threshold with the leakage guard and the refuse-if-uncalibrated
+rule), so the signal differs between the two and the thresholding discipline does not.
+
+**The cost side is measured, not asserted.** This method needs `n_samples + 1` full
+generations per example; the entropy gate needs a logarithm over a distribution the
+forward pass already produced. `mean_posthoc_overhead_ratio` reports that gap.
+
+Two limitations that **favor SENSE** and therefore have to be stated in the results
+discussion rather than left in a config comment: `n_samples` defaults to 10 where
+Manakul et al. use 20, and the judge is this project's pinned
+`deberta-v3-xsmall-mnli` rather than the DeBERTa-v3-large the paper used. Both weaken
+the baseline. Raise `n_samples` if the budget allows; do not quietly lower it.
+
+One justified exception to constraint #3 (hold decoding constant): the sample passes
+necessarily sample, since that is the method. The **main** answer uses gate.yaml's
+greedy config, identical to every other condition, so the thing being scored stays
+comparable across the study. `sampling_decoding_cfg` changes only `do_sample` and
+`temperature`, and a test pins that.
+
 ### Why the statistical treatment is bootstrap intervals, not multiple seeds
 
 The writing guide §4.6 asks for "multiple seeds, report variance." That is the right
@@ -563,21 +601,21 @@ this is the argument it should make.
   arXiv:2506.08980, Varshney et al. arXiv:2307.03987, UnCert-CoT arXiv:2503.15341).
   AdaDec in particular already does learned per-model entropy thresholds across eight
   checkpoints. Document-side.
-- **M2** — the post-hoc verification baseline (SelfCheckGPT / CoVe) promised in
-  proposal §5 does not exist in `experiments/`. Either build it or amend the
-  promise. **Code-side, not yet done.**
 - **M4** — the symbolic KB's coverage limits and RQ3's fixed probe triple are
   documented here but not disclosed in the proposal. Document-side.
 - **M5** — stale "real-time" references in proposal §5/§6 and the writing guide.
   Document-side.
 
-**Verification status of the code changes above.** 96 model-free tests pass:
+**Verification status of the code changes above.** 115 model-free tests pass:
 `eval/tests/test_routing_quality.py` (27, including hand-computed AUROC values, tie
 handling, and the confidence-interval wiring), `eval/tests/test_bootstrap.py` (19,
 including the paired-vs-independent width property and degenerate-resample
-suppression), `experiments/tests/test_transfer_arms.py` (16, arm logic and interval
-wiring, no models), and
-`experiments/tests/test_characterize_entropy_distributions.py` (34).
+suppression), `eval/tests/test_selfcheck.py` (13, including premise/hypothesis
+direction and contradiction-label resolution),
+`experiments/tests/test_transfer_arms.py` (16, arm logic and interval wiring),
+`experiments/tests/test_characterize_entropy_distributions.py` (34), and
+`experiments/tests/test_selfcheck_baseline_halueval.py` (6). All run without loading a
+model.
 The torch-dependent suites — `services/neural/tests/test_entropy_monitor.py`'s two new
 raw-scale tests and the updated RQ1/RQ2 end-to-end harness tests — **have not been
 run**; they need the macOS dev environment. Run before trusting this branch:

@@ -9,12 +9,15 @@
 Produced by the `feynman-research-review` workflow (adapted from Feynman, MIT License,
 Companion Inc. — github.com/Companion-Inc/feynman).
 
-> **Action status, updated 2026-10-04.** C1 and C3 are addressed in code on branch
+> **Action status, updated 2026-10-04.** Every code-side issue is addressed on branch
 > `review-c1-c3-routing-quality` (see `CLAUDE.md`, "2026-10-04 — proposal-v5 review
-> changes"). M3's per-run seed is addressed; M3's statistical treatment is not. C2,
-> M1, M4, M5 and the Minor items are document-side and still open. M2 (the missing
-> post-hoc baseline) is code-side and still open. This review is otherwise left as
-> written — it is the point-in-time record the revision plan was built from.
+> changes"): C1 (routing quality defined as detection performance), C3 (raw-scale
+> transfer arm, raw entropy retained), M2 (SelfCheckGPT-NLI post-hoc baseline, run at
+> matched budget), M3 (bootstrap confidence intervals — deliberately not the "multiple
+> seeds" the guide asks for; greedy decoding makes seed variance exactly zero).
+> C2, M1, M4, M5 and the Minor items are document-side and still open. None of the
+> code-side work has been executed on a GPU. This review is otherwise left as written —
+> it is the point-in-time record the revision plan was built from.
 
 ---
 
