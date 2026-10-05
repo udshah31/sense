@@ -8,8 +8,9 @@ import os
 import random
 import sys
 import zlib
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from pathlib import Path
+from typing import Sequence
 
 import torch
 import yaml
@@ -320,11 +321,21 @@ class ExampleSignal:
 
     Captured in one pass, so this costs no extra generation over the entropy-only path
     it replaces — only the NLI judge call at the call site.
+
+    The per-step series on both scales are retained alongside the means. Proposal §4.1
+    states that the aggregator is a mean over the generated span and that alternative
+    aggregators are available as an ablation "which costs no additional generation
+    because per-token entropies are recorded" — that sentence is only true if they
+    actually are. Keeping the series makes the ablation a configuration change over
+    data already in hand instead of a second GPU run. The cost is small: a generation
+    budget of `max_new_tokens` floats per example per scale.
     """
 
     normalized_entropy: float
     raw_entropy: float
     generated_text: str
+    normalized_steps: tuple[float, ...] = ()
+    raw_steps: tuple[float, ...] = ()
 
 
 class EmptyGenerationError(ValueError):
@@ -353,9 +364,11 @@ def example_signal(model, tokenizer, question: str, decoding_cfg: dict, model_cf
         )
 
     return ExampleSignal(
-        normalized_entropy=sum(monitor.entropies) / len(monitor.entropies),
-        raw_entropy=sum(monitor.raw_entropies) / len(monitor.raw_entropies),
+        normalized_entropy=aggregate_entropy(monitor.entropies),
+        raw_entropy=aggregate_entropy(monitor.raw_entropies),
         generated_text=generated["text"],
+        normalized_steps=tuple(monitor.entropies),
+        raw_steps=tuple(monitor.raw_entropies),
     )
 
 
@@ -366,14 +379,80 @@ def example_signals(model, tokenizer, examples, indices, decoding_cfg, model_cfg
     ]
 
 
-def entropies_on_scale(signals: list[ExampleSignal], scale: str) -> list[float]:
-    """Pull one entropy scale out of a signal list. `scale` is "normalized" or "raw".
+# How a per-step entropy series is collapsed to the one number the gate sees.
+#
+# `mean` is the default and what every result before 2026-10-05 used. The alternatives
+# exist because work on language-model cascades reports that sequence-level uncertainty
+# carries a length bias, over- or under-weighting outputs by their length, and argues
+# for considering the token-level structure rather than one aggregate (arXiv:2404.10136,
+# proposal reference [31]). A mean over a fixed `max_new_tokens` budget is the simplest
+# length-normalizing choice, which is why it is the default — but "simplest defensible"
+# is not "verified best", and the ablation is what turns that into a measured claim.
+#
+# `max` asks whether one highly uncertain token is what matters; `last` whether
+# uncertainty at the end of the span is what matters; `p90` is a tail measure less
+# brittle than `max` on a single outlier step.
+ENTROPY_AGGREGATORS = ("mean", "max", "last", "p90")
+DEFAULT_ENTROPY_AGGREGATOR = "mean"
 
-    Unknown scales raise rather than falling back, so a typo can't silently select the
-    wrong scale and quietly change which arm of RQ1 is being measured.
+
+def aggregate_entropy(steps: Sequence[float], aggregator: str = DEFAULT_ENTROPY_AGGREGATOR) -> float:
+    """Collapse one example's per-step entropy series to a single gate input.
+
+    Raises on an empty series rather than returning 0.0 — a zero would sit at the
+    bottom of every distribution and drag a calibrated quantile down with it, which is
+    the same reason EmptyGenerationError exists.
     """
-    if scale == "normalized":
-        return [s.normalized_entropy for s in signals]
-    if scale == "raw":
-        return [s.raw_entropy for s in signals]
-    raise ValueError(f"unknown entropy scale {scale!r} — expected 'normalized' or 'raw'")
+    if not steps:
+        raise EmptyGenerationError("cannot aggregate an empty entropy series")
+    if aggregator == "mean":
+        return sum(steps) / len(steps)
+    if aggregator == "max":
+        return max(steps)
+    if aggregator == "last":
+        return steps[-1]
+    if aggregator == "p90":
+        ordered = sorted(steps)
+        if len(ordered) == 1:
+            return ordered[0]
+        position = 0.9 * (len(ordered) - 1)
+        lower = int(position)
+        upper = min(lower + 1, len(ordered) - 1)
+        return ordered[lower] + (ordered[upper] - ordered[lower]) * (position - lower)
+    raise ValueError(
+        f"unknown entropy aggregator {aggregator!r} — expected one of {list(ENTROPY_AGGREGATORS)}"
+    )
+
+
+def entropies_on_scale(
+    signals: list[ExampleSignal], scale: str, aggregator: str = DEFAULT_ENTROPY_AGGREGATOR
+) -> list[float]:
+    """Pull one entropy scale out of a signal list, under one aggregator.
+
+    Unknown scales and unknown aggregators both raise rather than falling back, so a
+    typo can't silently change which arm of RQ1 is being measured or how the gate input
+    was formed.
+
+    With the default aggregator this returns the precomputed means, so existing call
+    sites are unaffected. Any other aggregator is recomputed from the retained per-step
+    series — no regeneration, which is what makes the §4.1 ablation free.
+    """
+    if scale not in ("normalized", "raw"):
+        raise ValueError(f"unknown entropy scale {scale!r} — expected 'normalized' or 'raw'")
+    if aggregator not in ENTROPY_AGGREGATORS:
+        raise ValueError(
+            f"unknown entropy aggregator {aggregator!r} — expected one of {list(ENTROPY_AGGREGATORS)}"
+        )
+
+    if aggregator == DEFAULT_ENTROPY_AGGREGATOR:
+        return [(s.normalized_entropy if scale == "normalized" else s.raw_entropy) for s in signals]
+
+    steps_for = lambda s: s.normalized_steps if scale == "normalized" else s.raw_steps  # noqa: E731
+    missing = sum(1 for s in signals if not steps_for(s))
+    if missing:
+        raise ValueError(
+            f"{missing} signal(s) carry no per-step {scale} series, so aggregator "
+            f"{aggregator!r} cannot be computed — they were produced before per-step "
+            "retention was added (2026-10-05); regenerate them"
+        )
+    return [aggregate_entropy(steps_for(s), aggregator) for s in signals]

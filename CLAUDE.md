@@ -649,6 +649,18 @@ AdaDec remains the closest and is cross-scale within code models. Recorded in th
 as a working belief resting on one search pass, not as an established fact — re-check
 before it appears in print.
 
+**2026-10-05 — entropy aggregator, and a claim made true.** The literature pass led to a
+sentence in proposal §4.1 saying alternative aggregators cost no extra generation
+"because per-token entropies are recorded." They were not: `example_signal` computed the
+mean and discarded the series, so the document asserted something false about the code.
+Fixed at the code end rather than by softening the sentence. `ExampleSignal` now retains
+`normalized_steps` and `raw_steps`; `aggregate_entropy` offers mean / max / last / p90;
+`entropies_on_scale` takes an aggregator and recomputes from the retained series for
+anything but the default. `configs/rq1.yaml` and `rq2.yaml` carry an `aggregators` list,
+empty by default, so the standard run is unchanged and the ablation is one config line.
+Signals produced before this change raise for non-default aggregators rather than
+silently falling back to the stored mean.
+
 **Still open:**
 
 - **m3** — the final citation renumbering pass. [22]–[27] are all appended out of

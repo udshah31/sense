@@ -42,6 +42,7 @@ import gc
 import torch
 
 from _common import (
+    DEFAULT_ENTROPY_AGGREGATOR,
     bootstrap_config,
     derived_seed,
     entropies_on_scale,
@@ -96,6 +97,7 @@ def adaptive_arm(
     target_name: str,
     verdict_labels: list[str],
     bootstrap_cfg: dict,
+    aggregator: str = DEFAULT_ENTROPY_AGGREGATOR,
 ) -> dict:
     """Fixed-vs-adaptive comparison on a single entropy scale.
 
@@ -104,9 +106,9 @@ def adaptive_arm(
     """
     expected_routing_rate = 1.0 - quantile
 
-    source_cal_entropies = entropies_on_scale(source_signals, scale)
-    target_cal_entropies = entropies_on_scale(target_cal_signals, scale)
-    target_eval_entropies = entropies_on_scale(target_eval_signals, scale)
+    source_cal_entropies = entropies_on_scale(source_signals, scale, aggregator)
+    target_cal_entropies = entropies_on_scale(target_cal_signals, scale, aggregator)
+    target_eval_entropies = entropies_on_scale(target_eval_signals, scale, aggregator)
 
     # Source native calibration — what gets transferred to produce the fixed gate.
     source_gate = GatePolicy()
@@ -141,7 +143,7 @@ def adaptive_arm(
             for entropy, routed, label in zip(target_eval_entropies, decisions, verdict_labels)
         ]
 
-    seed_label = (source_name, target_name, scale)
+    seed_label = (source_name, target_name, scale, aggregator)
     fixed_outcomes = outcomes(fixed_decisions)
     adaptive_outcomes = outcomes(adaptive_decisions)
     fixed_metrics = detection_metrics_with_ci(
@@ -162,6 +164,7 @@ def adaptive_arm(
 
     return {
         "entropy_scale": scale,
+        "aggregator": aggregator,
         "expected_routing_rate": expected_routing_rate,
         "fixed_threshold": source_threshold,
         "fixed_threshold_ci": threshold_confidence_interval(
@@ -206,6 +209,7 @@ def run_pair(
     nli_tokenizer,
     nli_cfg,
     bootstrap_cfg,
+    extra_aggregators=(),
 ) -> dict:
     source_cfg = models_registry[source_name]
     target_cfg = models_registry[target_name]
@@ -239,8 +243,8 @@ def run_pair(
             for index, signal in zip(eval_indices, target_eval_signals)
         ]
 
-        arms = {
-            scale: adaptive_arm(
+        def build(scale: str, aggregator: str) -> dict:
+            return adaptive_arm(
                 scale,
                 source_signals,
                 target_cal_signals,
@@ -252,8 +256,18 @@ def run_pair(
                 target_name,
                 verdict_labels,
                 bootstrap_cfg,
+                aggregator,
             )
-            for scale in ENTROPY_SCALES
+
+        arms = {scale: build(scale, DEFAULT_ENTROPY_AGGREGATOR) for scale in ENTROPY_SCALES}
+
+        # Aggregator ablation (proposal §4.1 and §5). Driven by configs/rq2.yaml's
+        # `aggregators` list; empty by default, so the standard run is unchanged. Every
+        # arm here is recomputed from per-step entropies already in hand — no extra
+        # generation and no extra judge calls, only the bootstrap resampling.
+        ablation = {
+            aggregator: {scale: build(scale, aggregator) for scale in ENTROPY_SCALES}
+            for aggregator in extra_aggregators
         }
 
         # RQ2, like RQ1, compares routing decisions without acting on them, so
@@ -274,6 +288,8 @@ def run_pair(
             "source_model": {"name": source_name, "hf_repo": source_cfg["hf_repo"], "revision": source_cfg["revision"]},
             "target_model": {"name": target_name, "hf_repo": target_cfg["hf_repo"], "revision": target_cfg["revision"]},
             "arms": arms,
+            "aggregator": DEFAULT_ENTROPY_AGGREGATOR,
+            "aggregator_ablation": ablation,
             "per_example": [
                 {
                     "index": index,
@@ -300,6 +316,7 @@ def run() -> list[dict]:
     decoding_cfg = config["gate"]["decoding"]
     quantile = config["gate"]["quantile"]
     eval_split = config["rq2"]["eval_split"]
+    extra_aggregators = tuple(config["rq2"].get("aggregators", ()))
     nli_cfg = config["nli_judge"]
     nli_model, nli_tokenizer = load_nli_model(nli_cfg["hf_repo"], nli_cfg["revision"])
     bootstrap_cfg = bootstrap_config()
@@ -320,6 +337,7 @@ def run() -> list[dict]:
             nli_tokenizer,
             nli_cfg,
             bootstrap_cfg,
+            extra_aggregators,
         )
         write_results(
             f"rq2_adaptive_halueval_{source_name}_to_{target_name}.json",

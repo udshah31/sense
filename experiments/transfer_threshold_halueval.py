@@ -63,6 +63,7 @@ import gc
 import torch
 
 from _common import (
+    DEFAULT_ENTROPY_AGGREGATOR,
     bootstrap_config,
     derived_seed,
     entropies_on_scale,
@@ -136,6 +137,7 @@ def transfer_arm(
     target_name: str,
     verdict_labels: list[str],
     bootstrap_cfg: dict,
+    aggregator: str = DEFAULT_ENTROPY_AGGREGATOR,
 ) -> dict:
     """One full calibrate -> transfer -> compare cycle on a single entropy scale.
 
@@ -144,9 +146,9 @@ def transfer_arm(
     depend on `scale` — the generation is the same either way — so both arms are
     scored against the same labels.
     """
-    source_cal_entropies = entropies_on_scale(source_signals, scale)
-    target_cal_entropies = entropies_on_scale(target_cal_signals, scale)
-    target_eval_entropies = entropies_on_scale(target_eval_signals, scale)
+    source_cal_entropies = entropies_on_scale(source_signals, scale, aggregator)
+    target_cal_entropies = entropies_on_scale(target_cal_signals, scale, aggregator)
+    target_eval_entropies = entropies_on_scale(target_eval_signals, scale, aggregator)
 
     # 1. Native source calibration — this threshold is what gets transferred.
     source_gate = GatePolicy()
@@ -184,7 +186,7 @@ def transfer_arm(
             for entropy, routed, label in zip(target_eval_entropies, decisions, verdict_labels)
         ]
 
-    seed_label = (source_name, target_name, scale)
+    seed_label = (source_name, target_name, scale, aggregator)
     transferred_outcomes = outcomes(transferred_decisions)
     native_outcomes = outcomes(native_decisions)
     transferred_metrics = detection_metrics_with_ci(
@@ -202,6 +204,7 @@ def transfer_arm(
 
     return {
         "entropy_scale": scale,
+        "aggregator": aggregator,
         "source_native_threshold": source_threshold,
         "target_native_threshold": target_native_threshold,
         "transferred_threshold": source_threshold,
@@ -245,6 +248,7 @@ def run_pair(
     nli_tokenizer,
     nli_cfg,
     bootstrap_cfg,
+    extra_aggregators=(),
 ) -> dict:
     source_cfg = models_registry[source_name]
     target_cfg = models_registry[target_name]
@@ -284,8 +288,8 @@ def run_pair(
         ]
         verdict_labels = [v.label for v in verdicts]
 
-        arms = {
-            scale: transfer_arm(
+        def build(scale: str, aggregator: str) -> dict:
+            return transfer_arm(
                 scale,
                 source_signals,
                 target_cal_signals,
@@ -297,8 +301,18 @@ def run_pair(
                 target_name,
                 verdict_labels,
                 bootstrap_cfg,
+                aggregator,
             )
-            for scale in ENTROPY_SCALES
+
+        arms = {scale: build(scale, DEFAULT_ENTROPY_AGGREGATOR) for scale in ENTROPY_SCALES}
+
+        # Aggregator ablation (proposal §4.1 and §5). Driven by configs/rq1.yaml's
+        # `aggregators` list; empty by default, so the standard run is unchanged. Every
+        # arm here is recomputed from per-step entropies already in hand — no extra
+        # generation and no extra judge calls, only the bootstrap resampling.
+        ablation = {
+            aggregator: {scale: build(scale, aggregator) for scale in ENTROPY_SCALES}
+            for aggregator in extra_aggregators
         }
 
         # The target model's ungated factuality, reported as the required triple.
@@ -329,6 +343,8 @@ def run_pair(
                 "revision": target_cfg["revision"],
             },
             "arms": arms,
+            "aggregator": DEFAULT_ENTROPY_AGGREGATOR,
+            "aggregator_ablation": ablation,
             "per_example": [
                 {
                     "index": index,
@@ -357,6 +373,7 @@ def run() -> list[dict]:
     decoding_cfg = config["gate"]["decoding"]
     quantile = config["gate"]["quantile"]
     eval_split = config["rq1"]["eval_split"]
+    extra_aggregators = tuple(config["rq1"].get("aggregators", ()))
     nli_cfg = config["nli_judge"]
     nli_model, nli_tokenizer = load_nli_model(nli_cfg["hf_repo"], nli_cfg["revision"])
     bootstrap_cfg = bootstrap_config()
@@ -377,6 +394,7 @@ def run() -> list[dict]:
             nli_tokenizer,
             nli_cfg,
             bootstrap_cfg,
+            extra_aggregators,
         )
         write_results(
             f"rq1_transfer_halueval_{source_name}_to_{target_name}.json",

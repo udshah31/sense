@@ -39,3 +39,12 @@ eval_split: development
 # it" — different findings, and the first retired-scope pilot
 # (results/rq1_transfer_truthful_qa_llama3_to_mistral.json, agreement 1.0) could not
 # distinguish them because only the normalized arm existed.
+
+# Aggregator ablation (proposal §4.1, §5). The gate collapses a per-step entropy series
+# to one number; `mean` over a fixed generation budget is the default and the simplest
+# length-normalizing choice, but "simplest defensible" is not "verified best". Listing
+# aggregators here adds one extra arm per scale per aggregator, recomputed from per-step
+# entropies already recorded — no extra generation, no extra judge calls, only bootstrap
+# resampling. Empty by default so the standard run is unchanged.
+# Valid values: mean, max, last, p90.
+aggregators: []

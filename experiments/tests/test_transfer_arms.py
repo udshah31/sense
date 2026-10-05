@@ -206,3 +206,92 @@ def test_adaptive_arm_reports_both_threshold_intervals(scale):
     assert arm["fixed_threshold_ci"]["point"] == arm["fixed_threshold"]
     assert arm["adaptive_threshold_ci"]["point"] == arm["adaptive_threshold"]
     assert "delta_f1_ci" in arm["routing_quality_delta_ci"]
+
+
+# --- entropy aggregators -------------------------------------------------------
+
+from _common import (  # noqa: E402
+    DEFAULT_ENTROPY_AGGREGATOR,
+    ENTROPY_AGGREGATORS,
+    EmptyGenerationError,
+    aggregate_entropy,
+)
+
+STEPS = [0.1, 0.9, 0.4, 0.2, 0.5]
+
+
+def test_mean_is_the_default_and_matches_an_explicit_mean():
+    assert DEFAULT_ENTROPY_AGGREGATOR == "mean"
+    assert aggregate_entropy(STEPS) == pytest.approx(sum(STEPS) / len(STEPS))
+
+
+@pytest.mark.parametrize("aggregator,expected", [
+    ("mean", 0.42),
+    ("max", 0.9),
+    ("last", 0.5),
+])
+def test_aggregators_are_hand_computed(aggregator, expected):
+    assert aggregate_entropy(STEPS, aggregator) == pytest.approx(expected)
+
+
+def test_p90_interpolates_like_the_gate_quantile():
+    # sorted: [0.1, 0.2, 0.4, 0.5, 0.9]; position 0.9*4 = 3.6 -> 0.5 + (0.9-0.5)*0.6
+    assert aggregate_entropy(STEPS, "p90") == pytest.approx(0.74)
+
+
+def test_single_step_series_is_that_value_under_every_aggregator():
+    for aggregator in ENTROPY_AGGREGATORS:
+        assert aggregate_entropy([0.33], aggregator) == pytest.approx(0.33)
+
+
+def test_empty_series_raises_rather_than_returning_zero():
+    # Zero would sit at the bottom of every distribution and drag the calibrated
+    # quantile down with it.
+    with pytest.raises(EmptyGenerationError):
+        aggregate_entropy([], "mean")
+
+
+def test_unknown_aggregator_raises():
+    with pytest.raises(ValueError, match="unknown entropy aggregator"):
+        aggregate_entropy(STEPS, "median")
+
+
+def signals_with_steps():
+    return [
+        ExampleSignal(
+            normalized_entropy=aggregate_entropy(steps),
+            raw_entropy=aggregate_entropy([v * 10 for v in steps]),
+            generated_text="",
+            normalized_steps=tuple(steps),
+            raw_steps=tuple(v * 10 for v in steps),
+        )
+        for steps in ([0.1, 0.9], [0.2, 0.3], [0.5, 0.5], [0.05, 0.95], [0.4, 0.6])
+    ]
+
+
+def test_default_aggregator_reads_the_precomputed_means():
+    sigs = signals_with_steps()
+    assert entropies_on_scale(sigs, "normalized") == [s.normalized_entropy for s in sigs]
+
+
+def test_a_different_aggregator_is_recomputed_from_the_per_step_series():
+    sigs = signals_with_steps()
+    assert entropies_on_scale(sigs, "normalized", "max") == pytest.approx([0.9, 0.3, 0.5, 0.95, 0.6])
+    # The raw scale is ten times the normalized one in this fixture.
+    assert entropies_on_scale(sigs, "raw", "max") == pytest.approx([9.0, 3.0, 5.0, 9.5, 6.0])
+
+
+def test_signals_without_a_per_step_series_raise_for_non_default_aggregators():
+    """Results produced before per-step retention (2026-10-05) cannot be re-aggregated,
+    and must say so rather than silently falling back to the mean."""
+    legacy = [ExampleSignal(normalized_entropy=0.5, raw_entropy=5.0, generated_text="")]
+    # The default still works, because it reads the stored mean.
+    assert entropies_on_scale(legacy, "normalized") == [0.5]
+    with pytest.raises(ValueError, match="no per-step"):
+        entropies_on_scale(legacy, "normalized", "max")
+
+
+def test_arms_report_which_aggregator_produced_them():
+    arm = transfer_arm("normalized", SOURCE_CAL, TARGET_CAL, TARGET_EVAL, VIEW, VIEW,
+                       0.9, "src", "tgt", LABELS, BOOTSTRAP)
+    assert arm["aggregator"] == DEFAULT_ENTROPY_AGGREGATOR
