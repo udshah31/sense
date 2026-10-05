@@ -15,8 +15,10 @@ Companion Inc. — github.com/Companion-Inc/feynman).
 > transfer arm, raw entropy retained), M2 (SelfCheckGPT-NLI post-hoc baseline, run at
 > matched budget), M3 (bootstrap confidence intervals — deliberately not the "multiple
 > seeds" the guide asks for; greedy decoding makes seed variance exactly zero).
-> C2, M1, M4, M5 and the Minor items are document-side and still open. None of the
-> code-side work has been executed on a GPU. This review is otherwise left as written —
+> C2, M1, M4, M5, M3's document side and most Minor items are also done, in the
+> proposal and writing guide on disk (see `CLAUDE.md`). Still open: m2 (ref [10]
+> initials), m3 (citation renumbering), m9 (AI Use Statement), and verification of
+> the newly added citations. None of the code-side work has been executed on a GPU. This review is otherwise left as written —
 > it is the point-in-time record the revision plan was built from.
 
 ---

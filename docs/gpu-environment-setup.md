@@ -1,8 +1,9 @@
 # GPU Environment Setup
 
 The dev laptop runs everything CPU-only against `sshleifer/tiny-gpt2` (see
-CLAUDE.md's dev/GPU split). Llama-3 and Mistral only ever run here, on a
-separate GPU host. This doc covers getting that host ready with
+CLAUDE.md's dev/GPU split). All five real checkpoints — Llama-3 8B Instruct,
+Mistral 7B Instruct v0.3 and the Qwen3 8B/4B/1.7B ladder — only ever run here,
+on a separate GPU host. This doc covers getting that host ready with
 `scripts/gpu_setup.sh`, for two providers: RunPod and Colab Pro.
 
 ## Prerequisites (either provider)
@@ -19,9 +20,13 @@ separate GPU host. This doc covers getting that host ready with
 
 ## RunPod
 
-1. **Create a pod**: runpod.io → Deploy → pick a GPU (A100 40GB comfortably
-   fits both models at bf16 with headroom; RTX 4090 24GB works too but is
-   tighter). Choose a **PyTorch** template (ships CUDA + drivers
+1. **Create a pod**: runpod.io → Deploy → pick a GPU. Every checkpoint runs at
+   **4-bit** (CLAUDE.md constraint #2, pinned since the 2026-08-10 scope
+   reconciliation — the earlier bf16 plan is retired), so peak memory is roughly
+   1–6 GB per model and the harnesses load one or two at a time. A 24GB RTX 4090
+   is comfortable; an A100 40GB is more than enough. These are estimates from
+   parameter counts, not measurements — confirm against `nvidia-smi` on the first
+   real load rather than trusting them. Choose a **PyTorch** template (ships CUDA + drivers
    pre-configured) — do not pick a bare Ubuntu image unless you want to
    install CUDA yourself.
 2. **Attach a persistent volume** (RunPod calls this a "Network Volume") and
@@ -71,9 +76,11 @@ os.environ["REPO_DIR"] = "/content/drive/MyDrive/sense"
 - **Runtime → Change runtime type → GPU** must be selected before any of
   this, or `nvidia-smi` in the script fails immediately and you're on CPU.
 - Colab's assigned GPU (A100 vs L4 vs T4) depends on availability even on
-  Pro — if you land on a T4 (16GB), bf16 Llama-3-8B (~16GB) may not fit
-  alongside anything else running; Mistral-7B fits more comfortably. Check
-  `nvidia-smi`'s reported memory before running the harnesses.
+  Pro. At 4-bit a T4 (16GB) should hold any single checkpoint with room to
+  spare, but RQ1 and RQ2 load a *pair* at once (source and target), so check
+  `nvidia-smi`'s reported memory before running those two in particular. The
+  SelfCheckGPT baseline loads one checkpoint but generates N+1 times per
+  example, so it is time-bound rather than memory-bound.
 - **Sessions are ephemeral and time out** (Colab Pro: up to ~24h, but
   disconnects on inactivity) — fine for a single RQ1/RQ2/RQ3/RAG run each
   (minutes to low hours), risky for anything you'd want unattended overnight.

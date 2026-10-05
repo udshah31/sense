@@ -592,19 +592,44 @@ Say this in the methods section rather than letting a reader assume seeds were v
 When the proposal's §5 gets its statistical-treatment paragraph (M3, document side),
 this is the argument it should make.
 
-**Still open from that review:**
+**Document side, done 2026-10-04** — in
+`/Users/udaysah/Documents/files/filess/SENSE_starred_paper_proposal_v5.docx` and
+`SENSE_starred_paper_writing_guide.md`, edited in place under their original
+filenames. The copy in the claude.ai project Files panel is **stale** and must be
+re-uploaded by hand; that store cannot hold binary, so it was left alone rather than
+overwritten with extracted text (which is how the v4-era "UTF-8 mislabeled as .docx"
+problem started).
 
-- **C2** — the proposal's §4.1, §6, and §7 specify semantic entropy / SEP probes as
-  the gating signal. The repo builds token entropy and always has. The code is right;
-  the document needs rewriting. Document-side change, no code impact.
-- **M1** — the §2.3 novelty claim is contradicted by uncited prior art (AdaDec
-  arXiv:2506.08980, Varshney et al. arXiv:2307.03987, UnCert-CoT arXiv:2503.15341).
-  AdaDec in particular already does learned per-model entropy thresholds across eight
-  checkpoints. Document-side.
-- **M4** — the symbolic KB's coverage limits and RQ3's fixed probe triple are
-  documented here but not disclosed in the proposal. Document-side.
-- **M5** — stale "real-time" references in proposal §5/§6 and the writing guide.
-  Document-side.
+- **C2** — the abstract, §2.1, §3, §4.1, §6 and §7 now name token entropy as the
+  gating signal. §6's cost argument is rewritten: the driver is the symbolic stream
+  scaled by the routing rate, not the uncertainty estimate.
+- **M1** — new §2.4, "Uncertainty-gated intervention", citing Varshney et al. [25],
+  AdaDec [26] and UnCert-CoT [27], and narrowing the contribution claim to the three
+  parts that survive them. Kuhn et al. added as [24] for the semantic-entropy
+  definition.
+- **M4** — §4.3 discloses the constraint set's single-domain coverage, that
+  unresolved claims are recorded as unverified rather than guessed at, and that RQ3's
+  latency probe is always-resolvable by design.
+- **M5** — the real-time argument is retired from §5 and §6 and from the writing
+  guide's §A.3 and §C.2.
+- **M3 (document side)** — §5 gains the statistical-treatment paragraph making the
+  bootstrap-not-seeds argument.
+- **Minors done:** m1 (ref [1] published), m4 (Kuhn added), m5 (RQ wording aligned),
+  m6 (calibration-set wording), m7 (hardware claim softened; this doc updated too),
+  m8 (Table I expectation marked as a hypothesis).
+
+**Still open:**
+
+- **m2** — reference [10] still lacks author initials. They must come from the paper,
+  not from memory.
+- **m3** — the final citation renumbering pass. [22]–[27] are all appended out of
+  order; the reference notes say so.
+- **m9** — the AI Use Statement question in §8.2 is unresolved, and the log still has
+  not been started.
+- **Citation verification** — [24], [25] and [27] were identified through citations in
+  other work; only [26] was read in full. [1]'s publication details come from secondary
+  reference lists. All four need confirming against publisher records before
+  submission, and the reference notes in the proposal say so.
 
 **Verification status of the code changes above.** 115 model-free tests pass:
 `eval/tests/test_routing_quality.py` (27, including hand-computed AUROC values, tie
