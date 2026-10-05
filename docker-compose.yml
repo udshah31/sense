@@ -33,7 +33,8 @@ services:
             - driver: nvidia
               count: all
               capabilities: [gpu]
-    # Defaults to running all four stages (rq1, rq2, rq3, rag). Override with
+    # Defaults to running all five stages (rq1, rq2, rq3, rag, selfcheck); `characterize`
+    # is not in `all`, run it first on its own. Override with
     # e.g. `docker compose run experiments rq3` for one stage only, matching
     # run_gpu_experiments.sh's own usage.
     command: ["all"]
