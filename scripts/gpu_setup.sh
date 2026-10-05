@@ -45,11 +45,19 @@ for pkg in $PACKAGES; do
     (cd "$pkg" && uv sync)
 done
 
-echo "=== installing CUDA torch wheel into services/neural's venv ($CUDA_TAG) ==="
-(
-    cd services/neural
-    uv pip install "torch==2.7.0" --index-url "https://download.pytorch.org/whl/${CUDA_TAG}" --force-reinstall --no-deps
-)
+# `uv sync` on Linux already installs a CUDA-enabled torch wheel, so only reinstall if
+# the venv's torch cannot see the GPU. When it is needed, target the venv explicitly:
+# without --python, `uv pip install` resolves against the system interpreter instead.
+echo "=== checking whether services/neural's torch already sees the GPU ==="
+if (cd services/neural && uv run python -c "import torch,sys; sys.exit(0 if torch.cuda.is_available() else 1)" 2>/dev/null); then
+    echo "CUDA torch already present in the venv — skipping the reinstall"
+else
+    echo "=== installing CUDA torch wheel into services/neural's venv ($CUDA_TAG) ==="
+    (
+        cd services/neural
+        uv pip install --python .venv/bin/python "torch==2.7.0" --index-url "https://download.pytorch.org/whl/${CUDA_TAG}" --force-reinstall --no-deps
+    )
+fi
 
 echo "=== verifying CUDA is visible to torch ==="
 (
