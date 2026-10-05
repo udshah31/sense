@@ -630,6 +630,25 @@ S. Zhou, H. Yang, Z. Qin, T. Zhou), and its title now follows the current versio
 which drops "interactive" — noted in the reference notes the way [15]'s author-version
 discrepancy is.
 
+**2026-10-05 — literature-review pass.** `docs/research/uncertainty-gated-symbolic-verification.md`
+(+ provenance). Reopened M1 in a weaker form and then closed it: retrieval has had an
+uncertainty-gated branch since 2023 — FLARE [28] retrieves only on low-confidence
+lookahead, DRAGIN [29] on a token-entropy-times-attention score against a *predefined*
+threshold — so "always on, as in retrieval" was a contrast the retrieval literature
+abandoned years ago. The proposal's §2.3, §2.4, §4.1, §4.3 and §5 were revised the same
+day, and the replacement framing is stronger: the distinction is **what the second stage
+returns**, a solver verdict versus retrieved evidence the decoder may ignore. Two
+secondary findings also landed in the proposal — the mean-over-span entropy aggregator is
+now named and justified against the length-bias result [31], with alternative aggregators
+added to the ablation list (free: per-token entropies are already recorded), and §4.3 now
+contrasts with Logic-LM [30], which repairs autoformalization errors downstream where
+SENSE narrows the surface upstream.
+
+**Of note for RQ1:** the pass found **no designed cross-family threshold-transfer study**.
+AdaDec remains the closest and is cross-scale within code models. Recorded in the review
+as a working belief resting on one search pass, not as an established fact — re-check
+before it appears in print.
+
 **Still open:**
 
 - **m3** — the final citation renumbering pass. [22]–[27] are all appended out of
