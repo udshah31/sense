@@ -4,6 +4,7 @@ the monitor must be a no-op on generation, and entropy values must be well-forme
 
 import math
 
+import pytest
 import torch
 from transformers import LogitsProcessorList
 
@@ -61,3 +62,35 @@ def test_reset_clears_recorded_entropies(tiny_model, tiny_tokenizer):
 
     monitor.reset()
     assert monitor.entropies == []
+
+
+def test_raw_entropies_recorded_alongside_normalized(tiny_model, tiny_tokenizer):
+    """Both scales are retained (added 2026-10-04, proposal-v5 review issue C3).
+
+    RQ1's premise is that *un-normalized* entropy is not comparable across
+    tokenizers. A monitor that records only the normalized value cannot be used to
+    test that premise after the fact, so the raw value has to survive the run.
+    """
+    monitor = TokenEntropyMonitor(vocab_size=tiny_tokenizer.vocab_size)
+    _generate(tiny_model, tiny_tokenizer, logits_processor=monitor)
+
+    assert monitor.raw_entropies, "no entropy recorded at all"
+    assert len(monitor.raw_entropies) == len(monitor.entropies)
+
+    log_vocab = math.log(tiny_tokenizer.vocab_size)
+    for raw, normalized in zip(monitor.raw_entropies, monitor.entropies):
+        assert normalized == pytest.approx(raw / log_vocab)
+
+    # Raw entropy is in nats, bounded above by ln(vocab_size) rather than by 1 — the
+    # whole reason it is not comparable across tokenizers.
+    assert all(0.0 <= raw <= log_vocab for raw in monitor.raw_entropies)
+
+
+def test_reset_clears_both_entropy_scales(tiny_model, tiny_tokenizer):
+    monitor = TokenEntropyMonitor(vocab_size=tiny_tokenizer.vocab_size)
+    _generate(tiny_model, tiny_tokenizer, logits_processor=monitor)
+    assert monitor.entropies and monitor.raw_entropies
+
+    monitor.reset()
+    assert monitor.entropies == []
+    assert monitor.raw_entropies == []

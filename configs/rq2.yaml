@@ -2,11 +2,20 @@
 # calibration data) preserve routing quality where a fixed (transferred) threshold
 # does not?
 #
-# "Routing quality preserved" is operationalized as: how close the routing rate on
-# held-out data lands to the quantile's own target rate (1 - quantile), which is
-# what the threshold was calibrated to produce. A gate whose held-out routing rate
-# tracks its intended rate is behaving as calibrated; one that doesn't has failed to
-# transfer, whether or not that gap is due to a genuinely worse model fit.
+# "Routing quality preserved" is operationalized (revised 2026-10-04, proposal-v5
+# review issue C1) as DETECTION PERFORMANCE: does the gate fire on the examples the
+# ungated model actually got wrong? Precision/recall/F1 of routed-vs-hallucinated,
+# plus the threshold-free AUROC of the entropy signal itself. Labels come from
+# HaluEval's own right_answer/hallucinated_answer pair, scored by the NLI judge.
+# See eval/src/sense_eval/routing_quality.py.
+#
+# The previous operationalization — how close the held-out routing rate lands to the
+# quantile's target rate (1 - quantile) — is retained as a SECONDARY diagnostic
+# (`*_calibration_fidelity_gap`). It measures whether a threshold still behaves as
+# calibrated, which is a real property, but it is not quality: a gate firing on
+# exactly (1 - quantile) of examples chosen at random scores perfectly on it.
+#
+# Both entropy scales get a full condition. See configs/rq1.yaml's note on arms.
 #
 # Same five pairs as configs/rq1.yaml (cross-family anchors + Qwen3 scale ladder,
 # CLAUDE.md's two transfer axes) — kept as a separate file since it's consumed by a
@@ -19,3 +28,12 @@ transfer_pairs:
   - {source_model: qwen3_8b, target_model: qwen3_1_7b}
 
 eval_split: development
+
+# Aggregator ablation (proposal §4.1, §5). The gate collapses a per-step entropy series
+# to one number; `mean` over a fixed generation budget is the default and the simplest
+# length-normalizing choice, but "simplest defensible" is not "verified best". Listing
+# aggregators here adds one extra arm per scale per aggregator, recomputed from per-step
+# entropies already recorded — no extra generation, no extra judge calls, only bootstrap
+# resampling. Empty by default so the standard run is unchanged.
+# Valid values: mean, max, last, p90.
+aggregators: []

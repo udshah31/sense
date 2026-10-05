@@ -5,8 +5,12 @@ and the example/split loading + results-writing boilerplate every harness repeat
 
 import json
 import os
+import random
 import sys
+import zlib
+from dataclasses import dataclass, field
 from pathlib import Path
+from typing import Sequence
 
 import torch
 import yaml
@@ -19,6 +23,7 @@ from sense_data.splits import SplitIndices, load_splits, PerCheckpointSplitIndic
 from sense_data.truthful_qa import TruthfulQAExample, load_truthful_qa
 from sense_eval.factuality import assert_factuality_metrics_reported_together
 from sense_neural.entropy import TokenEntropyMonitor
+from sense_neural.latency import generate_with_latency
 
 REPO_ROOT = Path(__file__).parent.parent
 CONFIGS_DIR = REPO_ROOT / "configs"
@@ -31,6 +36,73 @@ RESULTS_DIR = REPO_ROOT / "results"
 
 def load_yaml_config(name: str) -> dict:
     return yaml.safe_load((CONFIGS_DIR / name).read_text())
+
+
+def run_seed() -> int:
+    """The run-level seed from configs/run.yaml.
+
+    Raises rather than defaulting: a silently-defaulted seed is the same class of
+    problem as a silently-defaulted gate threshold (CLAUDE.md: never add a default
+    threshold value as a convenience fallback), because it makes an irreproducible
+    run look reproducible.
+    """
+    seed = load_yaml_config("run.yaml").get("seed")
+    if seed is None:
+        raise ValueError("configs/run.yaml must define `seed` — see CLAUDE.md reproducibility requirements")
+    return int(seed)
+
+
+def bootstrap_config() -> dict:
+    """configs/run.yaml's `bootstrap` block, validated.
+
+    Raises on a missing or malformed block rather than defaulting: an interval computed
+    with silently-assumed settings is not reportable.
+    """
+    cfg = load_yaml_config("run.yaml").get("bootstrap")
+    if not cfg:
+        raise ValueError("configs/run.yaml must define a `bootstrap` block (n_resamples, confidence)")
+    n_resamples, confidence = cfg.get("n_resamples"), cfg.get("confidence")
+    if not isinstance(n_resamples, int) or n_resamples < 1:
+        raise ValueError(f"bootstrap.n_resamples must be a positive int, got {n_resamples!r}")
+    if not (isinstance(confidence, (int, float)) and 0.0 < confidence < 1.0):
+        raise ValueError(f"bootstrap.confidence must be in (0, 1), got {confidence!r}")
+    # The run seed travels with the config so that everything downstream of it — the
+    # arms, the interval helpers — is a pure function of its arguments rather than of
+    # what happens to be on disk. It also lands in every result file alongside
+    # n_resamples, so an interval can be reproduced from the result alone.
+    return {"n_resamples": n_resamples, "confidence": float(confidence), "seed": run_seed()}
+
+
+def derived_seed(base_seed: int, *parts: str) -> int:
+    """A distinct, reproducible seed per bootstrap, from the run seed plus a label.
+
+    Every interval in a run needs its own resampling pattern — sharing one would
+    correlate estimates that are supposed to be independent — while staying
+    reproducible. CRC32 of the label is used because python's `hash()` is randomized
+    per process, which would make the intervals irreproducible across runs.
+
+    Pure: takes the base seed rather than reading configs/run.yaml, so callers in the
+    experiment arms have no hidden filesystem dependency and can be unit-tested with a
+    plain dict.
+    """
+    label = "|".join(parts)
+    return (base_seed + zlib.crc32(label.encode())) % (2**32)
+
+
+def seed_everything() -> int:
+    """Seed python and torch (CPU + CUDA) from configs/run.yaml, returning the seed.
+
+    Call once at the top of a harness's run(). Greedy decoding is already
+    deterministic, so this matters for any sampled condition and for making the
+    recorded seed in the result file a true statement about the run rather than a
+    decorative field.
+    """
+    seed = run_seed()
+    random.seed(seed)
+    torch.manual_seed(seed)
+    if torch.cuda.is_available():
+        torch.cuda.manual_seed_all(seed)
+    return seed
 
 
 # configs/model.yaml's quantization schemes (CLAUDE.md #2: one scheme, held constant
@@ -213,6 +285,9 @@ def write_results(filename: str, result: dict, *, print_exclude_keys: frozenset[
     branch should never fire today — it's left in place as a tripwire in case a
     future scorer is ever added under a name containing "placeholder".
     """
+    # Stamp the run seed unless the caller set one explicitly, so every result file
+    # records the seed that produced it (CLAUDE.md: "Fixed seeds, recorded per run").
+    result = {**result, "seed": result.get("seed", run_seed())}
     assert_factuality_metrics_reported_together(result)
     factuality_metric = result.get("factuality_metric", "")
     if "placeholder" in factuality_metric.lower():
@@ -226,3 +301,158 @@ def write_results(filename: str, result: dict, *, print_exclude_keys: frozenset[
     (RESULTS_DIR / filename).write_text(json.dumps(result, indent=2))
     summary = {k: v for k, v in result.items() if k not in print_exclude_keys}
     print(json.dumps(summary, indent=2))
+
+
+@dataclass(frozen=True)
+class ExampleSignal:
+    """Everything one evaluation example yields in a single generation pass.
+
+    `mean_calibration_entropy` above returns only the normalized mean and discards the
+    generated text. Both of the things it throws away are needed to measure routing
+    quality as detection performance (eval/src/sense_eval/routing_quality.py):
+
+      - `raw_entropy` — the un-normalized mean, in nats. RQ1's premise is that raw
+        entropy is not comparable across tokenizers, so testing that premise requires
+        the raw scale; a run that records only the normalized value cannot test it
+        afterwards.
+      - `generated_text` — needed to score the example with the NLI judge, which is
+        what supplies the correct/incorrect label the gate's detection performance is
+        measured against.
+
+    Captured in one pass, so this costs no extra generation over the entropy-only path
+    it replaces — only the NLI judge call at the call site.
+
+    The per-step series on both scales are retained alongside the means. Proposal §4.1
+    states that the aggregator is a mean over the generated span and that alternative
+    aggregators are available as an ablation "which costs no additional generation
+    because per-token entropies are recorded" — that sentence is only true if they
+    actually are. Keeping the series makes the ablation a configuration change over
+    data already in hand instead of a second GPU run. The cost is small: a generation
+    budget of `max_new_tokens` floats per example per scale.
+    """
+
+    normalized_entropy: float
+    raw_entropy: float
+    generated_text: str
+    normalized_steps: tuple[float, ...] = ()
+    raw_steps: tuple[float, ...] = ()
+
+
+class EmptyGenerationError(ValueError):
+    """Raised when a generation produced no decoding steps, so no entropy was recorded.
+
+    Loud rather than returning 0.0: a zero-entropy example would sit at the bottom of
+    every distribution and silently drag a calibrated quantile downward.
+    """
+
+
+def example_signal(model, tokenizer, question: str, decoding_cfg: dict, model_cfg: dict) -> ExampleSignal:
+    """Generate once for `question`, returning mean entropy on both scales plus the text.
+
+    Uses generate_with_latency (the same call RQ3 makes) rather than model.generate
+    directly, so the generated text follows exactly one decode convention across the
+    repo — skip_prompt, skip_special_tokens — instead of two that could drift.
+    """
+    monitor = TokenEntropyMonitor(vocab_size=tokenizer.vocab_size)
+    inputs = build_generation_inputs(tokenizer, question, model_cfg).to(model.device)
+    generated = generate_with_latency(model, tokenizer, inputs, decoding_cfg, logits_processor=[monitor])
+
+    if not monitor.entropies:
+        raise EmptyGenerationError(
+            f"generation for question {question[:60]!r} recorded no decoding steps — "
+            "cannot compute a mean entropy"
+        )
+
+    return ExampleSignal(
+        normalized_entropy=aggregate_entropy(monitor.entropies),
+        raw_entropy=aggregate_entropy(monitor.raw_entropies),
+        generated_text=generated["text"],
+        normalized_steps=tuple(monitor.entropies),
+        raw_steps=tuple(monitor.raw_entropies),
+    )
+
+
+def example_signals(model, tokenizer, examples, indices, decoding_cfg, model_cfg) -> list[ExampleSignal]:
+    """`example_signal` over a list of dataset indices, index-aligned with `indices`."""
+    return [
+        example_signal(model, tokenizer, examples[i].question, decoding_cfg, model_cfg) for i in indices
+    ]
+
+
+# How a per-step entropy series is collapsed to the one number the gate sees.
+#
+# `mean` is the default and what every result before 2026-10-05 used. The alternatives
+# exist because work on language-model cascades reports that sequence-level uncertainty
+# carries a length bias, over- or under-weighting outputs by their length, and argues
+# for considering the token-level structure rather than one aggregate (arXiv:2404.10136,
+# proposal reference [31]). A mean over a fixed `max_new_tokens` budget is the simplest
+# length-normalizing choice, which is why it is the default — but "simplest defensible"
+# is not "verified best", and the ablation is what turns that into a measured claim.
+#
+# `max` asks whether one highly uncertain token is what matters; `last` whether
+# uncertainty at the end of the span is what matters; `p90` is a tail measure less
+# brittle than `max` on a single outlier step.
+ENTROPY_AGGREGATORS = ("mean", "max", "last", "p90")
+DEFAULT_ENTROPY_AGGREGATOR = "mean"
+
+
+def aggregate_entropy(steps: Sequence[float], aggregator: str = DEFAULT_ENTROPY_AGGREGATOR) -> float:
+    """Collapse one example's per-step entropy series to a single gate input.
+
+    Raises on an empty series rather than returning 0.0 — a zero would sit at the
+    bottom of every distribution and drag a calibrated quantile down with it, which is
+    the same reason EmptyGenerationError exists.
+    """
+    if not steps:
+        raise EmptyGenerationError("cannot aggregate an empty entropy series")
+    if aggregator == "mean":
+        return sum(steps) / len(steps)
+    if aggregator == "max":
+        return max(steps)
+    if aggregator == "last":
+        return steps[-1]
+    if aggregator == "p90":
+        ordered = sorted(steps)
+        if len(ordered) == 1:
+            return ordered[0]
+        position = 0.9 * (len(ordered) - 1)
+        lower = int(position)
+        upper = min(lower + 1, len(ordered) - 1)
+        return ordered[lower] + (ordered[upper] - ordered[lower]) * (position - lower)
+    raise ValueError(
+        f"unknown entropy aggregator {aggregator!r} — expected one of {list(ENTROPY_AGGREGATORS)}"
+    )
+
+
+def entropies_on_scale(
+    signals: list[ExampleSignal], scale: str, aggregator: str = DEFAULT_ENTROPY_AGGREGATOR
+) -> list[float]:
+    """Pull one entropy scale out of a signal list, under one aggregator.
+
+    Unknown scales and unknown aggregators both raise rather than falling back, so a
+    typo can't silently change which arm of RQ1 is being measured or how the gate input
+    was formed.
+
+    With the default aggregator this returns the precomputed means, so existing call
+    sites are unaffected. Any other aggregator is recomputed from the retained per-step
+    series — no regeneration, which is what makes the §4.1 ablation free.
+    """
+    if scale not in ("normalized", "raw"):
+        raise ValueError(f"unknown entropy scale {scale!r} — expected 'normalized' or 'raw'")
+    if aggregator not in ENTROPY_AGGREGATORS:
+        raise ValueError(
+            f"unknown entropy aggregator {aggregator!r} — expected one of {list(ENTROPY_AGGREGATORS)}"
+        )
+
+    if aggregator == DEFAULT_ENTROPY_AGGREGATOR:
+        return [(s.normalized_entropy if scale == "normalized" else s.raw_entropy) for s in signals]
+
+    steps_for = lambda s: s.normalized_steps if scale == "normalized" else s.raw_steps  # noqa: E731
+    missing = sum(1 for s in signals if not steps_for(s))
+    if missing:
+        raise ValueError(
+            f"{missing} signal(s) carry no per-step {scale} series, so aggregator "
+            f"{aggregator!r} cannot be computed — they were produced before per-step "
+            "retention was added (2026-10-05); regenerate them"
+        )
+    return [aggregate_entropy(steps_for(s), aggregator) for s in signals]

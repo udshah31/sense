@@ -27,6 +27,13 @@ def generate_with_latency(model, tokenizer, inputs, decoding_cfg: dict, logits_p
         do_sample=decoding_cfg["do_sample"],
         streamer=streamer,
     )
+    # Sampling parameters are passed through only when the caller supplies them, so
+    # the greedy path (every condition except the SelfCheckGPT baseline's sample
+    # passes) keeps the exact kwargs it always had. transformers warns when these are
+    # set under do_sample=False, which is the right behavior to preserve.
+    for sampling_key in ("temperature", "top_p", "top_k"):
+        if sampling_key in decoding_cfg:
+            generate_kwargs[sampling_key] = decoding_cfg[sampling_key]
     if logits_processor is not None:
         generate_kwargs["logits_processor"] = logits_processor
 

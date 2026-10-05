@@ -6,7 +6,17 @@
 # on CPU with a tiny model, but the five real checkpoints only ever run here.
 #
 # Usage:
-#   HF_TOKEN=... ./run_gpu_experiments.sh [rq1|rq2|rq3|rag|all]
+#   HF_TOKEN=... ./run_gpu_experiments.sh [characterize|rq1|rq2|rq3|rag|selfcheck|all]
+#
+# RUN `characterize` FIRST, on its own, before paying for `all`. It is the RQ1
+# pre-flight diagnostic (experiments/characterize_entropy_distributions.py): it
+# reports whether the checkpoints' entropy distributions differ enough for a fixed
+# threshold to notice, on both the raw and normalized scales. If the raw-scale
+# threshold spread comes back near 1.0, RQ1's premise does not hold as the proposal
+# states it and the framing needs revisiting before five checkpoints of compute go
+# into answering it. It is also the first time any real checkpoint is loaded, so it
+# doubles as a cheap smoke test of 4-bit loading and the entropy monitor.
+# `all` deliberately does NOT include it — it is a decision point, not a stage.
 #
 # Defaults to "all". Each stage is independent — a mid-run failure in RQ2, say,
 # does not block re-running RQ1's already-written results; just re-invoke with
@@ -102,6 +112,10 @@ run_stage() {
 }
 
 case "$STAGE" in
+    characterize)
+        run_stage "entropy-distribution characterization (RQ1 pre-flight)" characterize_entropy_distributions.py
+        log "Read threshold_spread.raw.max_over_min_ratio and summary_by_axis before running 'all'."
+        ;;
     rq1)
         run_stage "RQ1 (fixed-threshold transfer)" transfer_threshold_halueval.py
         ;;
@@ -114,14 +128,18 @@ case "$STAGE" in
     rag)
         run_stage "RAG baseline" rag_baseline_halueval.py
         ;;
+    selfcheck)
+        run_stage "SelfCheckGPT-NLI baseline (post-hoc verification)" selfcheck_baseline_halueval.py
+        ;;
     all)
         run_stage "RQ1 (fixed-threshold transfer)" transfer_threshold_halueval.py
         run_stage "RQ2 (self-adaptive threshold)" adaptive_threshold_halueval.py
         run_stage "RQ3 (accuracy-latency trade-off)" rq3_accuracy_latency_halueval.py
         run_stage "RAG baseline" rag_baseline_halueval.py
+        run_stage "SelfCheckGPT-NLI baseline (post-hoc verification)" selfcheck_baseline_halueval.py
         ;;
     *)
-        fail "unknown stage '$STAGE' — expected one of: rq1, rq2, rq3, rag, all"
+        fail "unknown stage '$STAGE' — expected one of: characterize, rq1, rq2, rq3, rag, selfcheck, all"
         ;;
 esac
 

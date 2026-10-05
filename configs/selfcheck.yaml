@@ -1,0 +1,36 @@
+# SelfCheckGPT-NLI — the post-hoc verification baseline the proposal (§5) promises
+# alongside the ungated base model and RAG, and which did not exist until 2026-10-04
+# (proposal-v5 review issue M2).
+#
+# The comparison is run at MATCHED BUDGET: this detector's flag threshold is calibrated
+# at the same quantile the entropy gate uses (configs/gate.yaml), so both flag the same
+# fraction of examples and their precision/recall/AUROC are directly comparable. That
+# asks the question that matters — is entropy or sampling-consistency the better
+# hallucination signal per unit of intervention — rather than comparing two detectors
+# operating at different rates.
+
+models: [llama3, mistral, qwen3_8b, qwen3_4b, qwen3_1_7b]
+
+eval_split: development
+
+# Cost arithmetic, because this is the expensive baseline and the numbers should be
+# visible rather than discovered on the GPU bill. Per example this needs 1 greedy
+# generation + n_samples sampled generations. At n_eval_examples 300 and n_samples 10
+# that is 300 x 11 = 3,300 generations per checkpoint, 16,500 across five — plus the
+# calibration pass below. Lower n_eval_examples first if the budget binds; lowering
+# n_samples weakens the baseline (see below).
+n_eval_examples: 300
+n_calibration_examples: 200
+
+# Manakul et al. use N = 20. 10 is a compute-budget choice, and fewer samples makes the
+# consistency estimate noisier, which weakens the baseline — and a weakened baseline
+# flatters SENSE. This belongs in the results discussion as a named limitation, not
+# only here. Raise it if the budget allows; do not quietly lower it.
+n_samples: 10
+
+# Sampling temperature for the sample passes only. The MAIN answer is generated with
+# gate.yaml's greedy config, identical to every other condition, so the thing being
+# scored is comparable across the study. Sampling is intrinsic to the method, so this
+# is a justified exception to the hold-decoding-constant constraint (CLAUDE.md #3),
+# scoped to the samples and stated here rather than silently taken.
+temperature: 1.0

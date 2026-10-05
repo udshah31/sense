@@ -28,3 +28,7 @@ results/**/*.parquet
 graphify-out/cache/
 graphify-out/.graphify_*
 graphify-out/.vocab.txt
+
+# feynman-review workflow intermediates (final reviews under docs/research/ are tracked)
+docs/research/.plans/
+docs/research/.drafts/

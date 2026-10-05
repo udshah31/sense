@@ -47,9 +47,10 @@ import torch
 import uvicorn
 from sense_symbolic.app import app as symbolic_app
 
-from _common import build_generation_inputs, load_halueval_examples_and_splits, load_model, load_model_registry, load_yaml_config, mean_calibration_entropy, write_results
+from _common import bootstrap_config, build_generation_inputs, derived_seed, load_halueval_examples_and_splits, load_model, load_model_registry, load_yaml_config, mean_calibration_entropy, seed_everything, write_results
 from sense_eval.factuality import FactualityVerdict, summarize_factuality
 from sense_eval.nli_judge import NLI_METRIC_LABEL_TEMPLATE, load_nli_model, nli_verdict_short_answer
+from sense_eval.routing_quality import RoutingOutcome, detection_metrics_with_ci
 from sense_neural.entropy import TokenEntropyMonitor
 from sense_neural.latency import generate_with_latency
 from sense_orchestrator.gate import GatePolicy
@@ -69,7 +70,7 @@ def load_config() -> dict:
     }
 
 
-async def run_experiment_for_model(config: dict, model_name: str, examples, splits, nli_model, nli_tokenizer) -> dict:
+async def run_experiment_for_model(config: dict, model_name: str, examples, splits, nli_model, nli_tokenizer, bootstrap_cfg: dict) -> dict:
     model_cfg = config["models"][model_name]
     decoding_cfg = config["gate"]["decoding"]
     quantile = config["gate"]["quantile"]
@@ -120,6 +121,7 @@ async def run_experiment_for_model(config: dict, model_name: str, examples, spli
             )
 
             entropy = sum(monitor.entropies) / len(monitor.entropies)
+            raw_entropy = sum(monitor.raw_entropies) / len(monitor.raw_entropies)
             annotation = await route_and_annotate(
                 gate,
                 entropy,
@@ -143,6 +145,7 @@ async def run_experiment_for_model(config: dict, model_name: str, examples, spli
                     "index": index,
                     "routed": annotation.routed,
                     "entropy": entropy,
+                    "raw_entropy": raw_entropy,
                     "factuality": verdict.label,
                     "ungated_ttft_ms": ungated["ttft_ms"],
                     "ungated_total_ms": ungated["total_generation_ms"],
@@ -172,7 +175,27 @@ async def run_experiment_for_model(config: dict, model_name: str, examples, spli
             "n_available_in_split": len(all_eval_indices),
             "quantile": quantile,
             "decoding": decoding_cfg,
+            "bootstrap": bootstrap_cfg,
             "routing_rate": len(routed) / n,
+            # Routing quality as detection performance: did the gate fire on the
+            # examples this model actually got wrong? Free here — per_example already
+            # carries the (entropy, routed, factuality) triple the metric needs. Added
+            # 2026-10-04 per the proposal-v5 review (issue C1).
+            #
+            # Reported on the normalized scale only, deliberately: normalization is
+            # division by a per-model constant, so on a single model it is a positive
+            # monotonic transform and entropy_auroc is identical on both scales. A
+            # raw-scale copy would be the same number under a different name. RQ1 and
+            # RQ2 do need both scales, because there the threshold crosses models.
+            "routing_detection": detection_metrics_with_ci(
+                [
+                    RoutingOutcome(entropy=r["entropy"], routed=r["routed"], factuality=r["factuality"])
+                    for r in per_example
+                ],
+                n_resamples=bootstrap_cfg["n_resamples"],
+                confidence=bootstrap_cfg["confidence"],
+                seed=derived_seed(bootstrap_cfg["seed"], model_name, "rq3", "detection"),
+            ),
             "task_accuracy": factuality_report["task_accuracy"],
             "hallucination_rate": factuality_report["hallucination_rate"],
             "abstention_rate": factuality_report["abstention_rate"],
@@ -199,9 +222,12 @@ async def run_experiment_for_model(config: dict, model_name: str, examples, spli
 async def run_all(config: dict) -> list[dict]:
     examples, splits = load_halueval_examples_and_splits()
     nli_model, nli_tokenizer = load_nli_model(config["nli_judge"]["hf_repo"], config["nli_judge"]["revision"])
+    bootstrap_cfg = bootstrap_config()
     results = []
     for model_name in config["rq3"]["models"]:
-        result = await run_experiment_for_model(config, model_name, examples, splits, nli_model, nli_tokenizer)
+        result = await run_experiment_for_model(
+            config, model_name, examples, splits, nli_model, nli_tokenizer, bootstrap_cfg
+        )
         write_results(
             f"rq3_accuracy_latency_halueval_{model_name}.json",
             result,
@@ -212,6 +238,7 @@ async def run_all(config: dict) -> list[dict]:
 
 
 async def main() -> list[dict]:
+    seed_everything()
     config = load_config()
 
     server_config = uvicorn.Config(symbolic_app, host=SYMBOLIC_HOST, port=SYMBOLIC_PORT, log_level="warning")

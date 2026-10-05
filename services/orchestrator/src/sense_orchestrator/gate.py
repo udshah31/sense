@@ -9,8 +9,15 @@ annotates only, until that decision is made.
 from sense_data.splits import SplitIndices, assert_no_test_leakage
 
 
-def _quantile(values: list[float], q: float) -> float:
-    """Linear-interpolation quantile, no numpy dependency."""
+def quantile_threshold(values: list[float], q: float) -> float:
+    """Linear-interpolation quantile, no numpy dependency.
+
+    Public because two callers outside this module need to compute the threshold a gate
+    *would* produce without constructing one: the bootstrap that puts a confidence
+    interval on the threshold (it resamples calibration values, so it has no split
+    indices to pass to `calibrate`), and the characterization diagnostic. Keeping one
+    implementation means those can't drift from what the gate actually does.
+    """
     ordered = sorted(values)
     if len(ordered) == 1:
         return ordered[0]
@@ -72,7 +79,7 @@ class GatePolicy:
         if not calibration_entropies:
             raise ValueError("calibration_entropies must be non-empty")
 
-        self._threshold = _quantile(calibration_entropies, quantile)
+        self._threshold = quantile_threshold(calibration_entropies, quantile)
         self._calibration_source = source
         return self._threshold
 

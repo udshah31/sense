@@ -73,6 +73,33 @@ def entailment_scores(model, tokenizer, premise: str, hypothesis: str) -> dict[s
     return {model.config.id2label[i]: probs[i].item() for i in range(len(probs))}
 
 
+class ContradictionLabelError(ValueError):
+    """Raised when an NLI model's label set has no identifiable contradiction class.
+
+    Loud rather than guessing an index: label ordering is not standardized across NLI
+    models (which is why `entailment_scores` keys by name), so picking index 0 or 2 by
+    convention would silently invert the score on a model that orders them differently.
+    """
+
+
+def contradiction_label(model) -> str:
+    """The model's own name for its contradiction class, resolved at call time.
+
+    Matches case-insensitively on the label containing "contradiction", which covers
+    the usual spellings (CONTRADICTION, contradiction, contradiction_label). A model
+    using opaque names (LABEL_0/1/2) raises with its label set named, so the fix is to
+    map them explicitly rather than to assume an order.
+    """
+    labels = list(model.config.id2label.values())
+    matches = [label for label in labels if "contradiction" in str(label).lower()]
+    if len(matches) != 1:
+        raise ContradictionLabelError(
+            f"expected exactly one contradiction label, found {matches} in {labels} — "
+            "map this model's labels explicitly rather than assuming an order"
+        )
+    return matches[0]
+
+
 def entailment_scores_batch(
     model, tokenizer, pairs: list[tuple[str, str]], batch_size: int = 32
 ) -> list[dict[str, float]]:

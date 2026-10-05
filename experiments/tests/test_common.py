@@ -6,6 +6,7 @@ import yaml
 from transformers import AutoTokenizer
 
 from _common import (
+    run_seed,
     CONFIGS_DIR,
     RESULTS_DIR,
     GPU_CHECKPOINT_KEYS,
@@ -69,7 +70,7 @@ def test_write_results_writes_full_json_to_results_dir(tmp_path, monkeypatch):
     write_results("test_write_results.json", result)
 
     written = json.loads((tmp_path / "test_write_results.json").read_text())
-    assert written == result
+    assert written == {**result, "seed": run_seed()}
 
 
 def test_write_results_prints_summary_excluding_given_keys(tmp_path, monkeypatch, capsys):
@@ -79,9 +80,9 @@ def test_write_results_prints_summary_excluding_given_keys(tmp_path, monkeypatch
     write_results("test_write_results_summary.json", result, print_exclude_keys=frozenset({"per_example"}))
 
     printed = json.loads(capsys.readouterr().out)
-    assert printed == {"a": 1}
+    assert printed == {"a": 1, "seed": run_seed()}
     written = json.loads((tmp_path / "test_write_results_summary.json").read_text())
-    assert written == result
+    assert written == {**result, "seed": run_seed()}
 
 
 def test_load_model_defaults_to_no_dtype_override_when_quantization_missing():
