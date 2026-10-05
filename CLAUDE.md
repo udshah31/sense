@@ -618,18 +618,38 @@ problem started).
   m6 (calibration-set wording), m7 (hardware claim softened; this doc updated too),
   m8 (Table I expectation marked as a hypothesis).
 
+**Citations verified 2026-10-04** against arXiv and publisher records: [24] (ICLR
+2023 Spotlight; author order Kuhn, Gal, Farquhar), [25] (arXiv only, no published
+venue), [27] (arXiv preprint 2025, seven authors). [26] was read in full earlier the
+same day. [1]'s DOI (10.1145/3703155) is confirmed from the arXiv journal reference
+and the entry is now anchored to it — the volume, issue and article number could not
+be retrieved because the ACM Digital Library refuses automated access, so the earlier
+"vol. 43, no. 2, pp. 1–55" was removed rather than left asserted on secondary-source
+evidence. **m2 closed**: [10]'s author initials were taken from the paper (H. Zhao,
+S. Zhou, H. Yang, Z. Qin, T. Zhou), and its title now follows the current version,
+which drops "interactive" — noted in the reference notes the way [15]'s author-version
+discrepancy is.
+
 **Still open:**
 
-- **m2** — reference [10] still lacks author initials. They must come from the paper,
-  not from memory.
 - **m3** — the final citation renumbering pass. [22]–[27] are all appended out of
-  order; the reference notes say so.
-- **m9** — the AI Use Statement question in §8.2 is unresolved, and the log still has
-  not been started.
-- **Citation verification** — [24], [25] and [27] were identified through citations in
-  other work; only [26] was read in full. [1]'s publication details come from secondary
-  reference lists. All four need confirming against publisher records before
-  submission, and the reference notes in the proposal say so.
+  order; the reference notes say so. Worth deferring: the advisor asked for the
+  literature review to be expanded, so more references are coming and renumbering now
+  means renumbering twice.
+- **[1]'s volume/issue/article number** — to be filled in by hand from the ACM
+  Digital Library.
+- **m9 (partly)** — the question of whether the AI Use Statement requirement applies to
+  the Starred Paper is still unresolved (proposal §8.2). The **log itself is started**:
+  `/Users/udaysah/Documents/files/filess/SENSE_ai_use_log.md`, seeded from this repo's
+  commit history, with pre-2026-10-04 sessions marked as reconstructed because their
+  prompts were not recorded at the time.
+
+**What has and has not run on a GPU.** The *pre-change* pipeline has: commits on
+2026-08-11 and 2026-08-12 record real Llama-3 8B and Mistral 7B runs for RQ1 and RQ2
+(TruthfulQA, since-retired two-model scope), which means 4-bit loading, the entropy
+monitor and the transfer harnesses have all executed against real checkpoints at least
+once. What has **not** run is any of the 2026-10-04 changes, or anything at all under
+the five-checkpoint HaluEval scope — `results/` contains no HaluEval file.
 
 **Verification status of the code changes above.** 115 model-free tests pass:
 `eval/tests/test_routing_quality.py` (27, including hand-computed AUROC values, tie
