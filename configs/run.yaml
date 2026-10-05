@@ -1,0 +1,13 @@
+# Run-level reproducibility settings shared by every experiment harness.
+#
+# CLAUDE.md's reproducibility requirement is "Fixed seeds, recorded per run." Before
+# 2026-10-04 the only seed in the repo was configs/dataset.yaml's, which governs split
+# construction and nothing else — no harness seeded its own run or recorded a seed in
+# its result file. Greedy decoding (gate.yaml's do_sample: false) makes generation
+# deterministic without a seed, so this was low-impact in practice, but any sampled
+# condition would have been silently irreproducible.
+#
+# seed_everything() in experiments/_common.py applies this to python's `random` and to
+# torch (CPU and CUDA), and write_results() stamps it into every result file, so a
+# result can always be traced to the seed that produced it.
+seed: 42

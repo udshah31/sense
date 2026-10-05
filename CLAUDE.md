@@ -67,6 +67,28 @@ design decision serves that question.
 - **RQ3** — What accuracy–latency trade-off does routing introduce, and does it hold
   across all checkpoints?
 
+### What "routing quality" means (RQ1, RQ2)
+
+Defined 2026-10-04 (proposal-v5 review issue C1); before that the proposal used the
+phrase without defining it and the two harnesses each substituted something else.
+
+**Routing quality is detection performance of the gate against the ungated model's own
+correctness.** The gate's job is to fire on examples that would otherwise be
+hallucinated and stay quiet on examples that would be answered correctly, so quality
+is precision/recall/F1 of routed-vs-hallucinated, plus the threshold-free AUROC of the
+entropy signal. Labels come from HaluEval's own `right_answer`/`hallucinated_answer`
+pair via the NLI judge — no extra annotation. Implemented in
+`eval/src/sense_eval/routing_quality.py`.
+
+Two quantities that are **not** routing quality, both retained as secondary
+diagnostics and neither to be reported as the headline:
+
+- `transfer_agreement_rate` (RQ1) — concordance between the transferred and native
+  gates. Reads 1.0 whenever both route the same examples, right or wrong.
+- `*_calibration_fidelity_gap` (RQ2) — whether a threshold still hits its own design
+  firing rate. A gate firing on exactly `1 - quantile` of examples chosen at random
+  scores perfectly.
+
 ### Models
 
 Five checkpoints across three families, per advisor-confirmed scope
@@ -130,6 +152,17 @@ entropy is comparable across scale but must still be checked, not assumed. Raw
 entropy values are not directly comparable across families. Normalize by `ln(V)` or
 compare quantiles. Read `V` from `tokenizer.vocab_size` at load time — never
 hard-code it.
+
+**Both scales are recorded, and the "or" above is load-bearing (2026-10-04).** The
+gate calibrates on the normalized scale AND by quantile, which is "and," not "or" —
+each step independently removes a source of cross-model difference, and RQ1 exists to
+measure cross-model difference. `TokenEntropyMonitor` therefore keeps
+`raw_entropies` alongside the normalized `entropies`, and RQ1/RQ2 each run a full
+transfer arm on both scales. Do not go back to discarding the raw value: a run that
+records only the normalized scale cannot test RQ1's premise afterwards, which is the
+state the first pilot
+(`results/rq1_transfer_truthful_qa_llama3_to_mistral.json`, agreement 1.0) was left
+in. See `configs/rq1.yaml` and the proposal-v5 review (issue C3).
 
 ### 5. Model revisions are pinned
 
@@ -216,7 +249,11 @@ change, not an excuse.
 
 - Pinned Docker images by digest, not tag.
 - Pinned Python dependencies.
-- Fixed seeds, recorded per run.
+- Fixed seeds, recorded per run — `configs/run.yaml`'s `seed`, applied by
+  `_common.seed_everything()` (called from every reportable harness's entry point)
+  and stamped into every result file by `_common.write_results()`. Before
+  2026-10-04 the only seed in the repo governed split construction, and no result
+  recorded one.
 - Config-driven experiments — no parameters passed as edited source.
 - Every run logs: hardware, GPU model, driver, CUDA version, image digest, model
   revision SHA, quantization scheme, decoding config, seed.
@@ -434,3 +471,56 @@ keys described above — don't conflate any of the three.
 
 Not yet built regardless of scope: real-model GPU runs against the reconciled
 current scope).
+
+---
+
+## 2026-10-04 — proposal-v5 review changes
+
+A peer-review pass over proposal v5 (`docs/research/sense-proposal-v5-review.md`, run
+via the `feynman-research-review` workflow) raised three Critical issues. Two were
+code-level and are addressed here; the third is document-level and is not yet done.
+
+**Addressed in code** (branch `review-c1-c3-routing-quality`):
+
+- **C1 — routing quality was undefined.** Added
+  `eval/src/sense_eval/routing_quality.py` and wired it into RQ1, RQ2, and RQ3. See
+  "What routing quality means" above. RQ1 and RQ2 now generate, score with the NLI
+  judge, and report the required factuality triple under an `ungated_` prefix; the
+  marginal cost over the previous entropy-only path is the judge pass, not a second
+  round of generation.
+- **C3 — normalization and quantile calibration together may make a negative RQ1
+  result unreachable.** `TokenEntropyMonitor` retains `raw_entropies`; RQ1 and RQ2
+  each run both a `normalized` and a `raw` transfer arm. See constraint #4 above.
+- **M3 (partial) — no per-run seed.** `configs/run.yaml` + `seed_everything()`. The
+  statistical treatment itself (repeated runs, variance) is still missing; see below.
+
+**Still open from that review:**
+
+- **C2** — the proposal's §4.1, §6, and §7 specify semantic entropy / SEP probes as
+  the gating signal. The repo builds token entropy and always has. The code is right;
+  the document needs rewriting. Document-side change, no code impact.
+- **M1** — the §2.3 novelty claim is contradicted by uncited prior art (AdaDec
+  arXiv:2506.08980, Varshney et al. arXiv:2307.03987, UnCert-CoT arXiv:2503.15341).
+  AdaDec in particular already does learned per-model entropy thresholds across eight
+  checkpoints. Document-side.
+- **M2** — the post-hoc verification baseline (SelfCheckGPT / CoVe) promised in
+  proposal §5 does not exist in `experiments/`. Either build it or amend the
+  promise. **Code-side, not yet done.**
+- **M3** — repeated runs and a variance statistic. **Code-side, not yet done.**
+- **M4** — the symbolic KB's coverage limits and RQ3's fixed probe triple are
+  documented here but not disclosed in the proposal. Document-side.
+- **M5** — stale "real-time" references in proposal §5/§6 and the writing guide.
+  Document-side.
+
+**Verification status of the code changes above.** `routing_quality.py` is fully
+tested (16 tests, including hand-computed AUROC values and tie handling) and the arm
+logic is tested in `experiments/tests/test_transfer_arms.py` (11 tests, no models).
+The torch-dependent suites — `services/neural/tests/test_entropy_monitor.py`'s two new
+raw-scale tests and the updated RQ1/RQ2 end-to-end harness tests — **have not been
+run**; they need the macOS dev environment. Run before trusting this branch:
+
+```bash
+cd services/neural && uv run pytest -q
+cd ../../eval        && uv run pytest -q
+cd ../experiments    && uv run pytest -q
+```

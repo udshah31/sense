@@ -5,7 +5,9 @@ and the example/split loading + results-writing boilerplate every harness repeat
 
 import json
 import os
+import random
 import sys
+from dataclasses import dataclass
 from pathlib import Path
 
 import torch
@@ -19,6 +21,7 @@ from sense_data.splits import SplitIndices, load_splits, PerCheckpointSplitIndic
 from sense_data.truthful_qa import TruthfulQAExample, load_truthful_qa
 from sense_eval.factuality import assert_factuality_metrics_reported_together
 from sense_neural.entropy import TokenEntropyMonitor
+from sense_neural.latency import generate_with_latency
 
 REPO_ROOT = Path(__file__).parent.parent
 CONFIGS_DIR = REPO_ROOT / "configs"
@@ -31,6 +34,36 @@ RESULTS_DIR = REPO_ROOT / "results"
 
 def load_yaml_config(name: str) -> dict:
     return yaml.safe_load((CONFIGS_DIR / name).read_text())
+
+
+def run_seed() -> int:
+    """The run-level seed from configs/run.yaml.
+
+    Raises rather than defaulting: a silently-defaulted seed is the same class of
+    problem as a silently-defaulted gate threshold (CLAUDE.md: never add a default
+    threshold value as a convenience fallback), because it makes an irreproducible
+    run look reproducible.
+    """
+    seed = load_yaml_config("run.yaml").get("seed")
+    if seed is None:
+        raise ValueError("configs/run.yaml must define `seed` — see CLAUDE.md reproducibility requirements")
+    return int(seed)
+
+
+def seed_everything() -> int:
+    """Seed python and torch (CPU + CUDA) from configs/run.yaml, returning the seed.
+
+    Call once at the top of a harness's run(). Greedy decoding is already
+    deterministic, so this matters for any sampled condition and for making the
+    recorded seed in the result file a true statement about the run rather than a
+    decorative field.
+    """
+    seed = run_seed()
+    random.seed(seed)
+    torch.manual_seed(seed)
+    if torch.cuda.is_available():
+        torch.cuda.manual_seed_all(seed)
+    return seed
 
 
 # configs/model.yaml's quantization schemes (CLAUDE.md #2: one scheme, held constant
@@ -213,6 +246,9 @@ def write_results(filename: str, result: dict, *, print_exclude_keys: frozenset[
     branch should never fire today — it's left in place as a tripwire in case a
     future scorer is ever added under a name containing "placeholder".
     """
+    # Stamp the run seed unless the caller set one explicitly, so every result file
+    # records the seed that produced it (CLAUDE.md: "Fixed seeds, recorded per run").
+    result = {**result, "seed": result.get("seed", run_seed())}
     assert_factuality_metrics_reported_together(result)
     factuality_metric = result.get("factuality_metric", "")
     if "placeholder" in factuality_metric.lower():
@@ -226,3 +262,80 @@ def write_results(filename: str, result: dict, *, print_exclude_keys: frozenset[
     (RESULTS_DIR / filename).write_text(json.dumps(result, indent=2))
     summary = {k: v for k, v in result.items() if k not in print_exclude_keys}
     print(json.dumps(summary, indent=2))
+
+
+@dataclass(frozen=True)
+class ExampleSignal:
+    """Everything one evaluation example yields in a single generation pass.
+
+    `mean_calibration_entropy` above returns only the normalized mean and discards the
+    generated text. Both of the things it throws away are needed to measure routing
+    quality as detection performance (eval/src/sense_eval/routing_quality.py):
+
+      - `raw_entropy` — the un-normalized mean, in nats. RQ1's premise is that raw
+        entropy is not comparable across tokenizers, so testing that premise requires
+        the raw scale; a run that records only the normalized value cannot test it
+        afterwards.
+      - `generated_text` — needed to score the example with the NLI judge, which is
+        what supplies the correct/incorrect label the gate's detection performance is
+        measured against.
+
+    Captured in one pass, so this costs no extra generation over the entropy-only path
+    it replaces — only the NLI judge call at the call site.
+    """
+
+    normalized_entropy: float
+    raw_entropy: float
+    generated_text: str
+
+
+class EmptyGenerationError(ValueError):
+    """Raised when a generation produced no decoding steps, so no entropy was recorded.
+
+    Loud rather than returning 0.0: a zero-entropy example would sit at the bottom of
+    every distribution and silently drag a calibrated quantile downward.
+    """
+
+
+def example_signal(model, tokenizer, question: str, decoding_cfg: dict, model_cfg: dict) -> ExampleSignal:
+    """Generate once for `question`, returning mean entropy on both scales plus the text.
+
+    Uses generate_with_latency (the same call RQ3 makes) rather than model.generate
+    directly, so the generated text follows exactly one decode convention across the
+    repo — skip_prompt, skip_special_tokens — instead of two that could drift.
+    """
+    monitor = TokenEntropyMonitor(vocab_size=tokenizer.vocab_size)
+    inputs = build_generation_inputs(tokenizer, question, model_cfg).to(model.device)
+    generated = generate_with_latency(model, tokenizer, inputs, decoding_cfg, logits_processor=[monitor])
+
+    if not monitor.entropies:
+        raise EmptyGenerationError(
+            f"generation for question {question[:60]!r} recorded no decoding steps — "
+            "cannot compute a mean entropy"
+        )
+
+    return ExampleSignal(
+        normalized_entropy=sum(monitor.entropies) / len(monitor.entropies),
+        raw_entropy=sum(monitor.raw_entropies) / len(monitor.raw_entropies),
+        generated_text=generated["text"],
+    )
+
+
+def example_signals(model, tokenizer, examples, indices, decoding_cfg, model_cfg) -> list[ExampleSignal]:
+    """`example_signal` over a list of dataset indices, index-aligned with `indices`."""
+    return [
+        example_signal(model, tokenizer, examples[i].question, decoding_cfg, model_cfg) for i in indices
+    ]
+
+
+def entropies_on_scale(signals: list[ExampleSignal], scale: str) -> list[float]:
+    """Pull one entropy scale out of a signal list. `scale` is "normalized" or "raw".
+
+    Unknown scales raise rather than falling back, so a typo can't silently select the
+    wrong scale and quietly change which arm of RQ1 is being measured.
+    """
+    if scale == "normalized":
+        return [s.normalized_entropy for s in signals]
+    if scale == "raw":
+        return [s.raw_entropy for s in signals]
+    raise ValueError(f"unknown entropy scale {scale!r} — expected 'normalized' or 'raw'")

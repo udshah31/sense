@@ -9,6 +9,7 @@ import pytest
 from transformers import AutoModelForCausalLM, AutoTokenizer
 
 from _common import calibration_entropies
+from sense_eval.nli_judge import load_nli_model
 from sense_data.splits import generate_splits
 from sense_data.truthful_qa import load_truthful_qa
 from sense_orchestrator.gate import GatePolicy
@@ -21,6 +22,22 @@ TARGET_MODEL_REVISION = "f417fcb49b46298ae7c01308ff33bfeadc104bd3"
 DECODING_CFG = {"do_sample": False, "max_new_tokens": 5}
 SOURCE_MODEL_CFG = {"hf_repo": SOURCE_MODEL, "revision": SOURCE_MODEL_REVISION}
 TARGET_MODEL_CFG = {"hf_repo": TARGET_MODEL, "revision": TARGET_MODEL_REVISION}
+
+# The NLI judge now runs inside run_pair: routing quality is measured as detection
+# performance against the ungated model's own correctness, which needs a verdict per
+# example (proposal-v5 review issue C1). Same pinned judge the real runs use — small
+# enough to load in a test, and loading the real one keeps the test on the real path.
+NLI_CFG = {
+    "hf_repo": "cliang1453/deberta-v3-xsmall-mnli",
+    "revision": "d1ca70f9ece4d8afd33015893a69df9a6e45a672",
+    "short_answer_entailment_threshold": 0.7,
+}
+
+
+@pytest.fixture(scope="module")
+def nli():
+    return load_nli_model(NLI_CFG["hf_repo"], NLI_CFG["revision"])
+
 
 
 @pytest.fixture(scope="module")
@@ -109,7 +126,7 @@ def test_transferred_threshold_equals_source_native_threshold(source, small_spli
     assert transferred_gate.threshold == threshold
 
 
-def test_run_pair_end_to_end_on_tiny_models_via_halueval_shaped_splits():
+def test_run_pair_end_to_end_on_tiny_models_via_halueval_shaped_splits(nli):
     """Exercises run_pair itself (not just the underlying primitives above),
     against a tiny per-checkpoint-shaped split built from real HaluEval data —
     the actual code path the real five-checkpoint run uses, just with cpu_test
@@ -126,14 +143,39 @@ def test_run_pair_end_to_end_on_tiny_models_via_halueval_shaped_splits():
     )
     models_registry = {"source": SOURCE_MODEL_CFG, "target": TARGET_MODEL_CFG}
 
+    nli_model, nli_tokenizer = nli
     result = run_pair(
         models_registry, examples, splits, DECODING_CFG, quantile=0.9,
         eval_split="development", source_name="source", target_name="target",
+        nli_model=nli_model, nli_tokenizer=nli_tokenizer, nli_cfg=NLI_CFG,
     )
 
     assert result["research_question"] == "RQ1"
     assert result["dataset"] == "halueval"
     assert result["source_model"]["name"] == "source"
     assert result["target_model"]["name"] == "target"
-    assert 0.0 <= result["transfer_agreement_rate"] <= 1.0
     assert result["n_eval_examples"] == 10
+    for scale in ("normalized", "raw"):
+        arm = result["arms"][scale]
+        assert arm["entropy_scale"] == scale
+        # Concordance diagnostic is still reported, just no longer the headline.
+        assert 0.0 <= arm["transfer_agreement_rate"] <= 1.0
+        # The transferred threshold must be the source's own, unmodified.
+        assert arm["transferred_threshold"] == arm["source_native_threshold"]
+        for gate_key in ("transferred_gate", "native_gate"):
+            metrics = arm[gate_key]
+            assert metrics["n_outcomes"] == 10
+            assert metrics["n_scored"] + metrics["n_unknown_excluded"] == 10
+            assert 0.0 <= metrics["routing_rate"] <= 1.0
+            assert metrics["entropy_auroc"] is None or 0.0 <= metrics["entropy_auroc"] <= 1.0
+        assert "delta_f1" in arm["routing_quality_delta"]
+
+    # The raw arm must transfer a genuinely different number from the normalized one;
+    # if these matched, the second arm would not be testing anything new.
+    assert result["arms"]["raw"]["transferred_threshold"] != result["arms"]["normalized"]["transferred_threshold"]
+
+    # The required factuality triple, prefixed, so write_results' always-together
+    # check treats it as its own group.
+    for key in ("ungated_task_accuracy", "ungated_hallucination_rate", "ungated_abstention_rate"):
+        assert key in result
+    assert result["ungated_abstention_rate"] == 0.0  # RQ1 acts on no routing decision

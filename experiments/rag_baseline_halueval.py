@@ -24,7 +24,7 @@ subset — write_results enforces this); abstention_rate is always 0 here, since
 this baseline has no routing/merge-back policy to abstain with at all.
 """
 
-from _common import REPO_ROOT, load_model, load_model_registry, load_yaml_config, write_results
+from _common import REPO_ROOT, load_model, load_model_registry, load_yaml_config, seed_everything, write_results
 from _common import load_halueval_examples_and_splits as load_examples_and_splits
 from sense_eval.factuality import FactualityVerdict, summarize_factuality
 from sense_eval.nli_judge import NLI_METRIC_LABEL_TEMPLATE, load_nli_model, nli_verdict_short_answer
@@ -189,6 +189,7 @@ async def run_experiment(config: dict) -> dict:
 
 
 async def main() -> dict:
+    seed_everything()
     config = load_config()
     result = await run_experiment(config)
 

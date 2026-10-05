@@ -21,3 +21,21 @@ transfer_pairs:
 # Transfer is evaluated on the development split, never test — test is touched once,
 # at the end, for the numbers that go in the paper (CLAUDE.md's data split discipline).
 eval_split: development
+
+# Each pair runs TWO transfer arms (added 2026-10-04, proposal-v5 review issue C3).
+# Not configurable on purpose: both are always reported, because reporting only one
+# is what made the earlier runs hard to interpret.
+#
+#   normalized — entropy / ln(vocab_size). Normalization is designed to remove the
+#                cross-tokenizer incomparability that RQ1's premise rests on, and
+#                quantile calibration removes what location difference is left, so
+#                this arm asks whether a threshold transfers AFTER both sources of
+#                non-transfer have been engineered out.
+#   raw        — entropy in nats, transferred as a bare number on the native scale.
+#                The naive thing a practitioner would do, and the arm the premise
+#                predicts should fail.
+#
+# Reporting both separates "the signal doesn't transfer" from "normalization fixes
+# it" — different findings, and the first retired-scope pilot
+# (results/rq1_transfer_truthful_qa_llama3_to_mistral.json, agreement 1.0) could not
+# distinguish them because only the normalized arm existed.
