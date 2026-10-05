@@ -137,8 +137,11 @@ def routing_detection_metrics(outcomes: list[RoutingOutcome]) -> dict:
       balanced_accuracy            — mean of recall and specificity
       entropy_auroc                — threshold-free; see module docstring
 
-    Rate keys are None, never 0.0, where the denominator is empty. A precision of 0.0
-    on zero routed examples would be a fabricated measurement.
+    Rate keys are None, never 0.0, where the denominator is empty: a precision of 0.0
+    on zero routed examples would be a fabricated measurement. A rate of 0.0 on a
+    non-empty denominator is a real measurement and is reported as such — so f1 is 0.0
+    when precision and recall are both genuinely zero, and None only when one of them
+    could not be measured at all.
     """
     _validate(outcomes)
 
@@ -153,11 +156,16 @@ def routing_detection_metrics(outcomes: list[RoutingOutcome]) -> dict:
     precision = tp / (tp + fp) if (tp + fp) else None
     recall = tp / (tp + fn) if (tp + fn) else None
     specificity = tn / (tn + fp) if (tn + fp) else None
-    f1 = (
-        2 * precision * recall / (precision + recall)
-        if precision is not None and recall is not None and (precision + recall) > 0
-        else None
-    )
+    if precision is None or recall is None:
+        f1 = None
+    elif precision + recall == 0:
+        # Both are real measurements that came out zero: examples were routed and none
+        # were hallucinations, and hallucinations existed and none were caught. F1 is
+        # 0.0, not undefined — returning None here would hide a gate that failed
+        # completely, and would make the delta against a working gate unreportable.
+        f1 = 0.0
+    else:
+        f1 = 2 * precision * recall / (precision + recall)
     balanced_accuracy = (
         (recall + specificity) / 2.0 if recall is not None and specificity is not None else None
     )
@@ -214,4 +222,140 @@ def routing_quality_delta(transferred: dict, native: dict) -> dict:
             else None
         )
         for key in differenced
+    }
+
+
+# Metrics that get a bootstrap confidence interval. Count keys (n_true_positive and
+# friends) are excluded: they are properties of this sample, not estimates of a
+# population quantity, so an interval on them would be meaningless.
+CI_METRICS = (
+    "routing_rate",
+    "routed_hallucination_precision",
+    "hallucination_recall",
+    "f1",
+    "specificity",
+    "balanced_accuracy",
+    "entropy_auroc",
+)
+
+# Metrics whose transferred-vs-native difference carries a paired interval. Same list
+# minus entropy_auroc, which is threshold-free and therefore identical for both gates
+# on the same model — its delta is zero by construction (see routing_quality_delta).
+DELTA_CI_METRICS = tuple(key for key in CI_METRICS if key != "entropy_auroc")
+
+
+def detection_metrics_with_ci(
+    outcomes: list[RoutingOutcome],
+    *,
+    n_resamples: int,
+    confidence: float,
+    seed: int,
+) -> dict:
+    """`routing_detection_metrics` plus a bootstrap interval for each CI_METRICS key.
+
+    The interval covers **evaluation sampling** only — how much each metric would move
+    on another draw of examples from the same model. Uncertainty in the threshold
+    itself is a separate question, bootstrapped from the calibration sample by the
+    harness; see sense_eval.bootstrap for why these are different sources.
+
+    One resampling pass computes the whole metric dict per resample, so adding a metric
+    to CI_METRICS costs nothing extra.
+    """
+    import random as _random
+
+    from sense_eval.bootstrap import interval_from_estimates
+
+    point_metrics = routing_detection_metrics(outcomes)
+
+    if not outcomes:
+        return point_metrics | {
+            f"{key}_ci": interval_from_estimates(
+                point_metrics.get(key), [], n_resamples=n_resamples, confidence=confidence
+            ).as_dict()
+            for key in CI_METRICS
+        }
+
+    rng = _random.Random(seed)
+    n = len(outcomes)
+    collected: dict[str, list[float]] = {key: [] for key in CI_METRICS}
+    for _ in range(n_resamples):
+        resample = [outcomes[rng.randrange(n)] for _ in range(n)]
+        resampled_metrics = routing_detection_metrics(resample)
+        for key in CI_METRICS:
+            value = resampled_metrics.get(key)
+            if value is not None:
+                collected[key].append(value)
+
+    return point_metrics | {
+        f"{key}_ci": interval_from_estimates(
+            point_metrics.get(key), collected[key], n_resamples=n_resamples, confidence=confidence
+        ).as_dict()
+        for key in CI_METRICS
+    }
+
+
+def routing_quality_delta_with_ci(
+    transferred_outcomes: list[RoutingOutcome],
+    native_outcomes: list[RoutingOutcome],
+    *,
+    n_resamples: int,
+    confidence: float,
+    seed: int,
+) -> dict:
+    """native minus transferred, with a PAIRED bootstrap interval per metric.
+
+    The two outcome lists must be index-aligned — same examples, same generations, only
+    the routing decisions differ. One index set is drawn per resample and both gates are
+    scored on it, because the two conditions share examples and their errors are
+    correlated; resampling them independently would widen the interval and understate a
+    real gap.
+
+    **An interval excluding zero is the evidence RQ1 and RQ2 are after.** It says the
+    gap between a transferred threshold and a natively-calibrated one is larger than
+    sampling noise on this model. An interval straddling zero says the data does not
+    distinguish them, which on these two research questions is itself a finding and must
+    be reported as one rather than read as a null.
+    """
+    import random as _random
+
+    from sense_eval.bootstrap import interval_from_estimates
+
+    if len(transferred_outcomes) != len(native_outcomes):
+        raise ValueError(
+            "paired delta needs index-aligned outcome lists, got "
+            f"{len(transferred_outcomes)} and {len(native_outcomes)}"
+        )
+
+    transferred_point = routing_detection_metrics(transferred_outcomes)
+    native_point = routing_detection_metrics(native_outcomes)
+
+    def point_delta(key: str) -> float | None:
+        a, b = transferred_point.get(key), native_point.get(key)
+        return (b - a) if (a is not None and b is not None) else None
+
+    if not transferred_outcomes:
+        return {
+            f"delta_{key}_ci": interval_from_estimates(
+                point_delta(key), [], n_resamples=n_resamples, confidence=confidence
+            ).as_dict()
+            for key in DELTA_CI_METRICS
+        }
+
+    rng = _random.Random(seed)
+    n = len(transferred_outcomes)
+    collected: dict[str, list[float]] = {key: [] for key in DELTA_CI_METRICS}
+    for _ in range(n_resamples):
+        indices = [rng.randrange(n) for _ in range(n)]
+        resampled_transferred = routing_detection_metrics([transferred_outcomes[i] for i in indices])
+        resampled_native = routing_detection_metrics([native_outcomes[i] for i in indices])
+        for key in DELTA_CI_METRICS:
+            a, b = resampled_transferred.get(key), resampled_native.get(key)
+            if a is not None and b is not None:
+                collected[key].append(b - a)
+
+    return {
+        f"delta_{key}_ci": interval_from_estimates(
+            point_delta(key), collected[key], n_resamples=n_resamples, confidence=confidence
+        ).as_dict()
+        for key in DELTA_CI_METRICS
     }

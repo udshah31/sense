@@ -32,6 +32,10 @@ LABELS = ["correct", "incorrect", "incorrect", "correct", "unknown"]
 
 VIEW = SplitIndices(calibration=[0, 1, 2, 3, 4], development=[5, 6, 7, 8, 9], test=[10, 11, 12])
 
+# Small on purpose: these tests check that intervals are produced and wired, not
+# that they are tight. The bootstrap itself is tested in eval/tests/test_bootstrap.py.
+BOOTSTRAP = {"n_resamples": 50, "confidence": 0.95, "seed": 42}
+
 
 def test_entropies_on_scale_selects_the_right_scale():
     assert entropies_on_scale(SOURCE_CAL, "normalized") == [0.10, 0.20, 0.30, 0.40, 0.90]
@@ -45,7 +49,7 @@ def test_unknown_scale_raises_rather_than_defaulting():
 
 def _arm(scale):
     return transfer_arm(scale, SOURCE_CAL, TARGET_CAL, TARGET_EVAL, VIEW, VIEW,
-                        0.9, "src", "tgt", LABELS)
+                        0.9, "src", "tgt", LABELS, BOOTSTRAP)
 
 
 @pytest.mark.parametrize("scale", ["normalized", "raw"])
@@ -89,7 +93,7 @@ def test_agreement_is_one_when_thresholds_coincide():
     # Transferring a model's threshold to itself must agree perfectly — a sanity
     # check that the agreement computation is wired to the decisions it claims.
     arm = transfer_arm("normalized", TARGET_CAL, TARGET_CAL, TARGET_EVAL, VIEW, VIEW,
-                       0.9, "tgt", "tgt", LABELS)
+                       0.9, "tgt", "tgt", LABELS, BOOTSTRAP)
     assert arm["transfer_agreement_rate"] == 1.0
     assert arm["routing_quality_delta"]["delta_f1"] in (0.0, None)
 
@@ -116,7 +120,7 @@ def test_split_leakage_cannot_be_constructed_let_alone_calibrated_on():
 @pytest.mark.parametrize("scale", ["normalized", "raw"])
 def test_adaptive_arm_shape_and_fidelity(scale):
     arm = adaptive_arm(scale, SOURCE_CAL, TARGET_CAL, TARGET_EVAL, VIEW, VIEW,
-                       0.9, "src", "tgt", LABELS)
+                       0.9, "src", "tgt", LABELS, BOOTSTRAP)
     assert arm["entropy_scale"] == scale
     assert arm["expected_routing_rate"] == pytest.approx(0.1)
     assert arm["fixed_calibration_fidelity_gap"] >= 0.0
@@ -133,3 +137,72 @@ def test_adaptive_arm_shape_and_fidelity(scale):
     upper = min(lower + 1, len(values) - 1)
     expected = values[lower] + (values[upper] - values[lower]) * (position - lower)
     assert arm["adaptive_threshold"] == pytest.approx(expected)
+
+
+# --- confidence intervals are wired through the arms ---------------------------
+
+
+@pytest.mark.parametrize("scale", ["normalized", "raw"])
+def test_transfer_arm_reports_threshold_and_delta_intervals(scale):
+    arm = _arm(scale)
+
+    for key in ("source_threshold_ci", "target_native_threshold_ci"):
+        interval = arm[key]
+        assert interval["n_resamples"] == 50
+        if interval["ci_low"] is not None:
+            assert interval["ci_low"] <= interval["point"] <= interval["ci_high"]
+
+    # The threshold interval's point must be the threshold actually used.
+    assert arm["source_threshold_ci"]["point"] == arm["source_native_threshold"]
+
+    # Paired delta intervals, which are the primary evidence for RQ1.
+    assert "delta_f1_ci" in arm["routing_quality_delta_ci"]
+    assert "delta_entropy_auroc_ci" not in arm["routing_quality_delta_ci"]
+
+    # Per-metric intervals on each gate.
+    for gate_key in ("transferred_gate", "native_gate"):
+        assert "f1_ci" in arm[gate_key]
+        assert "entropy_auroc_ci" in arm[gate_key]
+
+
+def test_self_transfer_gives_zero_width_or_honestly_suppressed_delta_intervals():
+    """Transferring a model's threshold to itself: both gates make identical decisions,
+    so every paired difference is exactly zero.
+
+    Where an interval forms it must have zero width. Where it does not, it must have
+    been suppressed for a stated reason — more than MAX_DEGENERATE_FRACTION of
+    resamples left the metric undefined — rather than silently dropped. With this
+    5-example fixture routing a single example, roughly a third of resamples draw no
+    routed example at all, so `routed_hallucination_precision` genuinely cannot be
+    estimated and the module declines to invent a number for it. That is the behavior
+    under test, not a shortcoming of it.
+    """
+    from sense_eval.bootstrap import MAX_DEGENERATE_FRACTION
+
+    arm = transfer_arm("normalized", TARGET_CAL, TARGET_CAL, TARGET_EVAL, VIEW, VIEW,
+                       0.9, "tgt", "tgt", LABELS, BOOTSTRAP)
+
+    saw_an_interval = False
+    for key, interval in arm["routing_quality_delta_ci"].items():
+        if interval["point"] is not None:
+            assert interval["point"] == 0.0, key
+
+        if interval["ci_low"] is not None:
+            saw_an_interval = True
+            assert interval["ci_low"] == 0.0 and interval["ci_high"] == 0.0, key
+        else:
+            assert (
+                interval["point"] is None
+                or interval["n_degenerate_resamples"] > MAX_DEGENERATE_FRACTION * interval["n_resamples"]
+            ), f"{key}: interval absent without a stated reason"
+
+    assert saw_an_interval, "every delta interval was suppressed — fixture is too small to test anything"
+
+
+@pytest.mark.parametrize("scale", ["normalized", "raw"])
+def test_adaptive_arm_reports_both_threshold_intervals(scale):
+    arm = adaptive_arm(scale, SOURCE_CAL, TARGET_CAL, TARGET_EVAL, VIEW, VIEW,
+                       0.9, "src", "tgt", LABELS, BOOTSTRAP)
+    assert arm["fixed_threshold_ci"]["point"] == arm["fixed_threshold"]
+    assert arm["adaptive_threshold_ci"]["point"] == arm["adaptive_threshold"]
+    assert "delta_f1_ci" in arm["routing_quality_delta_ci"]

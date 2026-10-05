@@ -42,6 +42,8 @@ import gc
 import torch
 
 from _common import (
+    bootstrap_config,
+    derived_seed,
     entropies_on_scale,
     example_signals,
     load_halueval_examples_and_splits,
@@ -51,12 +53,22 @@ from _common import (
     seed_everything,
     write_results,
 )
+from sense_eval.bootstrap import percentile_bootstrap
 from sense_eval.factuality import FactualityVerdict, summarize_factuality
 from sense_eval.nli_judge import NLI_METRIC_LABEL_TEMPLATE, load_nli_model, nli_verdict_short_answer
-from sense_eval.routing_quality import RoutingOutcome, routing_detection_metrics, routing_quality_delta
-from sense_orchestrator.gate import GatePolicy
+from sense_eval.routing_quality import (
+    RoutingOutcome,
+    detection_metrics_with_ci,
+    routing_quality_delta,
+    routing_quality_delta_with_ci,
+)
+from sense_orchestrator.gate import GatePolicy, quantile_threshold
 
 ENTROPY_SCALES = ("normalized", "raw")
+
+# Imported rather than redefined: the threshold interval means the same thing in
+# both harnesses, and two copies would be two things to keep in step.
+from transfer_threshold_halueval import threshold_confidence_interval  # noqa: E402
 
 
 def load_config() -> dict:
@@ -83,6 +95,7 @@ def adaptive_arm(
     source_name: str,
     target_name: str,
     verdict_labels: list[str],
+    bootstrap_cfg: dict,
 ) -> dict:
     """Fixed-vs-adaptive comparison on a single entropy scale.
 
@@ -128,8 +141,21 @@ def adaptive_arm(
             for entropy, routed, label in zip(target_eval_entropies, decisions, verdict_labels)
         ]
 
-    fixed_metrics = routing_detection_metrics(outcomes(fixed_decisions))
-    adaptive_metrics = routing_detection_metrics(outcomes(adaptive_decisions))
+    seed_label = (source_name, target_name, scale)
+    fixed_outcomes = outcomes(fixed_decisions)
+    adaptive_outcomes = outcomes(adaptive_decisions)
+    fixed_metrics = detection_metrics_with_ci(
+        fixed_outcomes,
+        n_resamples=bootstrap_cfg["n_resamples"],
+        confidence=bootstrap_cfg["confidence"],
+        seed=derived_seed(bootstrap_cfg["seed"], *seed_label, "fixed"),
+    )
+    adaptive_metrics = detection_metrics_with_ci(
+        adaptive_outcomes,
+        n_resamples=bootstrap_cfg["n_resamples"],
+        confidence=bootstrap_cfg["confidence"],
+        seed=derived_seed(bootstrap_cfg["seed"], *seed_label, "adaptive"),
+    )
 
     fixed_dev_rate = routing_rate(fixed_gate, target_eval_entropies)
     adaptive_dev_rate = routing_rate(adaptive_gate, target_eval_entropies)
@@ -138,12 +164,27 @@ def adaptive_arm(
         "entropy_scale": scale,
         "expected_routing_rate": expected_routing_rate,
         "fixed_threshold": source_threshold,
+        "fixed_threshold_ci": threshold_confidence_interval(
+            source_cal_entropies, quantile, bootstrap_cfg, (source_name, "fixed", scale)
+        ),
         "adaptive_threshold": adaptive_threshold,
+        "adaptive_threshold_ci": threshold_confidence_interval(
+            target_cal_entropies, quantile, bootstrap_cfg, (target_name, "adaptive", scale)
+        ),
         # Primary evidence: detection performance of each gate on the target model.
         "fixed_gate": fixed_metrics,
         "adaptive_gate": adaptive_metrics,
         # adaptive minus fixed. Positive means recalibrating bought something.
         "routing_quality_delta": routing_quality_delta(fixed_metrics, adaptive_metrics),
+        # Paired interval on adaptive-minus-fixed. This is RQ2's evidence: an interval
+        # excluding zero says recalibrating bought more than sampling noise.
+        "routing_quality_delta_ci": routing_quality_delta_with_ci(
+            fixed_outcomes,
+            adaptive_outcomes,
+            n_resamples=bootstrap_cfg["n_resamples"],
+            confidence=bootstrap_cfg["confidence"],
+            seed=derived_seed(bootstrap_cfg["seed"], *seed_label, "delta"),
+        ),
         # Secondary diagnostic: does each threshold still hit its own design rate?
         "fixed_dev_routing_rate": fixed_dev_rate,
         "fixed_calibration_fidelity_gap": abs(fixed_dev_rate - expected_routing_rate),
@@ -164,6 +205,7 @@ def run_pair(
     nli_model,
     nli_tokenizer,
     nli_cfg,
+    bootstrap_cfg,
 ) -> dict:
     source_cfg = models_registry[source_name]
     target_cfg = models_registry[target_name]
@@ -209,6 +251,7 @@ def run_pair(
                 source_name,
                 target_name,
                 verdict_labels,
+                bootstrap_cfg,
             )
             for scale in ENTROPY_SCALES
         }
@@ -224,6 +267,7 @@ def run_pair(
             "n_eval_examples": len(eval_indices),
             "quantile": quantile,
             "decoding": decoding_cfg,
+            "bootstrap": bootstrap_cfg,
             "factuality_metric": NLI_METRIC_LABEL_TEMPLATE.format(
                 hf_repo=nli_cfg["hf_repo"], revision=nli_cfg["revision"]
             ),
@@ -258,6 +302,7 @@ def run() -> list[dict]:
     eval_split = config["rq2"]["eval_split"]
     nli_cfg = config["nli_judge"]
     nli_model, nli_tokenizer = load_nli_model(nli_cfg["hf_repo"], nli_cfg["revision"])
+    bootstrap_cfg = bootstrap_config()
 
     results = []
     for pair in config["rq2"]["transfer_pairs"]:
@@ -274,6 +319,7 @@ def run() -> list[dict]:
             nli_model,
             nli_tokenizer,
             nli_cfg,
+            bootstrap_cfg,
         )
         write_results(
             f"rq2_adaptive_halueval_{source_name}_to_{target_name}.json",

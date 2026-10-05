@@ -72,6 +72,7 @@ from _common import (
     seed_everything,
     write_results,
 )
+from sense_orchestrator.gate import quantile_threshold
 
 ENTROPY_SCALES = ("normalized", "raw")
 REPORTED_QUANTILES = (0.05, 0.10, 0.25, 0.50, 0.75, 0.90, 0.95)
@@ -82,22 +83,6 @@ REPORTED_QUANTILES = (0.05, 0.10, 0.25, 0.50, 0.75, 0.90, 0.95)
 MIN_EXAMPLES_FOR_STABLE_QUANTILES = 50
 
 
-def _quantile(values: list[float], q: float) -> float:
-    """Linear-interpolation quantile, matching GatePolicy._quantile exactly.
-
-    Deliberately duplicated rather than imported from the gate: this diagnostic must
-    report the threshold the gate *would* produce, so the two have to agree, and a
-    future change to one should break the other's test rather than silently diverge.
-    """
-    ordered = sorted(values)
-    if len(ordered) == 1:
-        return ordered[0]
-    position = q * (len(ordered) - 1)
-    lower = int(position)
-    upper = min(lower + 1, len(ordered) - 1)
-    return ordered[lower] + (ordered[upper] - ordered[lower]) * (position - lower)
-
-
 def summarize_distribution(values: list[float], gate_quantile: float) -> dict:
     """Shape of one checkpoint's entropy distribution on one scale."""
     return {
@@ -106,9 +91,9 @@ def summarize_distribution(values: list[float], gate_quantile: float) -> dict:
         "stdev": statistics.stdev(values) if len(values) > 1 else None,
         "min": min(values),
         "max": max(values),
-        "quantiles": {f"q{int(q * 100):02d}": _quantile(values, q) for q in REPORTED_QUANTILES},
+        "quantiles": {f"q{int(q * 100):02d}": quantile_threshold(values, q) for q in REPORTED_QUANTILES},
         # The threshold configs/gate.yaml's quantile would produce on this scale.
-        "gate_threshold": _quantile(values, gate_quantile),
+        "gate_threshold": quantile_threshold(values, gate_quantile),
     }
 
 

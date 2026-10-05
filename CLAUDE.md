@@ -491,8 +491,10 @@ code-level and are addressed here; the third is document-level and is not yet do
 - **C3 — normalization and quantile calibration together may make a negative RQ1
   result unreachable.** `TokenEntropyMonitor` retains `raw_entropies`; RQ1 and RQ2
   each run both a `normalized` and a `raw` transfer arm. See constraint #4 above.
-- **M3 (partial) — no per-run seed.** `configs/run.yaml` + `seed_everything()`. The
-  statistical treatment itself (repeated runs, variance) is still missing; see below.
+- **M3 — no statistical treatment.** Two parts, both done. (a) A per-run seed:
+  `configs/run.yaml` + `seed_everything()`, stamped into every result file. (b) The
+  statistical treatment itself — see the note below, because it is deliberately **not**
+  what the writing guide asks for.
 
 **Added alongside, not from the review itself:**
 
@@ -519,6 +521,39 @@ code-level and are addressed here; the third is document-level and is not yet do
   scale. Different task and a different fitting procedure, so treat it as a prediction
   to test, not evidence to cite.
 
+### Why the statistical treatment is bootstrap intervals, not multiple seeds
+
+The writing guide §4.6 asks for "multiple seeds, report variance." That is the right
+instinct for a stochastic pipeline and the wrong instrument for this one:
+`configs/gate.yaml` sets `do_sample: false`, so re-running a checkpoint on the same
+examples is byte-identical and seed-to-seed variance is exactly **zero**. Reporting
+that zero as variance would claim a stability result the experiment never tested.
+
+The variance that genuinely exists is sampling variance, from two sources:
+
+1. **Calibration sampling** — the threshold is a quantile of a finite calibration
+   draw. Another draw from the same model gives a different threshold, and everything
+   downstream is a function of it. This is the dominant source.
+2. **Evaluation sampling** — precision, recall, F1 and AUROC are estimated on a finite
+   development split.
+
+Both are addressable by resampling data already in hand, at **no extra GPU cost** — no
+extra generation, no extra judge calls. `eval/src/sense_eval/bootstrap.py` provides
+percentile intervals for each, and RQ1/RQ2 now report a threshold interval per gate, a
+per-metric interval on every detection number, and — most importantly — a **paired**
+interval on the transferred-vs-native difference. Paired because the two gates are
+scored on the same examples, so their errors are correlated and independent resampling
+would widen the interval and understate a real gap.
+
+**An interval excluding zero on `routing_quality_delta_ci` is RQ1's and RQ2's
+evidence.** An interval straddling zero means the data does not distinguish the two
+gates, which on these research questions is a finding in its own right and must be
+reported as one rather than presented as a null.
+
+Say this in the methods section rather than letting a reader assume seeds were varied.
+When the proposal's §5 gets its statistical-treatment paragraph (M3, document side),
+this is the argument it should make.
+
 **Still open from that review:**
 
 - **C2** — the proposal's §4.1, §6, and §7 specify semantic entropy / SEP probes as
@@ -531,19 +566,18 @@ code-level and are addressed here; the third is document-level and is not yet do
 - **M2** — the post-hoc verification baseline (SelfCheckGPT / CoVe) promised in
   proposal §5 does not exist in `experiments/`. Either build it or amend the
   promise. **Code-side, not yet done.**
-- **M3** — repeated runs and a variance statistic. **Code-side, not yet done.**
 - **M4** — the symbolic KB's coverage limits and RQ3's fixed probe triple are
   documented here but not disclosed in the proposal. Document-side.
 - **M5** — stale "real-time" references in proposal §5/§6 and the writing guide.
   Document-side.
 
-**Verification status of the code changes above.** `routing_quality.py` is fully
-tested (16 tests, including hand-computed AUROC values and tie handling), the arm
-logic is tested in `experiments/tests/test_transfer_arms.py` (11 tests, no models), and
-the characterization diagnostic in
-`experiments/tests/test_characterize_entropy_distributions.py` (34 tests, including a
-guard that its quantile stays identical to `GatePolicy`'s — they are deliberately
-duplicated so a change to one breaks the other's test rather than diverging silently).
+**Verification status of the code changes above.** 96 model-free tests pass:
+`eval/tests/test_routing_quality.py` (27, including hand-computed AUROC values, tie
+handling, and the confidence-interval wiring), `eval/tests/test_bootstrap.py` (19,
+including the paired-vs-independent width property and degenerate-resample
+suppression), `experiments/tests/test_transfer_arms.py` (16, arm logic and interval
+wiring, no models), and
+`experiments/tests/test_characterize_entropy_distributions.py` (34).
 The torch-dependent suites — `services/neural/tests/test_entropy_monitor.py`'s two new
 raw-scale tests and the updated RQ1/RQ2 end-to-end harness tests — **have not been
 run**; they need the macOS dev environment. Run before trusting this branch:

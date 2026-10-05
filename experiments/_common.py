@@ -7,6 +7,7 @@ import json
 import os
 import random
 import sys
+import zlib
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -48,6 +49,43 @@ def run_seed() -> int:
     if seed is None:
         raise ValueError("configs/run.yaml must define `seed` — see CLAUDE.md reproducibility requirements")
     return int(seed)
+
+
+def bootstrap_config() -> dict:
+    """configs/run.yaml's `bootstrap` block, validated.
+
+    Raises on a missing or malformed block rather than defaulting: an interval computed
+    with silently-assumed settings is not reportable.
+    """
+    cfg = load_yaml_config("run.yaml").get("bootstrap")
+    if not cfg:
+        raise ValueError("configs/run.yaml must define a `bootstrap` block (n_resamples, confidence)")
+    n_resamples, confidence = cfg.get("n_resamples"), cfg.get("confidence")
+    if not isinstance(n_resamples, int) or n_resamples < 1:
+        raise ValueError(f"bootstrap.n_resamples must be a positive int, got {n_resamples!r}")
+    if not (isinstance(confidence, (int, float)) and 0.0 < confidence < 1.0):
+        raise ValueError(f"bootstrap.confidence must be in (0, 1), got {confidence!r}")
+    # The run seed travels with the config so that everything downstream of it — the
+    # arms, the interval helpers — is a pure function of its arguments rather than of
+    # what happens to be on disk. It also lands in every result file alongside
+    # n_resamples, so an interval can be reproduced from the result alone.
+    return {"n_resamples": n_resamples, "confidence": float(confidence), "seed": run_seed()}
+
+
+def derived_seed(base_seed: int, *parts: str) -> int:
+    """A distinct, reproducible seed per bootstrap, from the run seed plus a label.
+
+    Every interval in a run needs its own resampling pattern — sharing one would
+    correlate estimates that are supposed to be independent — while staying
+    reproducible. CRC32 of the label is used because python's `hash()` is randomized
+    per process, which would make the intervals irreproducible across runs.
+
+    Pure: takes the base seed rather than reading configs/run.yaml, so callers in the
+    experiment arms have no hidden filesystem dependency and can be unit-tested with a
+    plain dict.
+    """
+    label = "|".join(parts)
+    return (base_seed + zlib.crc32(label.encode())) % (2**32)
 
 
 def seed_everything() -> int:

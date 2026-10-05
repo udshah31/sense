@@ -63,6 +63,8 @@ import gc
 import torch
 
 from _common import (
+    bootstrap_config,
+    derived_seed,
     entropies_on_scale,
     example_signals,
     load_halueval_examples_and_splits,
@@ -72,10 +74,16 @@ from _common import (
     seed_everything,
     write_results,
 )
+from sense_eval.bootstrap import percentile_bootstrap
 from sense_eval.factuality import FactualityVerdict, summarize_factuality
 from sense_eval.nli_judge import NLI_METRIC_LABEL_TEMPLATE, load_nli_model, nli_verdict_short_answer
-from sense_eval.routing_quality import RoutingOutcome, routing_detection_metrics, routing_quality_delta
-from sense_orchestrator.gate import GatePolicy
+from sense_eval.routing_quality import (
+    RoutingOutcome,
+    detection_metrics_with_ci,
+    routing_quality_delta,
+    routing_quality_delta_with_ci,
+)
+from sense_orchestrator.gate import GatePolicy, quantile_threshold
 
 # Both entropy scales TokenEntropyMonitor records. Each gets its own full transfer arm.
 ENTROPY_SCALES = ("normalized", "raw")
@@ -90,6 +98,32 @@ def load_config() -> dict:
     }
 
 
+def threshold_confidence_interval(
+    calibration_entropies: list[float],
+    quantile: float,
+    bootstrap_cfg: dict,
+    seed_label: tuple[str, ...],
+) -> dict:
+    """Bootstrap interval for the calibrated threshold itself.
+
+    Resamples the calibration entropies and refits the quantile, so the interval
+    answers "how much would this threshold move on another calibration draw from the
+    same model". That is the dominant source of uncertainty in RQ1 and RQ2, since every
+    downstream number is a function of the threshold. Costs no GPU: the entropies are
+    already computed.
+
+    `quantile_threshold` is the gate's own function, so the resampled thresholds are
+    fit exactly the way the real one was.
+    """
+    return percentile_bootstrap(
+        calibration_entropies,
+        lambda values: quantile_threshold(list(values), quantile),
+        n_resamples=bootstrap_cfg["n_resamples"],
+        confidence=bootstrap_cfg["confidence"],
+        seed=derived_seed(bootstrap_cfg["seed"], *seed_label, "threshold"),
+    ).as_dict()
+
+
 def transfer_arm(
     scale: str,
     source_signals,
@@ -101,6 +135,7 @@ def transfer_arm(
     source_name: str,
     target_name: str,
     verdict_labels: list[str],
+    bootstrap_cfg: dict,
 ) -> dict:
     """One full calibrate -> transfer -> compare cycle on a single entropy scale.
 
@@ -149,8 +184,21 @@ def transfer_arm(
             for entropy, routed, label in zip(target_eval_entropies, decisions, verdict_labels)
         ]
 
-    transferred_metrics = routing_detection_metrics(outcomes(transferred_decisions))
-    native_metrics = routing_detection_metrics(outcomes(native_decisions))
+    seed_label = (source_name, target_name, scale)
+    transferred_outcomes = outcomes(transferred_decisions)
+    native_outcomes = outcomes(native_decisions)
+    transferred_metrics = detection_metrics_with_ci(
+        transferred_outcomes,
+        n_resamples=bootstrap_cfg["n_resamples"],
+        confidence=bootstrap_cfg["confidence"],
+        seed=derived_seed(bootstrap_cfg["seed"], *seed_label, "transferred"),
+    )
+    native_metrics = detection_metrics_with_ci(
+        native_outcomes,
+        n_resamples=bootstrap_cfg["n_resamples"],
+        confidence=bootstrap_cfg["confidence"],
+        seed=derived_seed(bootstrap_cfg["seed"], *seed_label, "native"),
+    )
 
     return {
         "entropy_scale": scale,
@@ -159,11 +207,28 @@ def transfer_arm(
         "transferred_threshold": source_threshold,
         # Concordance diagnostic, not the primary evidence — see module docstring.
         "transfer_agreement_rate": agreement,
+        "source_threshold_ci": threshold_confidence_interval(
+            source_cal_entropies, quantile, bootstrap_cfg, (source_name, "source", scale)
+        ),
+        "target_native_threshold_ci": threshold_confidence_interval(
+            target_cal_entropies, quantile, bootstrap_cfg, (target_name, "native", scale)
+        ),
         "transferred_gate": transferred_metrics,
         "native_gate": native_metrics,
         # The proposal's "difference in routing quality": native minus transferred.
         # Positive means the transferred threshold cost something on this metric.
         "routing_quality_delta": routing_quality_delta(transferred_metrics, native_metrics),
+        # Paired interval on that difference — the two gates are scored on the same
+        # examples, so this is the interval that says whether the gap exceeds sampling
+        # noise. An interval excluding zero is RQ1's evidence; one straddling zero is a
+        # finding in its own right and must be reported as one.
+        "routing_quality_delta_ci": routing_quality_delta_with_ci(
+            transferred_outcomes,
+            native_outcomes,
+            n_resamples=bootstrap_cfg["n_resamples"],
+            confidence=bootstrap_cfg["confidence"],
+            seed=derived_seed(bootstrap_cfg["seed"], *seed_label, "delta"),
+        ),
     }
 
 
@@ -179,6 +244,7 @@ def run_pair(
     nli_model,
     nli_tokenizer,
     nli_cfg,
+    bootstrap_cfg,
 ) -> dict:
     source_cfg = models_registry[source_name]
     target_cfg = models_registry[target_name]
@@ -230,6 +296,7 @@ def run_pair(
                 source_name,
                 target_name,
                 verdict_labels,
+                bootstrap_cfg,
             )
             for scale in ENTROPY_SCALES
         }
@@ -247,6 +314,7 @@ def run_pair(
             "n_eval_examples": len(eval_indices),
             "quantile": quantile,
             "decoding": decoding_cfg,
+            "bootstrap": bootstrap_cfg,
             "factuality_metric": NLI_METRIC_LABEL_TEMPLATE.format(
                 hf_repo=nli_cfg["hf_repo"], revision=nli_cfg["revision"]
             ),
@@ -291,6 +359,7 @@ def run() -> list[dict]:
     eval_split = config["rq1"]["eval_split"]
     nli_cfg = config["nli_judge"]
     nli_model, nli_tokenizer = load_nli_model(nli_cfg["hf_repo"], nli_cfg["revision"])
+    bootstrap_cfg = bootstrap_config()
 
     results = []
     for pair in config["rq1"]["transfer_pairs"]:
@@ -307,6 +376,7 @@ def run() -> list[dict]:
             nli_model,
             nli_tokenizer,
             nli_cfg,
+            bootstrap_cfg,
         )
         write_results(
             f"rq1_transfer_halueval_{source_name}_to_{target_name}.json",

@@ -148,6 +148,7 @@ def test_run_pair_end_to_end_on_tiny_models_via_halueval_shaped_splits(nli):
         models_registry, examples, splits, DECODING_CFG, quantile=0.9,
         eval_split="development", source_name="source", target_name="target",
         nli_model=nli_model, nli_tokenizer=nli_tokenizer, nli_cfg=NLI_CFG,
+        bootstrap_cfg={"n_resamples": 50, "confidence": 0.95, "seed": 42},
     )
 
     assert result["research_question"] == "RQ1"

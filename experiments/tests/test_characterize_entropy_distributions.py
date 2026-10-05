@@ -8,17 +8,16 @@ reported number is tested here.
 import pytest
 
 from characterize_entropy_distributions import (
-    _quantile,
     ascii_histogram,
     summarize_by_axis,
     summarize_distribution,
     threshold_spread,
     transfer_matrix,
 )
-from sense_orchestrator.gate import _quantile as gate_quantile_fn
+from sense_orchestrator.gate import quantile_threshold as gate_quantile_fn
 
 
-# --- the duplication guard --------------------------------------------------------
+# --- the threshold the gate would produce --------------------------------------
 
 
 @pytest.mark.parametrize("values", [
@@ -29,11 +28,14 @@ from sense_orchestrator.gate import _quantile as gate_quantile_fn
     [0.61, 0.71, 0.70, 1.13, 1.94],  # AdaDec-shaped raw thresholds
 ])
 @pytest.mark.parametrize("q", [0.05, 0.5, 0.9, 0.95])
-def test_diagnostic_quantile_is_identical_to_the_gates(values, q):
-    """This diagnostic reports the threshold the gate WOULD produce, so the two
-    quantile implementations must agree exactly. If this test fails, one of them was
-    changed without the other — which is the failure it exists to catch."""
-    assert _quantile(values, q) == gate_quantile_fn(values, q)
+def test_reported_gate_threshold_is_exactly_what_the_gate_would_produce(values, q):
+    """The diagnostic's whole purpose is to report the threshold a gate WOULD fit, so
+    it calls the gate's own `quantile_threshold` rather than reimplementing it. This
+    pins the property that matters: same input, same number the gate would calibrate
+    to. (Until 2026-10-04 the quantile was private to the gate and this module kept a
+    copy guarded by an equality test; making it public removed the need for the copy.)
+    """
+    assert summarize_distribution(values, gate_quantile=q)["gate_threshold"] == gate_quantile_fn(values, q)
 
 
 # --- distribution summary --------------------------------------------------------
@@ -46,7 +48,7 @@ def test_summarize_distribution_reports_the_gate_threshold_at_the_given_quantile
     assert summary["n"] == 5
     assert summary["mean"] == pytest.approx(0.3)
     assert (summary["min"], summary["max"]) == (0.1, 0.5)
-    assert summary["gate_threshold"] == pytest.approx(_quantile(values, 0.9))
+    assert summary["gate_threshold"] == pytest.approx(gate_quantile_fn(values, 0.9))
     assert set(summary["quantiles"]) == {"q05", "q10", "q25", "q50", "q75", "q90", "q95"}
 
 

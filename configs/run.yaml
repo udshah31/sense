@@ -11,3 +11,19 @@
 # torch (CPU and CUDA), and write_results() stamps it into every result file, so a
 # result can always be traced to the seed that produced it.
 seed: 42
+
+# Bootstrap confidence intervals for the routing-quality numbers.
+#
+# NOT "multiple seeds": gate.yaml sets do_sample: false, so re-running a checkpoint on
+# the same examples is byte-identical and seed-to-seed variance is exactly zero.
+# Reporting that zero as variance would claim a stability result the experiment never
+# tested. The variance that actually exists is sampling variance — of the calibration
+# draw the threshold is fit on, and of the development split the metrics are estimated
+# on — and both are addressable by resampling data already in hand, at no extra GPU
+# cost. See eval/src/sense_eval/bootstrap.py.
+#
+# n_resamples 1000 is the usual floor for a stable 95% percentile interval. Cost is
+# linear and lands on CPU after generation is finished, not on GPU time.
+bootstrap:
+  n_resamples: 1000
+  confidence: 0.95
