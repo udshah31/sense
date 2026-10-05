@@ -117,11 +117,9 @@ monitor. Read `threshold_spread.raw.max_over_min_ratio` and `summary_by_axis` in
 `results/`. If the raw-scale spread is near 1.0, RQ1's premise does not hold as the
 proposal states it; revisit the framing before paying for `all`.
 
-**Config changes needed: one.** The RQ1/RQ2/RQ3/SelfCheck configs already name the real
-checkpoints, so no model edits are needed there. `configs/rag.yaml` still has
-`model: cpu_test`; change it to a real checkpoint key (e.g. `llama3`) before running
-the `rag` stage. Do not edit `configs/model.yaml`'s `active` key for these runs; the
-harnesses select checkpoints by key.
+**No config changes are needed.** The RQ1/RQ2/RQ3/SelfCheck configs name the real
+checkpoints, and `configs/rag.yaml` points at `llama3`. Do not edit `configs/model.yaml`'s
+`active` key for these runs; the harnesses select checkpoints by key.
 
 The test split is touched only for reported numbers (CLAUDE.md, constraint 1). The
 `characterize` harness refuses to run on it.
