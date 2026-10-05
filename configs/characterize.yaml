@@ -1,0 +1,39 @@
+# Entropy-distribution characterization — the pre-flight diagnostic for RQ1.
+#
+# Purpose: before spending the full five-checkpoint run, find out whether the entropy
+# distributions of different checkpoints actually differ in a way a fixed threshold
+# would notice, on BOTH scales. RQ1's premise is that they do. The first retired-scope
+# pilot (results/rq1_transfer_truthful_qa_llama3_to_mistral.json) returned perfect
+# transfer agreement, and because only the normalized scale was ever recorded, that
+# run could not distinguish "the premise is wrong" from "normalization removed the
+# effect before the gate saw it."
+#
+# This is a DIAGNOSTIC, not an RQ1 result: it uses no factuality labels and makes no
+# claim about routing quality. See the harness docstring.
+
+# Which checkpoints to characterize. Two is enough to answer the question; three gives
+# you one cross-family pair and one same-family (scale) pair in a single session, which
+# is what the two RQ1 axes need. Keys must exist in configs/model.yaml.
+models: [llama3, qwen3_8b, qwen3_1_7b]
+
+# Family grouping, used ONLY to group pairs in the printed summary and the
+# summary_by_axis block. Every pair is also reported individually, so this grouping
+# never hides a result. Stated explicitly rather than derived from the key name,
+# because a derived grouping is the kind of silent convention that goes wrong quietly.
+families:
+  llama3: llama
+  mistral: mistral
+  qwen3_8b: qwen3
+  qwen3_4b: qwen3
+  qwen3_1_7b: qwen3
+  cpu_test: cpu_test_a
+  cpu_test_transfer_target: cpu_test_b
+
+# Development split only. The harness refuses to run on test (CLAUDE.md's data split
+# discipline: test is touched once, at the end, for the reported numbers).
+eval_split: development
+
+# Cap on examples per checkpoint. 200 keeps a three-checkpoint session inside roughly
+# an hour on a single accelerator while leaving quantile estimates usable; the full
+# development split is 1,000 rows. Raising this costs linear GPU time.
+n_examples: 200

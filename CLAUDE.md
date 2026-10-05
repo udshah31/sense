@@ -494,6 +494,31 @@ code-level and are addressed here; the third is document-level and is not yet do
 - **M3 (partial) — no per-run seed.** `configs/run.yaml` + `seed_everything()`. The
   statistical treatment itself (repeated runs, variance) is still missing; see below.
 
+**Added alongside, not from the review itself:**
+
+- `experiments/characterize_entropy_distributions.py` + `configs/characterize.yaml` —
+  the RQ1 pre-flight diagnostic. Reports each checkpoint's entropy distribution on
+  both scales, the threshold spread across checkpoints
+  (`max_over_min_ratio` — the headline number), and what each checkpoint's routing
+  rate would do under every other checkpoint's threshold, split into cross-family and
+  same-family (scale-ladder) pairs. Uses no factuality labels and makes no
+  routing-quality claim; it is a decision point before the full run, not an RQ result.
+  Wired into `run_gpu_experiments.sh` as the `characterize` stage, deliberately
+  excluded from `all`.
+
+  **Run this before the five-checkpoint suite.** If the raw-scale threshold spread
+  comes back near 1.0, RQ1's premise does not hold as the proposal states it, and the
+  framing needs revisiting before five checkpoints of compute go into answering it. It
+  is also the first time any real checkpoint gets loaded, so it doubles as a smoke test
+  of 4-bit loading and the entropy monitor under quantization — which constraint #2's
+  note says still needs sanity-checking.
+
+  Hypothesis worth checking it against: AdaDec (arXiv:2506.08980, Table VI) reports
+  learned raw-entropy thresholds spanning 0.6153-1.9353 nats across eight checkpoints,
+  but only 0.6153-0.7134 within the Qwen3 family — wide across families, tight across
+  scale. Different task and a different fitting procedure, so treat it as a prediction
+  to test, not evidence to cite.
+
 **Still open from that review:**
 
 - **C2** — the proposal's §4.1, §6, and §7 specify semantic entropy / SEP probes as
@@ -513,8 +538,12 @@ code-level and are addressed here; the third is document-level and is not yet do
   Document-side.
 
 **Verification status of the code changes above.** `routing_quality.py` is fully
-tested (16 tests, including hand-computed AUROC values and tie handling) and the arm
-logic is tested in `experiments/tests/test_transfer_arms.py` (11 tests, no models).
+tested (16 tests, including hand-computed AUROC values and tie handling), the arm
+logic is tested in `experiments/tests/test_transfer_arms.py` (11 tests, no models), and
+the characterization diagnostic in
+`experiments/tests/test_characterize_entropy_distributions.py` (34 tests, including a
+guard that its quantile stays identical to `GatePolicy`'s — they are deliberately
+duplicated so a change to one breaks the other's test rather than diverging silently).
 The torch-dependent suites — `services/neural/tests/test_entropy_monitor.py`'s two new
 raw-scale tests and the updated RQ1/RQ2 end-to-end harness tests — **have not been
 run**; they need the macOS dev environment. Run before trusting this branch:
