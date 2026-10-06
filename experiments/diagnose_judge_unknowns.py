@@ -12,7 +12,7 @@ cause can be read off directly instead of guessed. It records only the first
 `n_examples` of the **development** split (never test) and writes nothing to results/.
 
 Usage (from experiments/):  uv run python diagnose_judge_unknowns.py [model_key] [n_examples]
-Output: one line per example to stdout; a summary at the end.
+Output: one line per example to stdout; per-formulation summary at the end.
 """
 
 import statistics
@@ -27,6 +27,18 @@ from _common import (
     seed_everything,
 )
 from sense_eval.nli_judge import entailment_scores, load_nli_model
+
+
+# Judge formulations compared on the SAME generations. `current` is what the harness uses.
+# The others change only how premise and hypothesis are built; the threshold stays fixed
+# at nli_judge.yaml's value so nothing is tuned on this sample (CLAUDE.md: thresholds are
+# fit on a calibration split, never on the data being inspected).
+VARIANTS = {
+    "current": lambda q, gen, ans: (gen, ans),
+    "q_prefixed": lambda q, gen, ans: (f"{q} {gen}", f"{q} {ans}"),
+    "statement": lambda q, gen, ans: (gen, f'The answer to "{q}" is {ans}.'),
+    "q_prefixed_statement": lambda q, gen, ans: (f"{q} {gen}", f'The answer to "{q}" is {ans}.'),
+}
 
 
 def main(model_key: str, n_examples: int) -> None:
@@ -48,30 +60,36 @@ def main(model_key: str, n_examples: int) -> None:
     for index in indices:
         example = examples[index]
         text = example_signal(model, tokenizer, example.question, gate_cfg["decoding"], model_cfg).generated_text
-        e_right = entailment_scores(nli_model, nli_tokenizer, text, example.right_answer)["entailment"]
-        e_wrong = entailment_scores(nli_model, nli_tokenizer, text, example.hallucinated_answer)["entailment"]
-        # Lexical hint only, to tell "the model said the right thing but the judge missed
-        # it" from "the model said something else". Not used as a label anywhere.
         contains_right = example.right_answer.strip().lower() in text.lower()
-        rows.append((e_right, e_wrong, contains_right, len(text.split())))
-        print(
-            f"{index} R={e_right:.2f} W={e_wrong:.2f} has_right={int(contains_right)} "
-            f"gen={text[:70]!r} right={example.right_answer[:25]!r} wrong={example.hallucinated_answer[:25]!r}"
-        )
+        scores = {}
+        for name, build in VARIANTS.items():
+            pr, hr = build(example.question, text, example.right_answer)
+            pw, hw = build(example.question, text, example.hallucinated_answer)
+            scores[name] = (
+                entailment_scores(nli_model, nli_tokenizer, pr, hr)["entailment"],
+                entailment_scores(nli_model, nli_tokenizer, pw, hw)["entailment"],
+            )
+        rows.append((scores, contains_right))
+        print(f"{index} has_right={int(contains_right)} gen={text[:60]!r}")
 
     n = len(rows)
-    right_clears = sum(r[0] >= threshold for r in rows)
-    wrong_clears = sum(r[1] >= threshold for r in rows)
-    print("--- summary ---")
-    print(f"n={n} right_clears={right_clears} wrong_clears={wrong_clears} "
-          f"neither={sum(r[0] < threshold and r[1] < threshold for r in rows)}")
-    print(f"median R={statistics.median(r[0] for r in rows):.3f} median W={statistics.median(r[1] for r in rows):.3f} "
-          f"max R={max(r[0] for r in rows):.3f}")
-    print(f"has_right={sum(r[2] for r in rows)} median_words={statistics.median(r[3] for r in rows)}")
-    # What does the model produce when the right answer IS literally in the text?
-    contained = [r for r in rows if r[2]]
-    if contained:
-        print(f"when has_right: median R={statistics.median(r[0] for r in contained):.3f}")
+    print("--- summary (threshold fixed at", threshold, ") ---")
+    for name in VARIANTS:
+        r = [x[0][name][0] for x in rows]
+        w = [x[0][name][1] for x in rows]
+        r_has = [x[0][name][0] for x in rows if x[1]]
+        r_not = [x[0][name][0] for x in rows if not x[1]]
+        verdicts = {"correct": 0, "incorrect": 0, "unknown": 0}
+        for a_, b_ in zip(r, w):
+            rc, wc = a_ >= threshold, b_ >= threshold
+            verdicts["correct" if rc and not wc else "incorrect" if wc and not rc else "unknown"] += 1
+        sep = (statistics.median(r_has) - statistics.median(r_not)) if r_has and r_not else float("nan")
+        print(
+            f"{name}: n={n} verdicts={verdicts} medR={statistics.median(r):.3f} medW={statistics.median(w):.3f} "
+            f"medR(has_right)={statistics.median(r_has) if r_has else float('nan'):.3f} "
+            f"medR(not)={statistics.median(r_not) if r_not else float('nan'):.3f} sep={sep:.3f}"
+        )
+    print(f"has_right_total={sum(x[1] for x in rows)}")
 
 
 if __name__ == "__main__":
