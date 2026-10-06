@@ -18,6 +18,17 @@ fraction against a reference text, matching FActScore's own methodology.
 Every result reports a `factuality_metric` field naming the model and
 pinned revision that produced it (`NLI_METRIC_LABEL_TEMPLATE`).
 
+**Question-prefixed input (2026-10-06).** `nli_verdict_short_answer` now prefixes the
+question to both the premise and the hypothesis (`short_answer_nli_pair`) and takes a
+required keyword-only `question`. Scoring a generation against a bare short answer
+left 946 of 1,000 real Mistral generations "unknown" in the first RQ1 pair; on a
+30-example diagnostic (`experiments/diagnose_judge_unknowns.py`) the prefix raised the
+median entailment of generations containing the right answer from 0.334 to 0.926.
+The cost, measured on 300 calibration-pool examples with canonical answers as stand-in
+generations at the old 0.7 threshold: the self-agreement rate fell from 98%/97% to
+90%/82% (right/wrong), all of it moving to "unknown", with no opposite-label errors.
+The threshold below was fit on the bare formulation and has **not** been refit.
+
 **Threshold calibration status** (see `docs/superpowers/specs/2026-08-16-nli-judge-design.md`):
 `short_answer_entailment_threshold` — used by `nli_verdict_short_answer`
 (HaluEval-shaped harnesses: RQ1-RQ3, the RAG baseline) — is now calibrated

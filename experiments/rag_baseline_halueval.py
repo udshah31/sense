@@ -142,6 +142,7 @@ async def run_experiment(config: dict) -> dict:
             example.right_answer,
             example.hallucinated_answer,
             config["nli_judge"]["short_answer_entailment_threshold"],
+            question=example.question,
         )
 
         per_example.append(

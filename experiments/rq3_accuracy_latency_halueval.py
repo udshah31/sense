@@ -138,6 +138,7 @@ async def run_experiment_for_model(config: dict, model_name: str, examples, spli
                 example.right_answer,
                 example.hallucinated_answer,
                 config["nli_judge"]["short_answer_entailment_threshold"],
+                question=example.question,
             )
 
             per_example.append(

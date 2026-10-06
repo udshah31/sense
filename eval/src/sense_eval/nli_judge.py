@@ -217,6 +217,21 @@ def best_claim_entailment_batch(
     return results
 
 
+def short_answer_nli_pair(question: str, text: str, answer: str) -> tuple[str, str]:
+    """(premise, hypothesis) for judging whether `text` answers `question` with `answer`.
+
+    The question is prefixed to BOTH sides. Scoring the bare generation against a bare
+    short answer ("Paris", a name) asks an MNLI-style model to judge a noun-phrase
+    hypothesis, which it is poor at: on a 30-example Mistral sample, generations that
+    literally contained the right answer had a median entailment of 0.334 under the bare
+    formulation and 0.926 with the question on both sides, while generations that did
+    not contain it stayed near 0.002 either way (experiments/diagnose_judge_unknowns.py).
+    One helper builds the pair so the verdict function and the threshold calibration
+    cannot drift into scoring different things.
+    """
+    return f"{question} {text}", f"{question} {answer}"
+
+
 def nli_verdict_short_answer(
     model,
     tokenizer,
@@ -224,14 +239,27 @@ def nli_verdict_short_answer(
     right_answer: str,
     hallucinated_answer: str,
     entailment_threshold: float,
+    *,
+    question: str,
 ) -> FactualityVerdict:
     """"correct" if the generated text entails the right answer (and doesn't
     also entail the hallucinated one at/above threshold), "incorrect" the
     symmetric case, "unknown" otherwise (including both or neither clearing
     threshold) — same tri-state contract the retired lexical_containment_verdict
-    had, so call sites don't change shape, only semantics."""
-    right_entailment = entailment_scores(model, tokenizer, generated_text, right_answer)["entailment"]
-    wrong_entailment = entailment_scores(model, tokenizer, generated_text, hallucinated_answer)["entailment"]
+    had, so call sites don't change shape, only semantics.
+
+    `question` is required and keyword-only: it is part of the NLI input (see
+    `short_answer_nli_pair`), and a positional slot would let a caller who forgot it
+    silently pass the wrong string. `entailment_threshold` was fit on the bare-text
+    formulation that preceded the question prefix and has NOT been refit for this one
+    (configs/nli_judge.yaml) — treat verdicts as provisional until it is.
+    """
+    right_entailment = entailment_scores(
+        model, tokenizer, *short_answer_nli_pair(question, generated_text, right_answer)
+    )["entailment"]
+    wrong_entailment = entailment_scores(
+        model, tokenizer, *short_answer_nli_pair(question, generated_text, hallucinated_answer)
+    )["entailment"]
 
     right_clears = right_entailment >= entailment_threshold
     wrong_clears = wrong_entailment >= entailment_threshold

@@ -43,7 +43,7 @@ CLAUDE.md's "never add a default threshold value as a convenience fallback."
 import random
 
 from _common import load_halueval_examples_and_splits, load_yaml_config, write_results
-from sense_eval.nli_judge import entailment_scores, load_nli_model
+from sense_eval.nli_judge import entailment_scores, load_nli_model, short_answer_nli_pair
 
 CANDIDATE_THRESHOLDS = [round(0.05 * i, 2) for i in range(1, 20)]  # 0.05 .. 0.95
 FIT_FRACTION = 0.8
@@ -76,24 +76,23 @@ def compute_calibration_scores(model, tokenizer, examples, indices) -> list[dict
     wrong_vs_right, wrong_vs_wrong (entailment isn't symmetric, so all four are
     distinct) — so sweeping many thresholds afterward needs no further model
     inference."""
+    def entail(example, text: str, answer: str) -> float:
+        # Same pair construction as nli_verdict_short_answer, so the sweep scores exactly
+        # what the judge will later score.
+        premise, hypothesis = short_answer_nli_pair(example.question, text, answer)
+        return entailment_scores(model, tokenizer, premise, hypothesis)["entailment"]
+
     scores = []
     for index in indices:
         example = examples[index]
+        right, wrong = example.right_answer, example.hallucinated_answer
         scores.append(
             {
                 "index": index,
-                "right_vs_right": entailment_scores(model, tokenizer, example.right_answer, example.right_answer)[
-                    "entailment"
-                ],
-                "right_vs_wrong": entailment_scores(
-                    model, tokenizer, example.right_answer, example.hallucinated_answer
-                )["entailment"],
-                "wrong_vs_right": entailment_scores(
-                    model, tokenizer, example.hallucinated_answer, example.right_answer
-                )["entailment"],
-                "wrong_vs_wrong": entailment_scores(
-                    model, tokenizer, example.hallucinated_answer, example.hallucinated_answer
-                )["entailment"],
+                "right_vs_right": entail(example, right, right),
+                "right_vs_wrong": entail(example, right, wrong),
+                "wrong_vs_right": entail(example, wrong, right),
+                "wrong_vs_wrong": entail(example, wrong, wrong),
             }
         )
     return scores
