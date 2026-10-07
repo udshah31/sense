@@ -15,8 +15,15 @@ revision: d1ca70f9ece4d8afd33015893a69df9a6e45a672
 # (self-entailment), not a real paraphrased model output — see eval/README.md.
 # 2026-10-06: the judge now prefixes the question to both premise and hypothesis
 # (sense_eval.nli_judge.short_answer_nli_pair); the value below was fit on the earlier
-# bare-text formulation and has NOT been refit for this one. Provisional until
-# experiments/calibrate_nli_short_answer_threshold.py is re-run and the result reviewed.
+# bare-text formulation. The calibration was re-run for the new formulation
+# (results/nli_short_answer_calibration.json): the interior optimum on the canonical-
+# answer stand-in is 0.97 (95.0% fit / 95.9% held out; 0.98 -> 92.9%, 0.99 -> 67.4%),
+# versus 98.7% at 0.7 for the old formulation. It is deliberately NOT applied: real
+# generations that contain the right answer scored a median entailment of ~0.93 in the
+# 30-example diagnostic, so a 0.97 threshold would send most of them back to "unknown".
+# The stand-in objective (shared question text inflates BOTH answers' entailment) no
+# longer matches real output. 0.7 stays provisional pending a calibration against real,
+# labeled generations or a margin-based verdict (decision recorded in the PR).
 short_answer_entailment_threshold: 0.7
 
 # factscore_style_verdict (FActScore-shaped harness): per-claim entailment

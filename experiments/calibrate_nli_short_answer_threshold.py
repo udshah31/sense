@@ -45,7 +45,11 @@ import random
 from _common import load_halueval_examples_and_splits, load_yaml_config, write_results
 from sense_eval.nli_judge import entailment_scores, load_nli_model, short_answer_nli_pair
 
-CANDIDATE_THRESHOLDS = [round(0.05 * i, 2) for i in range(1, 20)]  # 0.05 .. 0.95
+# 0.05 .. 0.95 in steps of 0.05, then a finer tail. The tail exists because the question-
+# prefixed judge's first sweep (2026-10-06) peaked at the old 0.95 ceiling with accuracy
+# still rising — a boundary pick, not an interior optimum, same failure the 2026-08-26
+# FActScore calibration hit and fixed by widening. A pick on either edge is not a result.
+CANDIDATE_THRESHOLDS = [round(0.05 * i, 2) for i in range(1, 20)] + [0.96, 0.97, 0.98, 0.99, 0.995, 0.999]
 FIT_FRACTION = 0.8
 SPLIT_SEED = 42
 
