@@ -90,7 +90,8 @@ def test_tri_state_verdict_does_not_drift_from_nli_verdict_short_answer():
 
     for generated_text in (right_answer, hallucinated_answer):
         real_verdict = nli_verdict_short_answer(
-            model, tokenizer, generated_text, right_answer, hallucinated_answer, entailment_threshold=0.5
+            model, tokenizer, generated_text, right_answer, hallucinated_answer, entailment_threshold=0.5,
+            question="q",
         )
 
         scores = compute_calibration_scores(

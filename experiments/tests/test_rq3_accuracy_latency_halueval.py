@@ -69,13 +69,16 @@ async def test_gated_and_ungated_generation_are_identical(running_symbolic_serve
 
 
 def test_factuality_verdict_is_computed_on_ungated_text():
-    examples = load_halueval()
-    example = examples[0]
+    """Plumbing check: the verdict is a function of the ungated text and the example's own
+    answers. A literal example, not dataset row 0: that row is one the question-prefixed
+    judge scores "unknown" even on its own canonical answer (both answers clear the
+    threshold), which would test the judge's sensitivity rather than this wiring."""
     nli_model, nli_tokenizer = load_nli_model(
         "cliang1453/deberta-v3-xsmall-mnli", "d1ca70f9ece4d8afd33015893a69df9a6e45a672"
     )
     verdict = nli_verdict_short_answer(
-        nli_model, nli_tokenizer, example.right_answer, example.right_answer, example.hallucinated_answer, 0.7
+        nli_model, nli_tokenizer, "The capital of France is Paris.", "Paris", "Berlin", 0.7,
+        question="What is the capital of France?",
     )
     assert verdict.label == "correct"
 

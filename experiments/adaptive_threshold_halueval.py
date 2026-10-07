@@ -239,6 +239,7 @@ def run_pair(
                 examples[index].right_answer,
                 examples[index].hallucinated_answer,
                 nli_cfg["short_answer_entailment_threshold"],
+                question=examples[index].question,
             ).label
             for index, signal in zip(eval_indices, target_eval_signals)
         ]

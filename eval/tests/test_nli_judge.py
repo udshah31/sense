@@ -111,6 +111,7 @@ def test_nli_verdict_short_answer_correct_when_generated_entails_right_answer(nl
         right_answer="Nothing happens, the seeds just pass through your digestive system.",
         hallucinated_answer="You die if you eat watermelon seeds.",
         entailment_threshold=0.7,
+        question="What happens if you eat watermelon seeds?",
     )
 
     assert verdict.label == "correct"
@@ -126,6 +127,7 @@ def test_nli_verdict_short_answer_incorrect_when_generated_entails_hallucinated_
         right_answer="Nothing happens, the seeds just pass through your digestive system.",
         hallucinated_answer="You die if you eat watermelon seeds.",
         entailment_threshold=0.7,
+        question="What happens if you eat watermelon seeds?",
     )
 
     assert verdict.label == "incorrect"
@@ -141,6 +143,7 @@ def test_nli_verdict_short_answer_unknown_when_neither_entailed(nli_model_and_to
         right_answer="Nothing happens, the seeds just pass through your digestive system.",
         hallucinated_answer="You die if you eat watermelon seeds.",
         entailment_threshold=0.7,
+        question="What happens if you eat watermelon seeds?",
     )
 
     assert verdict.label == "unknown"
@@ -277,3 +280,82 @@ def test_factscore_style_verdict_unknown_when_no_claims_to_score(nli_model_and_t
     assert verdict.label == "unknown"
     assert detail.claims == ()
     assert detail.supported_fraction is None
+
+
+from sense_eval.nli_judge import short_answer_nli_pair
+
+
+def test_short_answer_nli_pair_prefixes_the_question_on_both_sides():
+    premise, hypothesis = short_answer_nli_pair("Who wrote Hamlet?", "It was Shakespeare.", "William Shakespeare")
+
+    assert premise == "Who wrote Hamlet? It was Shakespeare."
+    assert hypothesis == "Who wrote Hamlet? William Shakespeare"
+
+
+def test_nli_verdict_short_answer_requires_the_question_keyword(nli_model_and_tokenizer):
+    """question is keyword-only and required: a caller that forgets it must fail loudly,
+    not silently fall back to the bare-text formulation or pass a wrong positional."""
+    model, tokenizer = nli_model_and_tokenizer
+
+    with pytest.raises(TypeError):
+        nli_verdict_short_answer(model, tokenizer, "Paris.", "Paris", "Berlin", 0.7)
+
+
+def test_question_prefix_lets_a_hedged_generation_that_contains_the_right_answer_score_correct(
+    nli_model_and_tokenizer,
+):
+    """Regression for the 2026-10-06 diagnostic: on real Mistral output the bare
+    formulation left almost every right answer "unknown" (entailment far below the
+    threshold) because the hypothesis was a noun phrase. With the question on both
+    sides the same kind of generation clears the threshold. The bare score is asserted
+    too, so this test fails if someone "simplifies" the prefix away."""
+    model, tokenizer = nli_model_and_tokenizer
+    question = "What is the capital of France?"
+    generated = "The capital you're asking about is likely Paris, a city on"
+
+    bare_right = entailment_scores(model, tokenizer, generated, "Paris")["entailment"]
+    verdict = nli_verdict_short_answer(
+        model, tokenizer, generated, "Paris", "Berlin", entailment_threshold=0.7, question=question
+    )
+
+    assert bare_right < 0.7
+    assert verdict.label == "correct"
+
+
+def test_question_prefix_marks_a_plain_hallucinated_answer_incorrect(nli_model_and_tokenizer):
+    """Known asymmetry, deliberately not asserted away: a HEDGED wrong answer ("is likely
+    Berlin, a city on") scored 0.608 against the 0.7 threshold, while the equally hedged
+    right answer scored 0.927 — so hedged wrong answers can still come out "unknown" and
+    "incorrect" is under-counted relative to "correct". This test covers the plain
+    statement the judge does handle (0.817)."""
+    model, tokenizer = nli_model_and_tokenizer
+
+    verdict = nli_verdict_short_answer(
+        model,
+        tokenizer,
+        "The capital of France is Berlin.",
+        "Paris",
+        "Berlin",
+        entailment_threshold=0.7,
+        question="What is the capital of France?",
+    )
+
+    assert verdict.label == "incorrect"
+
+
+def test_question_prefix_leaves_an_unrelated_generation_unknown(nli_model_and_tokenizer):
+    """The prefix must not make the judge generous: text that answers neither way
+    (the real run's off-topic fragments) still gets no verdict."""
+    model, tokenizer = nli_model_and_tokenizer
+
+    verdict = nli_verdict_short_answer(
+        model,
+        tokenizer,
+        "The chemical you're referring to is likely water. Cadmium",
+        "Paris",
+        "Berlin",
+        entailment_threshold=0.7,
+        question="What is the capital of France?",
+    )
+
+    assert verdict.label == "unknown"

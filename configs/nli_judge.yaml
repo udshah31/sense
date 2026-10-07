@@ -13,6 +13,10 @@ revision: d1ca70f9ece4d8afd33015893a69df9a6e45a672
 # results/nli_short_answer_calibration.json). Honest limitation of that
 # calibration: it uses the canonical answer text as a stand-in generation
 # (self-entailment), not a real paraphrased model output — see eval/README.md.
+# 2026-10-06: the judge now prefixes the question to both premise and hypothesis
+# (sense_eval.nli_judge.short_answer_nli_pair); the value below was fit on the earlier
+# bare-text formulation and has NOT been refit for this one. Provisional until
+# experiments/calibrate_nli_short_answer_threshold.py is re-run and the result reviewed.
 short_answer_entailment_threshold: 0.7
 
 # factscore_style_verdict (FActScore-shaped harness): per-claim entailment
