@@ -1,0 +1,18 @@
+# Retrieval-gated condition (proposal §2.4; advisor-approved 2026-10-06) — the same
+# entropy gate as RQ3, calibrated the same way, but a fired gate routes to retrieval
+# instead of the symbolic backend. Everything upstream is held constant so the only
+# difference between this and the SENSE condition is what the second stage returns:
+# retrieved passages the decoder is free to ignore, vs. a solver verdict.
+#
+# One result file per model (retrieval_gated_halueval_<model>.json), same loop shape
+# as RQ3. Evaluated on the development split; the test split is touched once, at the
+# end, for reported numbers (CLAUDE.md constraint #1) — if this condition is run on
+# test, build and point at the matching corpus first
+# (`build_corpus.py test` -> data/rag_corpus/passages.json).
+models: [llama3, mistral, qwen3_8b, qwen3_4b, qwen3_1_7b]
+eval_split: development
+n_eval_examples: 1000
+top_k: 3
+# Built by `services/rag/scripts/build_corpus.py development`: one Wikipedia intro
+# passage per development-split question, resolved once offline.
+corpus_path: data/rag_corpus/passages_development.json

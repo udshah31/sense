@@ -12,7 +12,9 @@ from, which would trivially inflate its accuracy relative to the gated pipeline.
 
 Not part of any automated test-suite execution path or experiment run path —
 sense_rag.index and sense_rag.retrieve only ever read the committed output file.
-Run by hand: `uv run python scripts/build_corpus.py`.
+Run by hand: `uv run python scripts/build_corpus.py [split]` (default `test`; the
+gated-retrieval condition evaluates on `development`, so it needs
+`build_corpus.py development` -> data/rag_corpus/passages_development.json).
 """
 
 import json
@@ -26,7 +28,7 @@ WIKIPEDIA_API_URL = "https://en.wikipedia.org/w/api.php"
 REQUEST_HEADERS = {"User-Agent": "sense-rag/0.1 (CSCI699 research project; no contact URL yet)"}
 
 REPO_ROOT = Path(__file__).parent.parent.parent.parent
-CORPUS_PATH = REPO_ROOT / "data" / "rag_corpus" / "passages.json"
+CORPUS_DIR = REPO_ROOT / "data" / "rag_corpus"
 SPLIT_PATH = REPO_ROOT / "data" / "splits" / "halueval.json"
 
 
@@ -82,14 +84,20 @@ def build_corpus(questions: list[str], client: httpx.Client) -> list[dict]:
     return passages
 
 
-def main() -> None:
+def corpus_path(split: str) -> Path:
+    """`test` keeps the original passages.json (the always-on RAG baseline reads it);
+    any other split gets its own file so the two corpora can never overwrite each other."""
+    return CORPUS_DIR / ("passages.json" if split == "test" else f"passages_{split}.json")
+
+
+def main(split: str = "test") -> None:
     sys.path.insert(0, str(REPO_ROOT / "data" / "src"))
     from sense_data.halueval import load_halueval
     from sense_data.splits import load_per_checkpoint_splits
 
     examples = load_halueval()
     splits = load_per_checkpoint_splits(SPLIT_PATH)
-    questions = [examples[i].question for i in splits.test]
+    questions = [examples[i].question for i in getattr(splits, split)]
 
     # Force IPv4: this network environment's IPv6 route to Wikipedia's edge is
     # rate-limited far more aggressively than IPv4 (confirmed via curl -6 vs -4),
@@ -98,10 +106,11 @@ def main() -> None:
     with httpx.Client(timeout=10.0, transport=transport) as client:
         passages = build_corpus(questions, client)
 
-    CORPUS_PATH.parent.mkdir(parents=True, exist_ok=True)
-    CORPUS_PATH.write_text(json.dumps(passages, indent=2))
-    print(f"wrote {len(passages)} passages (of {len(questions)} questions) to {CORPUS_PATH}")
+    path = corpus_path(split)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(passages, indent=2))
+    print(f"wrote {len(passages)} passages (of {len(questions)} questions) to {path}")
 
 
 if __name__ == "__main__":
-    main()
+    main(sys.argv[1] if len(sys.argv) > 1 else "test")
