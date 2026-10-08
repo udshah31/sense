@@ -133,7 +133,7 @@ def test_nli_verdict_short_answer_incorrect_when_generated_entails_hallucinated_
     assert verdict.label == "incorrect"
 
 
-def test_nli_verdict_short_answer_unknown_when_neither_entailed(nli_model_and_tokenizer):
+def test_nli_verdict_short_answer_incorrect_when_neither_entailed(nli_model_and_tokenizer):
     model, tokenizer = nli_model_and_tokenizer
 
     verdict = nli_verdict_short_answer(
@@ -146,7 +146,7 @@ def test_nli_verdict_short_answer_unknown_when_neither_entailed(nli_model_and_to
         question="What happens if you eat watermelon seeds?",
     )
 
-    assert verdict.label == "unknown"
+    assert verdict.label == "incorrect"
 
 
 from sense_eval.nli_judge import best_claim_entailment_batch, select_candidate_reference_sentences
@@ -325,9 +325,9 @@ def test_question_prefix_lets_a_hedged_generation_that_contains_the_right_answer
 def test_question_prefix_marks_a_plain_hallucinated_answer_incorrect(nli_model_and_tokenizer):
     """Known asymmetry, deliberately not asserted away: a HEDGED wrong answer ("is likely
     Berlin, a city on") scored 0.608 against the 0.7 threshold, while the equally hedged
-    right answer scored 0.927 — so hedged wrong answers can still come out "unknown" and
-    "incorrect" is under-counted relative to "correct". This test covers the plain
-    statement the judge does handle (0.817)."""
+    right answer scored 0.927 — so a hedged wrong answer is not *affirmed* wrong by entailment
+    (under the binary verdict it is still "incorrect", by failing to entail the right
+    answer). This test covers the plain statement that is affirmed wrong (0.817)."""
     model, tokenizer = nli_model_and_tokenizer
 
     verdict = nli_verdict_short_answer(
@@ -343,9 +343,10 @@ def test_question_prefix_marks_a_plain_hallucinated_answer_incorrect(nli_model_a
     assert verdict.label == "incorrect"
 
 
-def test_question_prefix_leaves_an_unrelated_generation_unknown(nli_model_and_tokenizer):
+def test_question_prefix_marks_an_unrelated_generation_incorrect_not_unknown(nli_model_and_tokenizer):
     """The prefix must not make the judge generous: text that answers neither way
-    (the real run's off-topic fragments) still gets no verdict."""
+    (the real run's off-topic fragments) is not credited as correct. Binary verdict
+    (2026-10-07): "not demonstrably correct" is "incorrect"; there is no "unknown"."""
     model, tokenizer = nli_model_and_tokenizer
 
     verdict = nli_verdict_short_answer(
@@ -358,4 +359,4 @@ def test_question_prefix_leaves_an_unrelated_generation_unknown(nli_model_and_to
         question="What is the capital of France?",
     )
 
-    assert verdict.label == "unknown"
+    assert verdict.label == "incorrect"

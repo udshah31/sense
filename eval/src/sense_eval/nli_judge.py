@@ -242,11 +242,15 @@ def nli_verdict_short_answer(
     *,
     question: str,
 ) -> FactualityVerdict:
-    """"correct" if the generated text entails the right answer (and doesn't
-    also entail the hallucinated one at/above threshold), "incorrect" the
-    symmetric case, "unknown" otherwise (including both or neither clearing
-    threshold) — same tri-state contract the retired lexical_containment_verdict
-    had, so call sites don't change shape, only semantics.
+    """Binary verdict (decided 2026-10-07): "correct" if the generated text entails the
+    right answer and does not also entail the hallucinated one at/above threshold,
+    "incorrect" otherwise. "Incorrect" therefore means "not demonstrably correct" —
+    wrong, off-topic, or too hedged to entail the right answer — not "affirms the
+    hallucinated answer". Two reasons: a 20-token greedy fragment rarely entails the
+    hallucinated answer even when wrong (the tri-state rule labeled ~77% of a real
+    sample "unknown", leaving too few scored examples for routing quality), and the
+    gate's job is to fire on answers that are not right, whatever shape they take.
+    This function never returns "unknown"; the FActScore verdicts below still can.
 
     `question` is required and keyword-only: it is part of the NLI input (see
     `short_answer_nli_pair`), and a positional slot would let a caller who forgot it
@@ -264,11 +268,8 @@ def nli_verdict_short_answer(
     right_clears = right_entailment >= entailment_threshold
     wrong_clears = wrong_entailment >= entailment_threshold
 
-    if right_clears and not wrong_clears:
-        return FactualityVerdict(label="correct")
-    if wrong_clears and not right_clears:
-        return FactualityVerdict(label="incorrect")
-    return FactualityVerdict(label="unknown")
+    label = "correct" if right_clears and not wrong_clears else "incorrect"
+    return FactualityVerdict(label=label)
 
 
 @dataclass(frozen=True)

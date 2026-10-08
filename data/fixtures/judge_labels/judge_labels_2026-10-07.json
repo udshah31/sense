@@ -1,0 +1,1209 @@
+{
+ "annotator": "Claude (claude-sonnet-5-5), not a human",
+ "labeled_on": "2026-10-07",
+ "rubric": "correct = the generated text, as written, commits to the dataset's right_answer (or an equivalent paraphrase) and asserts nothing contradicting it. incorrect = everything else: a different answer, a refusal, text cut off before any answer appears (max_new_tokens=20), or non-committal text. Judged against HaluEval's right_answer, not world knowledge. Labels were assigned from question, right_answer, hallucinated_answer and generated_text only, BEFORE the judge's scores were read.",
+ "generations": "20-token greedy generations from 4-bit mistral and qwen3_1_7b (configs/model.yaml revisions) on Kaggle T4; produced by experiments/dump_labeling_sample.py from the calibration pool only. generated_text was hand-transcribed from the Kaggle console into this file (scores are exact copies).",
+ "entailment": "question-prefixed NLI entailment probabilities (sense_eval.nli_judge.short_answer_nli_pair), deberta-v3-xsmall-mnli pinned revision d1ca70f9ece4d8afd33015893a69df9a6e45a672",
+ "rows": [
+  {
+   "model": "mistral",
+   "position": 0,
+   "tier": "fit",
+   "dataset_index": 322,
+   "generated_text": "The band you're referring to is Pink Floyd. They have produced 15 gold albums",
+   "label": "incorrect",
+   "right_entailment": 0.0018,
+   "hallucinated_entailment": 0.0145
+  },
+  {
+   "model": "mistral",
+   "position": 1,
+   "tier": "fit",
+   "dataset_index": 546,
+   "generated_text": "\"Just a Lil Bit\" was released as the third single from 50 Cent's second",
+   "label": "incorrect",
+   "right_entailment": 0.0007,
+   "hallucinated_entailment": 0.0005
+  },
+  {
+   "model": "mistral",
+   "position": 2,
+   "tier": "fit",
+   "dataset_index": 583,
+   "generated_text": "Sameera Perera is a cricketer from Sri Lanka, an island country located in South",
+   "label": "correct",
+   "right_entailment": 0.9871,
+   "hallucinated_entailment": 0.0191
+  },
+  {
+   "model": "mistral",
+   "position": 3,
+   "tier": "fit",
+   "dataset_index": 1356,
+   "generated_text": "Yes, both The Cribs and Mad Season are from the same country. They are both British",
+   "label": "incorrect",
+   "right_entailment": 0.0007,
+   "hallucinated_entailment": 0.0017
+  },
+  {
+   "model": "mistral",
+   "position": 4,
+   "tier": "fit",
+   "dataset_index": 1499,
+   "generated_text": "The character who is a recurring character in \"The Simpsons\" and is voiced by",
+   "label": "incorrect",
+   "right_entailment": 0.0008,
+   "hallucinated_entailment": 0.0042
+  },
+  {
+   "model": "mistral",
+   "position": 5,
+   "tier": "fit",
+   "dataset_index": 1986,
+   "generated_text": "I don't have the specific information about Mr. Marks, Mrs. Hodgson",
+   "label": "incorrect",
+   "right_entailment": 0.0025,
+   "hallucinated_entailment": 0.0003
+  },
+  {
+   "model": "mistral",
+   "position": 6,
+   "tier": "fit",
+   "dataset_index": 2006,
+   "generated_text": "\"Complicated\" by Rihanna is from her fifth studio album \"Loud\". The album",
+   "label": "incorrect",
+   "right_entailment": 0.0004,
+   "hallucinated_entailment": 0.0003
+  },
+  {
+   "model": "mistral",
+   "position": 7,
+   "tier": "fit",
+   "dataset_index": 2009,
+   "generated_text": "The journal you are referring to is likely the \"Journal of the Indian National Science Academy\" (J",
+   "label": "incorrect",
+   "right_entailment": 0.0006,
+   "hallucinated_entailment": 0.0002
+  },
+  {
+   "model": "mistral",
+   "position": 8,
+   "tier": "fit",
+   "dataset_index": 2102,
+   "generated_text": "The Magic Roundabout film featuring Ray Winstone was released in 2005. However",
+   "label": "correct",
+   "right_entailment": 0.9415,
+   "hallucinated_entailment": 0.0068
+  },
+  {
+   "model": "mistral",
+   "position": 9,
+   "tier": "fit",
+   "dataset_index": 2279,
+   "generated_text": "Duke University was not founded on rented premises in 1942. Duke University was",
+   "label": "incorrect",
+   "right_entailment": 0.0501,
+   "hallucinated_entailment": 0.0389
+  },
+  {
+   "model": "mistral",
+   "position": 10,
+   "tier": "fit",
+   "dataset_index": 2468,
+   "generated_text": "The Piano Sonata in B minor, also known as Sonata No. 14,",
+   "label": "incorrect",
+   "right_entailment": 0.0004,
+   "hallucinated_entailment": 0.0002
+  },
+  {
+   "model": "mistral",
+   "position": 11,
+   "tier": "fit",
+   "dataset_index": 2639,
+   "generated_text": "No, Wang Xiaoshuai and Justin Reardon are not producers. Wang Xiaosh",
+   "label": "correct",
+   "right_entailment": 0.7449,
+   "hallucinated_entailment": 0.9878
+  },
+  {
+   "model": "mistral",
+   "position": 12,
+   "tier": "fit",
+   "dataset_index": 2711,
+   "generated_text": "Subways and Wildflower are not albums, so they don't have a common compilation.",
+   "label": "incorrect",
+   "right_entailment": 0.0114,
+   "hallucinated_entailment": 0.0132
+  },
+  {
+   "model": "mistral",
+   "position": 13,
+   "tier": "fit",
+   "dataset_index": 2848,
+   "generated_text": "Speedo, a well-known brand in competitive swimwear, has a line of swimsuits",
+   "label": "incorrect",
+   "right_entailment": 0.0038,
+   "hallucinated_entailment": 0.9422
+  },
+  {
+   "model": "mistral",
+   "position": 14,
+   "tier": "fit",
+   "dataset_index": 2941,
+   "generated_text": "The shopping centre that marks the beginning of the Westfield Sydney to Melbourne Ultramarathon is West",
+   "label": "incorrect",
+   "right_entailment": 0.0011,
+   "hallucinated_entailment": 0.0006
+  },
+  {
+   "model": "mistral",
+   "position": 15,
+   "tier": "fit",
+   "dataset_index": 2997,
+   "generated_text": "Freeze the Atlantic is a post-hardcore band, known for their heavy guitar riffs,",
+   "label": "incorrect",
+   "right_entailment": 0.1697,
+   "hallucinated_entailment": 0.0011
+  },
+  {
+   "model": "mistral",
+   "position": 16,
+   "tier": "fit",
+   "dataset_index": 3282,
+   "generated_text": "The music for the movie \"Coco\" was composed by Michael Giacchino, who was",
+   "label": "incorrect",
+   "right_entailment": 0.0003,
+   "hallucinated_entailment": 0.0007
+  },
+  {
+   "model": "mistral",
+   "position": 17,
+   "tier": "fit",
+   "dataset_index": 3485,
+   "generated_text": "Tyre (Sidon) was the ancient Lebanese city that issued the coins known as",
+   "label": "correct",
+   "right_entailment": 0.9843,
+   "hallucinated_entailment": 0.5817
+  },
+  {
+   "model": "mistral",
+   "position": 18,
+   "tier": "fit",
+   "dataset_index": 3791,
+   "generated_text": "The Backstreet Boy who participated in the reality TV show \"Boy Band\" is Nick Carter",
+   "label": "incorrect",
+   "right_entailment": 0.365,
+   "hallucinated_entailment": 0.0105
+  },
+  {
+   "model": "mistral",
+   "position": 19,
+   "tier": "fit",
+   "dataset_index": 4544,
+   "generated_text": "The 1960 Italian epic adventure film you're referring to is likely \"El C",
+   "label": "incorrect",
+   "right_entailment": 0.0004,
+   "hallucinated_entailment": 0.0011
+  },
+  {
+   "model": "mistral",
+   "position": 20,
+   "tier": "fit",
+   "dataset_index": 4643,
+   "generated_text": "The author of \"Dănilă Prepeleac,\" Ion Creanga, was born",
+   "label": "incorrect",
+   "right_entailment": 0.0003,
+   "hallucinated_entailment": 0.0004
+  },
+  {
+   "model": "mistral",
+   "position": 21,
+   "tier": "fit",
+   "dataset_index": 4767,
+   "generated_text": "The snooker player who made the final of the 2017 China Championship and is",
+   "label": "incorrect",
+   "right_entailment": 0.0004,
+   "hallucinated_entailment": 0.0003
+  },
+  {
+   "model": "mistral",
+   "position": 22,
+   "tier": "fit",
+   "dataset_index": 5667,
+   "generated_text": "The individual you are referring to is Eugene Melnyk. He is a Ukrainian-Can",
+   "label": "correct",
+   "right_entailment": 0.9387,
+   "hallucinated_entailment": 0.0009
+  },
+  {
+   "model": "mistral",
+   "position": 23,
+   "tier": "fit",
+   "dataset_index": 6069,
+   "generated_text": "Both Bessera and Sesleria are genera of grasses (Poaceae). They",
+   "label": "incorrect",
+   "right_entailment": 0.5706,
+   "hallucinated_entailment": 0.0918
+  },
+  {
+   "model": "mistral",
+   "position": 24,
+   "tier": "fit",
+   "dataset_index": 6229,
+   "generated_text": "The author of Oh, the Things I Know! was Senator William E. Borah from the state",
+   "label": "incorrect",
+   "right_entailment": 0.0005,
+   "hallucinated_entailment": 0.0004
+  },
+  {
+   "model": "mistral",
+   "position": 25,
+   "tier": "fit",
+   "dataset_index": 6523,
+   "generated_text": "Hannes Mór Smárason is the CEO of Isavia, the national air navigation service provider",
+   "label": "incorrect",
+   "right_entailment": 0.0195,
+   "hallucinated_entailment": 0.0075
+  },
+  {
+   "model": "mistral",
+   "position": 26,
+   "tier": "fit",
+   "dataset_index": 7249,
+   "generated_text": "Graham Bonnet and John Corabi both have the mutual occupation of being rock musicians and vocalists.",
+   "label": "correct",
+   "right_entailment": 0.7906,
+   "hallucinated_entailment": 0.1983
+  },
+  {
+   "model": "mistral",
+   "position": 27,
+   "tier": "fit",
+   "dataset_index": 7320,
+   "generated_text": "Michael Coutts-Trotter is not directly related to any Australian politician. He is a",
+   "label": "incorrect",
+   "right_entailment": 0.0086,
+   "hallucinated_entailment": 0.0052
+  },
+  {
+   "model": "mistral",
+   "position": 28,
+   "tier": "fit",
+   "dataset_index": 8211,
+   "generated_text": "Olympique de Marseille's remarkable run to third place in the French League, after a",
+   "label": "incorrect",
+   "right_entailment": 0.3644,
+   "hallucinated_entailment": 0.0037
+  },
+  {
+   "model": "mistral",
+   "position": 29,
+   "tier": "fit",
+   "dataset_index": 8307,
+   "generated_text": "The woman who performed \"A Message to Your Heart\" at the Eurovision Song Contest in",
+   "label": "incorrect",
+   "right_entailment": 0.0004,
+   "hallucinated_entailment": 0.0003
+  },
+  {
+   "model": "mistral",
+   "position": 30,
+   "tier": "fit",
+   "dataset_index": 8341,
+   "generated_text": "Bernhard Cathrinus Pauss was born in the city of Kristiania, which is now",
+   "label": "incorrect",
+   "right_entailment": 0.0265,
+   "hallucinated_entailment": 0.0032
+  },
+  {
+   "model": "mistral",
+   "position": 31,
+   "tier": "fit",
+   "dataset_index": 8590,
+   "generated_text": "The state with 29 distinct types of liquor licenses and 48 operating wineries is",
+   "label": "incorrect",
+   "right_entailment": 0.0003,
+   "hallucinated_entailment": 0.0004
+  },
+  {
+   "model": "mistral",
+   "position": 32,
+   "tier": "fit",
+   "dataset_index": 8594,
+   "generated_text": "\"Sing for the Moment\" by Eminem samples the 1973 song \"",
+   "label": "incorrect",
+   "right_entailment": 0.0034,
+   "hallucinated_entailment": 0.0022
+  },
+  {
+   "model": "mistral",
+   "position": 33,
+   "tier": "fit",
+   "dataset_index": 8625,
+   "generated_text": "The botanist who published one of the most influential and popular botany books of his time was",
+   "label": "incorrect",
+   "right_entailment": 0.0003,
+   "hallucinated_entailment": 0.0002
+  },
+  {
+   "model": "mistral",
+   "position": 34,
+   "tier": "fit",
+   "dataset_index": 8859,
+   "generated_text": "The Norwegian black metal band that invited Attila Csihar from Tormentor to do vocals",
+   "label": "incorrect",
+   "right_entailment": 0.0037,
+   "hallucinated_entailment": 0.0022
+  },
+  {
+   "model": "mistral",
+   "position": 35,
+   "tier": "fit",
+   "dataset_index": 9110,
+   "generated_text": "Juan Jufré was the governor of the Argentine province of Córdoba, which histor",
+   "label": "incorrect",
+   "right_entailment": 0.0015,
+   "hallucinated_entailment": 0.0005
+  },
+  {
+   "model": "mistral",
+   "position": 36,
+   "tier": "fit",
+   "dataset_index": 9155,
+   "generated_text": "American Airlines Group has more employees compared to Becton Dickinson. As of 202",
+   "label": "correct",
+   "right_entailment": 0.0016,
+   "hallucinated_entailment": 0.0135
+  },
+  {
+   "model": "mistral",
+   "position": 37,
+   "tier": "fit",
+   "dataset_index": 9306,
+   "generated_text": "The Polish brand of beer that is produced by Kompania Piwowarska and whose name",
+   "label": "incorrect",
+   "right_entailment": 0.9551,
+   "hallucinated_entailment": 0.0022
+  },
+  {
+   "model": "mistral",
+   "position": 38,
+   "tier": "fit",
+   "dataset_index": 9789,
+   "generated_text": "Both Heze and Shahe are located in the Hebei province, which is in China.",
+   "label": "correct",
+   "right_entailment": 0.4744,
+   "hallucinated_entailment": 0.8366
+  },
+  {
+   "model": "mistral",
+   "position": 39,
+   "tier": "fit",
+   "dataset_index": 9845,
+   "generated_text": "Yes, David McCullough is a well-known American historian, author, and public speaker.",
+   "label": "incorrect",
+   "right_entailment": 0.0014,
+   "hallucinated_entailment": 0.0005
+  },
+  {
+   "model": "mistral",
+   "position": 40,
+   "tier": "holdout",
+   "dataset_index": 867,
+   "generated_text": "Jolen is a member of the race of Asgardians, a group of supernatural beings",
+   "label": "incorrect",
+   "right_entailment": 0.638,
+   "hallucinated_entailment": 0.0654
+  },
+  {
+   "model": "mistral",
+   "position": 41,
+   "tier": "holdout",
+   "dataset_index": 928,
+   "generated_text": "\"Crumb\" was produced first. It was released in 1994, while \"",
+   "label": "correct",
+   "right_entailment": 0.0192,
+   "hallucinated_entailment": 0.0306
+  },
+  {
+   "model": "mistral",
+   "position": 42,
+   "tier": "holdout",
+   "dataset_index": 1094,
+   "generated_text": "The American singer you're referring to is Ciara. She began her career as a cheerle",
+   "label": "incorrect",
+   "right_entailment": 0.0023,
+   "hallucinated_entailment": 0.9916
+  },
+  {
+   "model": "mistral",
+   "position": 43,
+   "tier": "holdout",
+   "dataset_index": 1752,
+   "generated_text": "Neither Jack and Coke nor Pink Gin traditionally use lemon rind as a garnish",
+   "label": "incorrect",
+   "right_entailment": 0.8069,
+   "hallucinated_entailment": 0.0088
+  },
+  {
+   "model": "mistral",
+   "position": 44,
+   "tier": "holdout",
+   "dataset_index": 2116,
+   "generated_text": "The individual you're referring to is Whitey Bulger, an infamous American organized crime figure",
+   "label": "incorrect",
+   "right_entailment": 0.002,
+   "hallucinated_entailment": 0.0029
+  },
+  {
+   "model": "mistral",
+   "position": 45,
+   "tier": "holdout",
+   "dataset_index": 2565,
+   "generated_text": "The New Jersey Devils, not located in Newark but in nearby Newark, New Jersey,",
+   "label": "correct",
+   "right_entailment": 0.9672,
+   "hallucinated_entailment": 0.0007
+  },
+  {
+   "model": "mistral",
+   "position": 46,
+   "tier": "holdout",
+   "dataset_index": 2619,
+   "generated_text": "Lago and Emila are fictional characters from the Italian comic book series \"Diabolik\"",
+   "label": "incorrect",
+   "right_entailment": 0.0006,
+   "hallucinated_entailment": 0.0147
+  },
+  {
+   "model": "mistral",
+   "position": 47,
+   "tier": "holdout",
+   "dataset_index": 3060,
+   "generated_text": "Both Howard University Hospital and Providence Hospital are located in Washington, D.C., United States.",
+   "label": "correct",
+   "right_entailment": 0.9902,
+   "hallucinated_entailment": 0.0016
+  },
+  {
+   "model": "mistral",
+   "position": 48,
+   "tier": "holdout",
+   "dataset_index": 3148,
+   "generated_text": "Helen Fraser, a British actress, did not star in a film directed by Roman Polanski",
+   "label": "incorrect",
+   "right_entailment": 0.0008,
+   "hallucinated_entailment": 0.0005
+  },
+  {
+   "model": "mistral",
+   "position": 49,
+   "tier": "holdout",
+   "dataset_index": 3941,
+   "generated_text": "The first known portrait of Charles Edward Stuart, also known as Bonnie Prince Charlie, was painted by",
+   "label": "incorrect",
+   "right_entailment": 0.001,
+   "hallucinated_entailment": 0.0009
+  },
+  {
+   "model": "mistral",
+   "position": 50,
+   "tier": "holdout",
+   "dataset_index": 4075,
+   "generated_text": "Jean-Baptiste Lully, an Italian-born French composer, instrumentalist, and d",
+   "label": "correct",
+   "right_entailment": 0.9829,
+   "hallucinated_entailment": 0.0395
+  },
+  {
+   "model": "mistral",
+   "position": 51,
+   "tier": "holdout",
+   "dataset_index": 4567,
+   "generated_text": "The actor you're referring to is Chris Haywood. He was born in 196",
+   "label": "incorrect",
+   "right_entailment": 0.0018,
+   "hallucinated_entailment": 0.0109
+  },
+  {
+   "model": "mistral",
+   "position": 52,
+   "tier": "holdout",
+   "dataset_index": 6147,
+   "generated_text": "Yes, both Duvalia and Maxillaria are genera of orchids. They belong",
+   "label": "incorrect",
+   "right_entailment": 0.3408,
+   "hallucinated_entailment": 0.1886
+  },
+  {
+   "model": "mistral",
+   "position": 53,
+   "tier": "holdout",
+   "dataset_index": 6583,
+   "generated_text": "The race you're referring to is the \"Zero Distance Race\" or \"Zero Distance",
+   "label": "incorrect",
+   "right_entailment": 0.0031,
+   "hallucinated_entailment": 0.0004
+  },
+  {
+   "model": "mistral",
+   "position": 54,
+   "tier": "holdout",
+   "dataset_index": 6631,
+   "generated_text": "Richie Zito has worked with many artists throughout his career, but he is particularly known for his",
+   "label": "incorrect",
+   "right_entailment": 0.0003,
+   "hallucinated_entailment": 0.0002
+  },
+  {
+   "model": "mistral",
+   "position": 55,
+   "tier": "holdout",
+   "dataset_index": 6786,
+   "generated_text": "The Maid of Honor at the wedding of Catherine, Duchess of Cambridge, and Prince William",
+   "label": "incorrect",
+   "right_entailment": 0.0028,
+   "hallucinated_entailment": 0.0033
+  },
+  {
+   "model": "mistral",
+   "position": 56,
+   "tier": "holdout",
+   "dataset_index": 7281,
+   "generated_text": "The singer whose signature song is \"At Last\" is Etta James. The song was first released",
+   "label": "correct",
+   "right_entailment": 0.2463,
+   "hallucinated_entailment": 0.2404
+  },
+  {
+   "model": "mistral",
+   "position": 57,
+   "tier": "holdout",
+   "dataset_index": 9072,
+   "generated_text": "The lake you're referring to is likely Lake Argentino or Lake Buenos Aires, which is located",
+   "label": "incorrect",
+   "right_entailment": 0.1717,
+   "hallucinated_entailment": 0.0009
+  },
+  {
+   "model": "mistral",
+   "position": 58,
+   "tier": "holdout",
+   "dataset_index": 9586,
+   "generated_text": "Lee Gi-kwang is a South Korean singer, songwriter, and actor, while Chad",
+   "label": "incorrect",
+   "right_entailment": 0.139,
+   "hallucinated_entailment": 0.0026
+  },
+  {
+   "model": "mistral",
+   "position": 59,
+   "tier": "holdout",
+   "dataset_index": 9604,
+   "generated_text": "Richard Schroder debuted in the 1979 American drama sports film \"Ice",
+   "label": "incorrect",
+   "right_entailment": 0.0092,
+   "hallucinated_entailment": 0.0011
+  },
+  {
+   "model": "qwen3_1_7b",
+   "position": 0,
+   "tier": "fit",
+   "dataset_index": 376,
+   "generated_text": "The cover of the Alternative Press magazine's \"100 Bands You Need to Know in 2",
+   "label": "incorrect",
+   "right_entailment": 0.0026,
+   "hallucinated_entailment": 0.0004
+  },
+  {
+   "model": "qwen3_1_7b",
+   "position": 1,
+   "tier": "fit",
+   "dataset_index": 1325,
+   "generated_text": "Celeborn is a fictional character in J.R.R. Tolkien's *The Lord of the Rings*",
+   "label": "incorrect",
+   "right_entailment": 0.0641,
+   "hallucinated_entailment": 0.0052
+  },
+  {
+   "model": "qwen3_1_7b",
+   "position": 2,
+   "tier": "fit",
+   "dataset_index": 1779,
+   "generated_text": "The company founded by George Weston in 1882 is **Weston Foods**. Its",
+   "label": "incorrect",
+   "right_entailment": 0.8055,
+   "hallucinated_entailment": 0.9813
+  },
+  {
+   "model": "qwen3_1_7b",
+   "position": 3,
+   "tier": "fit",
+   "dataset_index": 1842,
+   "generated_text": "The question is a bit of a trick, but let's break it down: - **Boy",
+   "label": "incorrect",
+   "right_entailment": 0.9171,
+   "hallucinated_entailment": 0.047
+  },
+  {
+   "model": "qwen3_1_7b",
+   "position": 4,
+   "tier": "fit",
+   "dataset_index": 2114,
+   "generated_text": "Mia Hansen-Løve won the Silver Bear for Best Director for the film *The White Storm",
+   "label": "incorrect",
+   "right_entailment": 0.0004,
+   "hallucinated_entailment": 0.0004
+  },
+  {
+   "model": "qwen3_1_7b",
+   "position": 5,
+   "tier": "fit",
+   "dataset_index": 2125,
+   "generated_text": "The American Industrial rock band Nine Inch Nails released the song **\"Hail to the Chief\"",
+   "label": "incorrect",
+   "right_entailment": 0.0146,
+   "hallucinated_entailment": 0.009
+  },
+  {
+   "model": "qwen3_1_7b",
+   "position": 6,
+   "tier": "fit",
+   "dataset_index": 2271,
+   "generated_text": "John Laub is an American criminologist and Distinguished University Professor in the Department of Crimin",
+   "label": "incorrect",
+   "right_entailment": 0.0002,
+   "hallucinated_entailment": 0.0002
+  },
+  {
+   "model": "qwen3_1_7b",
+   "position": 7,
+   "tier": "fit",
+   "dataset_index": 2714,
+   "generated_text": "The only known remains of the **Piksi** (a prehistoric people, possibly related to",
+   "label": "incorrect",
+   "right_entailment": 0.0004,
+   "hallucinated_entailment": 0.0002
+  },
+  {
+   "model": "qwen3_1_7b",
+   "position": 8,
+   "tier": "fit",
+   "dataset_index": 2791,
+   "generated_text": "State Route 126 connects Lewiston to the **Town of Washington** in **Knox",
+   "label": "correct",
+   "right_entailment": 0.743,
+   "hallucinated_entailment": 0.0008
+  },
+  {
+   "model": "qwen3_1_7b",
+   "position": 9,
+   "tier": "fit",
+   "dataset_index": 2854,
+   "generated_text": "The Ride to Hangman's Tree starred the actor who played Steve McGarrett in the CBS series",
+   "label": "incorrect",
+   "right_entailment": 0.0006,
+   "hallucinated_entailment": 0.009
+  },
+  {
+   "model": "qwen3_1_7b",
+   "position": 10,
+   "tier": "fit",
+   "dataset_index": 3010,
+   "generated_text": "No, Victoria Larimore and Mauritz Stiller have not both worked as film directors. - **",
+   "label": "incorrect",
+   "right_entailment": 0.0825,
+   "hallucinated_entailment": 0.0007
+  },
+  {
+   "model": "qwen3_1_7b",
+   "position": 11,
+   "tier": "fit",
+   "dataset_index": 3089,
+   "generated_text": "Eleanor McGovern was the wife of **Senator Everett Dirksen**, who was the presidential nominee in",
+   "label": "incorrect",
+   "right_entailment": 0.0072,
+   "hallucinated_entailment": 0.0007
+  },
+  {
+   "model": "qwen3_1_7b",
+   "position": 12,
+   "tier": "fit",
+   "dataset_index": 3289,
+   "generated_text": "Joe Cornish's co-writer on *Ant-Man* is **J. J. Abrams**",
+   "label": "incorrect",
+   "right_entailment": 0.0009,
+   "hallucinated_entailment": 0.0009
+  },
+  {
+   "model": "qwen3_1_7b",
+   "position": 13,
+   "tier": "fit",
+   "dataset_index": 3817,
+   "generated_text": "Yes, both **Francoa** and **Echium** are plants. - **Fran",
+   "label": "correct",
+   "right_entailment": 0.977,
+   "hallucinated_entailment": 0.0008
+  },
+  {
+   "model": "qwen3_1_7b",
+   "position": 14,
+   "tier": "fit",
+   "dataset_index": 4032,
+   "generated_text": "The industry that makes both **Dana Ivey** and **Rush Hour 3** popular",
+   "label": "incorrect",
+   "right_entailment": 0.6991,
+   "hallucinated_entailment": 0.0019
+  },
+  {
+   "model": "qwen3_1_7b",
+   "position": 15,
+   "tier": "fit",
+   "dataset_index": 4231,
+   "generated_text": "Morten Suurballe was played alongside in the three television series \"The Killing\" by **",
+   "label": "incorrect",
+   "right_entailment": 0.0075,
+   "hallucinated_entailment": 0.0013
+  },
+  {
+   "model": "qwen3_1_7b",
+   "position": 16,
+   "tier": "fit",
+   "dataset_index": 4347,
+   "generated_text": "The protagonist in the film \"Mind Games\" (2002), directed by David Fincher",
+   "label": "incorrect",
+   "right_entailment": 0.0003,
+   "hallucinated_entailment": 0.0002
+  },
+  {
+   "model": "qwen3_1_7b",
+   "position": 17,
+   "tier": "fit",
+   "dataset_index": 4578,
+   "generated_text": "The former Trump campaign manager who promoted Jack Posobiec's tweets was **Mark Meadows**, who served",
+   "label": "incorrect",
+   "right_entailment": 0.0002,
+   "hallucinated_entailment": 0.0007
+  },
+  {
+   "model": "qwen3_1_7b",
+   "position": 18,
+   "tier": "fit",
+   "dataset_index": 4635,
+   "generated_text": "The TCF Bank Stadium in Downtown East, Minneapolis is located on the campus of the **University of",
+   "label": "incorrect",
+   "right_entailment": 0.4639,
+   "hallucinated_entailment": 0.0009
+  },
+  {
+   "model": "qwen3_1_7b",
+   "position": 19,
+   "tier": "fit",
+   "dataset_index": 5229,
+   "generated_text": "Martin Beck grew up 20 blocks from a neighborhood within **New York City**. The specific",
+   "label": "incorrect",
+   "right_entailment": 0.0004,
+   "hallucinated_entailment": 0.0012
+  },
+  {
+   "model": "qwen3_1_7b",
+   "position": 20,
+   "tier": "fit",
+   "dataset_index": 5396,
+   "generated_text": "Djalma Campos is a Brazilian footballer who played as a **forward** (goalkeeper or",
+   "label": "incorrect",
+   "right_entailment": 0.0108,
+   "hallucinated_entailment": 0.0026
+  },
+  {
+   "model": "qwen3_1_7b",
+   "position": 21,
+   "tier": "fit",
+   "dataset_index": 5412,
+   "generated_text": "No, **Ornithogalum** and **Monstera** are **not both",
+   "label": "correct",
+   "right_entailment": 0.9874,
+   "hallucinated_entailment": 0.0011
+  },
+  {
+   "model": "qwen3_1_7b",
+   "position": 22,
+   "tier": "fit",
+   "dataset_index": 5585,
+   "generated_text": "Thea Gilmore's EP titled *Thea Gilmore's EP* (2005",
+   "label": "incorrect",
+   "right_entailment": 0.0007,
+   "hallucinated_entailment": 0.0008
+  },
+  {
+   "model": "qwen3_1_7b",
+   "position": 23,
+   "tier": "fit",
+   "dataset_index": 5848,
+   "generated_text": "The song from Metallica's fifth album, *Blackened* (1991), that",
+   "label": "incorrect",
+   "right_entailment": 0.0023,
+   "hallucinated_entailment": 0.729
+  },
+  {
+   "model": "qwen3_1_7b",
+   "position": 24,
+   "tier": "fit",
+   "dataset_index": 5911,
+   "generated_text": "The Australian actor who may have influenced Miley Cyrus' album \"Younger Now\" is **Peter",
+   "label": "incorrect",
+   "right_entailment": 0.0036,
+   "hallucinated_entailment": 0.0001
+  },
+  {
+   "model": "qwen3_1_7b",
+   "position": 25,
+   "tier": "fit",
+   "dataset_index": 6026,
+   "generated_text": "The Australian municipality that covers the inner eastern suburbs of Adelaide and has a population of 34,",
+   "label": "incorrect",
+   "right_entailment": 0.0006,
+   "hallucinated_entailment": 0.0003
+  },
+  {
+   "model": "qwen3_1_7b",
+   "position": 26,
+   "tier": "fit",
+   "dataset_index": 6531,
+   "generated_text": "The Delta Air Lines fleet was initially composed of all-Boeing and McDonnell Douglas aircraft before the",
+   "label": "incorrect",
+   "right_entailment": 0.5872,
+   "hallucinated_entailment": 0.0089
+  },
+  {
+   "model": "qwen3_1_7b",
+   "position": 27,
+   "tier": "fit",
+   "dataset_index": 7258,
+   "generated_text": "The question is a bit of a playful and slightly confusing one. Let's break it down: -",
+   "label": "incorrect",
+   "right_entailment": 0.0078,
+   "hallucinated_entailment": 0.0003
+  },
+  {
+   "model": "qwen3_1_7b",
+   "position": 28,
+   "tier": "fit",
+   "dataset_index": 7348,
+   "generated_text": "The Nike Hypervenom is a brand of footwear, and the term \"Hyperven",
+   "label": "incorrect",
+   "right_entailment": 0.0005,
+   "hallucinated_entailment": 0.0004
+  },
+  {
+   "model": "qwen3_1_7b",
+   "position": 29,
+   "tier": "fit",
+   "dataset_index": 7369,
+   "generated_text": "The hotel and casino you're referring to is **The Golden Palace Hotel and Casino** located in **",
+   "label": "incorrect",
+   "right_entailment": 0.0003,
+   "hallucinated_entailment": 0.0002
+  },
+  {
+   "model": "qwen3_1_7b",
+   "position": 30,
+   "tier": "fit",
+   "dataset_index": 7374,
+   "generated_text": "No, **Velvetpark** and **Womankind** are not women's websites. Here",
+   "label": "incorrect",
+   "right_entailment": 0.0016,
+   "hallucinated_entailment": 0.0008
+  },
+  {
+   "model": "qwen3_1_7b",
+   "position": 31,
+   "tier": "fit",
+   "dataset_index": 7423,
+   "generated_text": "The daughter of former Congressman Pat Williams co-established the American nonprofit organization **Bridge International Peace Academy** (",
+   "label": "incorrect",
+   "right_entailment": 0.0003,
+   "hallucinated_entailment": 0.0007
+  },
+  {
+   "model": "qwen3_1_7b",
+   "position": 32,
+   "tier": "fit",
+   "dataset_index": 7825,
+   "generated_text": "The answer is **\"Bryan Adams\"**. Here's the reasoning: - Kavana is",
+   "label": "incorrect",
+   "right_entailment": 0.007,
+   "hallucinated_entailment": 0.9883
+  },
+  {
+   "model": "qwen3_1_7b",
+   "position": 33,
+   "tier": "fit",
+   "dataset_index": 8189,
+   "generated_text": "The 2002 Infiniti Pro Series season ended with **Dale Earnhardt**",
+   "label": "incorrect",
+   "right_entailment": 0.0005,
+   "hallucinated_entailment": 0.0005
+  },
+  {
+   "model": "qwen3_1_7b",
+   "position": 34,
+   "tier": "fit",
+   "dataset_index": 8410,
+   "generated_text": "The song you're referring to is **\"Style\"** by Taylor Swift, featuring Kendrick Lamar.",
+   "label": "incorrect",
+   "right_entailment": 0.0011,
+   "hallucinated_entailment": 0.0013
+  },
+  {
+   "model": "qwen3_1_7b",
+   "position": 35,
+   "tier": "fit",
+   "dataset_index": 8513,
+   "generated_text": "The American statesman and retired four-star general who has attended events at the **Southern Center for International",
+   "label": "incorrect",
+   "right_entailment": 0.0003,
+   "hallucinated_entailment": 0.0004
+  },
+  {
+   "model": "qwen3_1_7b",
+   "position": 36,
+   "tier": "fit",
+   "dataset_index": 8744,
+   "generated_text": "The Tánaiste is the head of government in Ireland, and the Frances Fitzgerald is the wife",
+   "label": "incorrect",
+   "right_entailment": 0.6984,
+   "hallucinated_entailment": 0.0004
+  },
+  {
+   "model": "qwen3_1_7b",
+   "position": 37,
+   "tier": "fit",
+   "dataset_index": 9201,
+   "generated_text": "The song \"Wait ’til My Bobby Gets Home\" was recorded by **The Everly Brothers**",
+   "label": "incorrect",
+   "right_entailment": 0.0002,
+   "hallucinated_entailment": 0.0002
+  },
+  {
+   "model": "qwen3_1_7b",
+   "position": 38,
+   "tier": "fit",
+   "dataset_index": 9547,
+   "generated_text": "The 2010 Census population of the town located south of the Merrill Shell Bank Light is",
+   "label": "incorrect",
+   "right_entailment": 0.0002,
+   "hallucinated_entailment": 0.0002
+  },
+  {
+   "model": "qwen3_1_7b",
+   "position": 39,
+   "tier": "fit",
+   "dataset_index": 9746,
+   "generated_text": "In Leo Tolstoy's novel *War and Peace*, the Countess Natalya \"Natasha",
+   "label": "incorrect",
+   "right_entailment": 0.1633,
+   "hallucinated_entailment": 0.0587
+  },
+  {
+   "model": "qwen3_1_7b",
+   "position": 40,
+   "tier": "holdout",
+   "dataset_index": 610,
+   "generated_text": "The piece you're referring to is **\"The Green Bushes\"** by **Eugene",
+   "label": "incorrect",
+   "right_entailment": 0.0013,
+   "hallucinated_entailment": 0.0004
+  },
+  {
+   "model": "qwen3_1_7b",
+   "position": 41,
+   "tier": "holdout",
+   "dataset_index": 1578,
+   "generated_text": "Béla Bartók was born first. He was born on **March 29,",
+   "label": "correct",
+   "right_entailment": 0.0008,
+   "hallucinated_entailment": 0.1314
+  },
+  {
+   "model": "qwen3_1_7b",
+   "position": 42,
+   "tier": "holdout",
+   "dataset_index": 1791,
+   "generated_text": "The answer is **Bush**. Executive Order 13765 was signed by **George",
+   "label": "incorrect",
+   "right_entailment": 0.004,
+   "hallucinated_entailment": 0.0027
+  },
+  {
+   "model": "qwen3_1_7b",
+   "position": 43,
+   "tier": "holdout",
+   "dataset_index": 1984,
+   "generated_text": "Boyd Gaming Corporation is an American gaming and hospitality company based in **Las Vegas, Nevada**.",
+   "label": "incorrect",
+   "right_entailment": 0.0049,
+   "hallucinated_entailment": 0.0034
+  },
+  {
+   "model": "qwen3_1_7b",
+   "position": 44,
+   "tier": "holdout",
+   "dataset_index": 2119,
+   "generated_text": "The question refers to the 2004-05 season in which **Futbol",
+   "label": "incorrect",
+   "right_entailment": 0.0106,
+   "hallucinated_entailment": 0.97
+  },
+  {
+   "model": "qwen3_1_7b",
+   "position": 45,
+   "tier": "holdout",
+   "dataset_index": 2280,
+   "generated_text": "The actor born in 1945 who starred in the show \"Trial & Error\" is",
+   "label": "incorrect",
+   "right_entailment": 0.0003,
+   "hallucinated_entailment": 0.0003
+  },
+  {
+   "model": "qwen3_1_7b",
+   "position": 46,
+   "tier": "holdout",
+   "dataset_index": 3124,
+   "generated_text": "The television series written by Dan Guterman and directed by Dominic Polcino that premiered on July",
+   "label": "incorrect",
+   "right_entailment": 0.0003,
+   "hallucinated_entailment": 0.0002
+  },
+  {
+   "model": "qwen3_1_7b",
+   "position": 47,
+   "tier": "holdout",
+   "dataset_index": 3661,
+   "generated_text": "The actress who co-starred with Peter Breck in the 1956 film *H",
+   "label": "incorrect",
+   "right_entailment": 0.0003,
+   "hallucinated_entailment": 0.0009
+  },
+  {
+   "model": "qwen3_1_7b",
+   "position": 48,
+   "tier": "holdout",
+   "dataset_index": 3793,
+   "generated_text": "Jaume Balagueró i Bernat is a Spanish film director known for his horror films,",
+   "label": "incorrect",
+   "right_entailment": 0.0015,
+   "hallucinated_entailment": 0.0005
+  },
+  {
+   "model": "qwen3_1_7b",
+   "position": 49,
+   "tier": "holdout",
+   "dataset_index": 4014,
+   "generated_text": "Odeya Rush played the lead role in the 2015 American horror comedy film *",
+   "label": "incorrect",
+   "right_entailment": 0.0014,
+   "hallucinated_entailment": 0.0011
+  },
+  {
+   "model": "qwen3_1_7b",
+   "position": 50,
+   "tier": "holdout",
+   "dataset_index": 4288,
+   "generated_text": "The common name for the hostplant of *Phyllocnistis Iridodendronella",
+   "label": "incorrect",
+   "right_entailment": 0.0036,
+   "hallucinated_entailment": 0.001
+  },
+  {
+   "model": "qwen3_1_7b",
+   "position": 51,
+   "tier": "holdout",
+   "dataset_index": 4966,
+   "generated_text": "No, \"The American Ruling Class and Stevie\" is not a film. It is a",
+   "label": "incorrect",
+   "right_entailment": 0.0054,
+   "hallucinated_entailment": 0.0004
+  },
+  {
+   "model": "qwen3_1_7b",
+   "position": 52,
+   "tier": "holdout",
+   "dataset_index": 5777,
+   "generated_text": "Edward H. Griffith directed **more films** than Hans Behrendt. - **Edward H.",
+   "label": "correct",
+   "right_entailment": 0.9878,
+   "hallucinated_entailment": 0.0598
+  },
+  {
+   "model": "qwen3_1_7b",
+   "position": 53,
+   "tier": "holdout",
+   "dataset_index": 6712,
+   "generated_text": "The irrigation canal in Kern County, California, that you're referring to is the **Kern Island",
+   "label": "correct",
+   "right_entailment": 0.8734,
+   "hallucinated_entailment": 0.65
+  },
+  {
+   "model": "qwen3_1_7b",
+   "position": 54,
+   "tier": "holdout",
+   "dataset_index": 6796,
+   "generated_text": "The actor described in the question is **Rajinikanth**, the legendary Indian film director,",
+   "label": "incorrect",
+   "right_entailment": 0.0072,
+   "hallucinated_entailment": 0.0003
+  },
+  {
+   "model": "qwen3_1_7b",
+   "position": 55,
+   "tier": "holdout",
+   "dataset_index": 6810,
+   "generated_text": "The man who described Pope Theophilus of Alexandria as \"the perpetual enemy of peace and virtue\"",
+   "label": "incorrect",
+   "right_entailment": 0.0005,
+   "hallucinated_entailment": 0.0002
+  },
+  {
+   "model": "qwen3_1_7b",
+   "position": 56,
+   "tier": "holdout",
+   "dataset_index": 6825,
+   "generated_text": "The **Doctor of Fine Arts (D.F.A.)** is a **doctoral degree** in",
+   "label": "incorrect",
+   "right_entailment": 0.9517,
+   "hallucinated_entailment": 0.0006
+  },
+  {
+   "model": "qwen3_1_7b",
+   "position": 57,
+   "tier": "holdout",
+   "dataset_index": 7281,
+   "generated_text": "The signature song of **Elton John** is **\"Rocket Man\"**, but the question is",
+   "label": "incorrect",
+   "right_entailment": 0.0037,
+   "hallucinated_entailment": 0.5254
+  },
+  {
+   "model": "qwen3_1_7b",
+   "position": 58,
+   "tier": "holdout",
+   "dataset_index": 7533,
+   "generated_text": "The brother-in-law of **John Winthrop**, the founder of the Massachusetts Bay Colony, was **",
+   "label": "incorrect",
+   "right_entailment": 0.0015,
+   "hallucinated_entailment": 0.0012
+  },
+  {
+   "model": "qwen3_1_7b",
+   "position": 59,
+   "tier": "holdout",
+   "dataset_index": 9939,
+   "generated_text": "The question refers to \"Eyes of the Rainbow,\" a term often used in the context of the",
+   "label": "incorrect",
+   "right_entailment": 0.0005,
+   "hallucinated_entailment": 0.0004
+  }
+ ]
+}
