@@ -24,6 +24,10 @@ revision: d1ca70f9ece4d8afd33015893a69df9a6e45a672
 # The stand-in objective (shared question text inflates BOTH answers' entailment) no
 # longer matches real output. 0.7 stays provisional pending a calibration against real,
 # labeled generations or a margin-based verdict (decision recorded in the PR).
+# 2026-10-07: the short-answer verdict is now BINARY — "incorrect" means "not
+# demonstrably correct", and "unknown" is gone from this judge (the tri-state rule
+# labeled ~77% of a real sample "unknown"). The threshold is still the provisional 0.7;
+# experiments/dump_labeling_sample.py produces real generations to label and refit it.
 short_answer_entailment_threshold: 0.7
 
 # factscore_style_verdict (FActScore-shaped harness): per-claim entailment
