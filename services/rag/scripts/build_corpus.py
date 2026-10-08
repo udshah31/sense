@@ -36,20 +36,29 @@ def fetch_passage(question: str, client: httpx.Client) -> dict | None:
     """Search Wikipedia for `question`, return the top hit's {title, text}
     intro extract, or None if nothing resolved."""
     for attempt in range(6):
-        response = client.get(
-            WIKIPEDIA_API_URL,
-            params={
-                "action": "query",
-                "format": "json",
-                "generator": "search",
-                "gsrsearch": question,
-                "gsrlimit": 1,
-                "prop": "extracts",
-                "exintro": 1,
-                "explaintext": 1,
-            },
-            headers=REQUEST_HEADERS,
-        )
+        try:
+            response = client.get(
+                WIKIPEDIA_API_URL,
+                params={
+                    "action": "query",
+                    "format": "json",
+                    "generator": "search",
+                    "gsrsearch": question,
+                    "gsrlimit": 1,
+                    "prop": "extracts",
+                    "exintro": 1,
+                    "explaintext": 1,
+                },
+                headers=REQUEST_HEADERS,
+            )
+        except httpx.TransportError:
+            # A timeout/connection reset used to abort the whole ~1,000-question build
+            # (it did, after 150 questions); retry with backoff like a 429. Only the
+            # last attempt's failure propagates.
+            if attempt == 5:
+                raise
+            time.sleep(2 * (attempt + 1))
+            continue
         if response.status_code == 429:
             wait = float(response.headers.get("retry-after", 2 * (attempt + 1)))
             time.sleep(wait)
@@ -74,7 +83,9 @@ def build_corpus(questions: list[str], client: httpx.Client) -> list[dict]:
     """Resolve each question to a passage, skipping (and logging) any that
     don't resolve. Returns the list of resolved {title, text} passages."""
     passages = []
-    for question in questions:
+    for n, question in enumerate(questions, 1):
+        if n % 50 == 0:
+            print(f"resolved {len(passages)} passages from {n - 1}/{len(questions)} questions", file=sys.stderr, flush=True)
         passage = fetch_passage(question, client)
         if passage is None:
             print(f"skipping question with no Wikipedia hit: {question!r}", file=sys.stderr)
