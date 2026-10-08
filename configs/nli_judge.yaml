@@ -28,6 +28,13 @@ revision: d1ca70f9ece4d8afd33015893a69df9a6e45a672
 # demonstrably correct", and "unknown" is gone from this judge (the tri-state rule
 # labeled ~77% of a real sample "unknown"). The threshold is still the provisional 0.7;
 # experiments/dump_labeling_sample.py produces real generations to label and refit it.
+# First check against 120 real generations (mistral, qwen3_1_7b; calibration pool only),
+# labeled by Claude, NOT a human (data/fixtures/judge_labels/, analyze_judge_labels.py):
+# the binary rule at 0.7 scores precision 0.76 (13/17), recall 0.68 (13/19), balanced
+# accuracy 0.82 against those labels; 0.7 was also the best threshold on the fit rows.
+# 95% Wilson intervals are wide (precision 0.53-0.90, recall 0.46-0.85) with only 19
+# positives, so this supports keeping 0.7, not calling it validated. The margin rules
+# tried did worse. A human spot-check of the labels is still owed.
 short_answer_entailment_threshold: 0.7
 
 # factscore_style_verdict (FActScore-shaped harness): per-claim entailment
