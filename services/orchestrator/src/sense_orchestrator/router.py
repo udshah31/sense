@@ -6,6 +6,7 @@ gate and symbolic backend said about it, plus per-stage latency.
 """
 
 import time
+from collections.abc import Callable
 from dataclasses import dataclass
 
 from sense_orchestrator.gate import GatePolicy
@@ -65,4 +66,54 @@ async def route_and_annotate(
         symbolic_latency_ms=symbolic_latency_ms,
         symbolic_error=symbolic_error,
         total_latency_ms=total_latency_ms,
+    )
+
+
+@dataclass(frozen=True)
+class RetrievalRouting:
+    routed: bool
+    entropy: float
+    gate_eval_latency_ms: float
+    passages: list[str] | None
+    retrieval_latency_ms: float | None
+    total_latency_ms: float
+
+
+def route_to_retrieval(
+    gate: GatePolicy,
+    entropy: float,
+    query: str,
+    retrieve_fn: Callable[[str], list[str]],
+) -> RetrievalRouting:
+    """The retrieval-routed counterpart of `route_and_annotate`: same gate, same
+    decision, but a fired gate fetches passages for the caller to put in a second
+    prompt instead of calling the symbolic backend. This isolates what the second
+    stage returns — evidence the decoder may ignore, vs. a solver verdict — with
+    everything upstream held constant (proposal §2.4).
+
+    `retrieve_fn` is injected rather than imported so the orchestrator keeps its
+    HTTP-only boundary with the other services; retrieval is in-process (FAISS), so
+    its errors propagate instead of being annotated. Uncalibrated gates raise, as
+    in `route_and_annotate`.
+    """
+    total_start = time.perf_counter()
+
+    gate_start = time.perf_counter()
+    routed = gate.decide(entropy)
+    gate_eval_latency_ms = (time.perf_counter() - gate_start) * 1000
+
+    passages = None
+    retrieval_latency_ms = None
+    if routed:
+        retrieval_start = time.perf_counter()
+        passages = retrieve_fn(query)
+        retrieval_latency_ms = (time.perf_counter() - retrieval_start) * 1000
+
+    return RetrievalRouting(
+        routed=routed,
+        entropy=entropy,
+        gate_eval_latency_ms=gate_eval_latency_ms,
+        passages=passages,
+        retrieval_latency_ms=retrieval_latency_ms,
+        total_latency_ms=(time.perf_counter() - total_start) * 1000,
     )

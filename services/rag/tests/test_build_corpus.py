@@ -65,3 +65,10 @@ def test_build_corpus_collects_resolved_passages():
         {"title": "Paris", "text": "Paris is the capital of France."},
         {"title": "Paris", "text": "Paris is the capital of France."},
     ]
+
+
+def test_corpus_path_keeps_test_file_and_separates_other_splits():
+    from build_corpus import corpus_path
+
+    assert corpus_path("test").name == "passages.json"
+    assert corpus_path("development").name == "passages_development.json"
