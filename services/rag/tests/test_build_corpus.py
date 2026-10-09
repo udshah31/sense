@@ -72,3 +72,19 @@ def test_corpus_path_keeps_test_file_and_separates_other_splits():
 
     assert corpus_path("test").name == "passages.json"
     assert corpus_path("development").name == "passages_development.json"
+
+
+def test_fetch_passage_retries_a_transport_timeout(monkeypatch):
+    monkeypatch.setattr("build_corpus.time.sleep", lambda s: None)
+    calls = []
+
+    def handler(request: httpx.Request) -> httpx.Response:
+        calls.append(1)
+        if len(calls) == 1:
+            raise httpx.ReadTimeout("slow", request=request)
+        return httpx.Response(200, json={"query": {"pages": {"1": {"title": "Paris", "extract": "Paris is in France."}}}})
+
+    client = httpx.Client(transport=httpx.MockTransport(handler))
+
+    assert fetch_passage("capital of France", client) == {"title": "Paris", "text": "Paris is in France."}
+    assert len(calls) == 2
