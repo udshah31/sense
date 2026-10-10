@@ -1,17 +1,88 @@
 {
-  "NOTE": "Retrieval-gated condition (same entropy gate as RQ3, a fired gate routes to retrieval and regenerates with the retrieved passages), SMOKE TEST on ONE checkpoint only: qwen3_1_7b. Colab Pro T4 High-RAM, master @ 76cde58, started 2026-10-09 20:38 CDT, ~49 min. Headline numbers transcribed from the cell output; per_example was not saved. 1,000 development examples, top_k 3, corpus = data/rag_corpus/passages_development.json (647 passages from 1,000 questions: 65% of questions resolved to a Wikipedia passage, the rest get unrelated nearest passages). Other four checkpoints NOT run yet. Inspection of the live result file: all 75 routed examples were regenerated and all 75 final texts differ from the first-pass text, but the regenerated outputs typically open with preamble such as 'The question you're asking...' / 'The person w...' (qualitative, first 8 examples read by hand), so with a 20-token cutoff and mostly unrelated retrieved passages retrieval did not turn any hallucination into a correct answer.",
-  "research_question": "retrieval-gated condition", "dataset": "halueval", "eval_split": "development", "n_eval_examples": 1000, "quantile": 0.9, "top_k": 3,
-  "model": {"name": "qwen3_1_7b", "revision": "70d244cc86ccca08cf5af4e1e306ecf908b1ad5e"},
-  "factuality_metric": "nli_entailment (cliang1453/deberta-v3-xsmall-mnli @ d1ca70f9ece4d8afd33015893a69df9a6e45a672), binary verdict, threshold 0.7",
-  "routing_rate": 0.075,
-  "first_pass": {"task_accuracy": 0.111, "hallucination_rate": 0.889, "abstention_rate": 0.0, "n_correct": 111, "n_incorrect": 889},
-  "final_after_retrieval": {"task_accuracy": 0.111, "hallucination_rate": 0.889, "abstention_rate": 0.0, "n_correct": 111, "n_incorrect": 889},
-  "routed_label_transitions": {"incorrect->incorrect": 72, "correct->correct": 3, "incorrect->correct": 0, "correct->incorrect": 0},
-  "routed_examples_text_changed": "75 of 75",
-  "n_routed_prompts_truncated": 0,
-  "gate_detection_vs_first_pass": {"precision": 0.96, "recall": 0.081, "f1": 0.1494, "entropy_auroc": 0.6378, "tp": 72, "fp": 3, "fn": 817, "tn": 108,
-    "_note": "identical to RQ1's qwen3_8b->qwen3_1_7b native gate: same calibration, same first-pass answers (greedy decoding is deterministic)"},
-  "latency_ms": {"mean_first_pass_total": 1239.11, "mean_gate_eval": 0.0012, "mean_retrieval_when_routed": 6.82, "mean_regeneration_total_when_routed": 2610.88, "mean_total_pipeline": 1435.44,
-    "pipeline_vs_first_pass_pct": 15.8,
-    "_note": "regeneration on the ~7.5% routed examples costs ~2.6 s each and adds ~16% mean latency, against ~0.6% for the symbolic stage in RQ3 (qwen3_1_7b: 1357 -> 1365 ms). Different Colab sessions; first-pass time includes the entropy monitor."}
+ "NOTE": "Retrieval-gated condition (same entropy gate as RQ3, a fired gate routes to retrieval and regenerates with the retrieved passages), SMOKE TEST on ONE checkpoint only: qwen3_1_7b. Colab Pro T4 High-RAM, master @ 76cde58, started 2026-10-09 20:38 CDT, ~49 min. Headline numbers transcribed from the cell output; per_example was not saved. 1,000 development examples, top_k 3, corpus = data/rag_corpus/passages_development.json (647 passages from 1,000 questions: 65% of questions resolved to a Wikipedia passage, the rest get unrelated nearest passages). Other four checkpoints NOT run yet. Inspection of the live result file: all 75 routed examples were regenerated and all 75 final texts differ from the first-pass text, but the regenerated outputs typically open with preamble such as 'The question you're asking...' / 'The person w...' (qualitative, first 8 examples read by hand), so with a 20-token cutoff and mostly unrelated retrieved passages retrieval did not turn any hallucination into a correct answer.",
+ "research_question": "retrieval-gated condition",
+ "dataset": "halueval",
+ "eval_split": "development",
+ "n_eval_examples": 1000,
+ "quantile": 0.9,
+ "top_k": 3,
+ "model": {
+  "name": "qwen3_1_7b",
+  "revision": "70d244cc86ccca08cf5af4e1e306ecf908b1ad5e"
+ },
+ "factuality_metric": "nli_entailment (cliang1453/deberta-v3-xsmall-mnli @ d1ca70f9ece4d8afd33015893a69df9a6e45a672), binary verdict, threshold 0.7",
+ "routing_rate": 0.075,
+ "first_pass": {
+  "task_accuracy": 0.111,
+  "hallucination_rate": 0.889,
+  "abstention_rate": 0.0,
+  "n_correct": 111,
+  "n_incorrect": 889
+ },
+ "final_after_retrieval": {
+  "task_accuracy": 0.111,
+  "hallucination_rate": 0.889,
+  "abstention_rate": 0.0,
+  "n_correct": 111,
+  "n_incorrect": 889
+ },
+ "routed_label_transitions": {
+  "incorrect->incorrect": 72,
+  "correct->correct": 3,
+  "incorrect->correct": 0,
+  "correct->incorrect": 0
+ },
+ "routed_examples_text_changed": "75 of 75",
+ "n_routed_prompts_truncated": 0,
+ "gate_detection_vs_first_pass": {
+  "precision": 0.96,
+  "recall": 0.081,
+  "f1": 0.1494,
+  "entropy_auroc": 0.6378,
+  "tp": 72,
+  "fp": 3,
+  "fn": 817,
+  "tn": 108,
+  "_note": "identical to RQ1's qwen3_8b->qwen3_1_7b native gate: same calibration, same first-pass answers (greedy decoding is deterministic)"
+ },
+ "latency_ms": {
+  "mean_first_pass_total": 1239.11,
+  "mean_gate_eval": 0.0012,
+  "mean_retrieval_when_routed": 6.82,
+  "mean_regeneration_total_when_routed": 2610.88,
+  "mean_total_pipeline": 1435.44,
+  "pipeline_vs_first_pass_pct": 15.8,
+  "_note": "regeneration on the ~7.5% routed examples costs ~2.6 s each and adds ~16% mean latency, against ~0.6% for the symbolic stage in RQ3 (qwen3_1_7b: 1357 -> 1365 ms). Different Colab sessions; first-pass time includes the entropy monitor."
+ },
+ "always_on_diagnostic_qwen3_1_7b": {
+  "NOTE": "Same harness, model, prompt format and judge as the smoke test, but gate quantile set to 0.01 (edited on the Colab copy only: sed on configs/gate.yaml) so retrieval is applied to ~99.6% of examples, and n_eval_examples reduced to the first 500 development examples. Colab T4, ran 22:20-23:21 CDT on 2026-10-09. Purpose: does retrieval help this model AT ALL under this protocol, independent of gating?",
+  "n_eval_examples": 500,
+  "quantile": 0.01,
+  "routing_rate": 0.996,
+  "first_pass": {
+   "task_accuracy": 0.106,
+   "n_correct": 53
+  },
+  "final_after_retrieval": {
+   "task_accuracy": 0.114,
+   "n_correct": 57
+  },
+  "transitions": {
+   "incorrect->incorrect": 422,
+   "correct->correct": 32,
+   "incorrect->correct": 24,
+   "correct->incorrect": 20
+  },
+  "net_change_correct": 4,
+  "reading": "Retrieval flips verdicts in both directions (24 wrong->right vs 20 right->wrong); a net +4 of 500 (+0.8 points) is not distinguishable from zero (sign test on 24 vs 20, p ~0.65). So the earlier zero on the gated 75 is not specific to gating; retrieval barely moves this model's accuracy under this prompt, corpus (65% of questions resolved to a passage) and 20-token cutoff. Note the gated 75 produced 0 flips against ~8.8% flips overall: retrieval-driven changes concentrate on the model's confident answers, not its uncertain ones.",
+  "latency_ms": {
+   "mean_first_pass_total": 1350.52,
+   "mean_retrieval_when_routed": 7.46,
+   "mean_regeneration_total_when_routed": 2844.58,
+   "mean_total_pipeline": 4191.16,
+   "pipeline_vs_first_pass_pct": 210.3,
+   "_note": "always-on retrieval would cost ~3.1x per-example latency for this model"
+  },
+  "n_routed_prompts_truncated": 0
+ }
 }
