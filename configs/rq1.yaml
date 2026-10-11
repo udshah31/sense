@@ -21,6 +21,10 @@ transfer_pairs:
 # Transfer is evaluated on the development split, never test — test is touched once,
 # at the end, for the numbers that go in the paper (CLAUDE.md's data split discipline).
 eval_split: development
+# Optional: evaluate on a fixed prefix of the split (default: the whole split). Used to run the
+# held-out test split at the same cost as development: n_eval_examples: 1000 with
+# eval_split: test takes the first 1,000 of the committed test indices.
+# n_eval_examples: 1000
 
 # Each pair runs TWO transfer arms (added 2026-10-04, proposal-v5 review issue C3).
 # Not configurable on purpose: both are always reported, because reporting only one
