@@ -249,6 +249,7 @@ def run_pair(
     nli_cfg,
     bootstrap_cfg,
     extra_aggregators=(),
+    n_eval_examples=None,
 ) -> dict:
     source_cfg = models_registry[source_name]
     target_cfg = models_registry[target_name]
@@ -258,7 +259,9 @@ def run_pair(
     try:
         source_view = splits.for_checkpoint(source_name)
         target_view = splits.for_checkpoint(target_name)
-        eval_indices = getattr(splits, eval_split)
+        # A fixed prefix of the committed split (None = the whole split), so a smaller
+        # evaluation set is still a pre-declared index list, never a runtime sample.
+        eval_indices = getattr(splits, eval_split)[:n_eval_examples]
 
         # One generation pass per example per model; both entropy scales and the
         # generated text come back together (see _common.ExampleSignal).
@@ -396,6 +399,7 @@ def run() -> list[dict]:
             nli_cfg,
             bootstrap_cfg,
             extra_aggregators,
+            config["rq1"].get("n_eval_examples"),
         )
         write_results(
             f"rq1_transfer_halueval_{source_name}_to_{target_name}.json",
