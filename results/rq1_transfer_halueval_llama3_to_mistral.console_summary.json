@@ -1,0 +1,40 @@
+{
+  "NOTE": "Transcribed from the Kaggle console print of the harness result (per_example and per-metric CIs for the individual gates omitted). The full result file was lost when the Kaggle draft session ended; re-run if per_example is needed. Run: binary judge (nli threshold 0.7), branch binary-judge-labeling-sample @ 8db879e+, started 2026-10-08T04:39:39Z, seed 42.",
+  "research_question": "RQ1", "dataset": "halueval", "eval_split": "development", "n_eval_examples": 1000,
+  "quantile": 0.9, "decoding": {"do_sample": false, "max_new_tokens": 20},
+  "bootstrap": {"n_resamples": 1000, "confidence": 0.95, "seed": 42},
+  "factuality_metric": "nli_entailment (cliang1453/deberta-v3-xsmall-mnli @ d1ca70f9ece4d8afd33015893a69df9a6e45a672)",
+  "source_model": {"name": "llama3", "revision": "8afb486c1db24fe5011ec46dfbe5b5dccdb575c2"},
+  "target_model": {"name": "mistral", "revision": "c170c708c41dac9275d15a8fff4eca08d52bab71"},
+  "ungated": {"n_correct": 158, "n_incorrect": 842, "n_unknown": 0, "task_accuracy": 0.158, "hallucination_rate": 0.842, "abstention_rate": 0.0},
+  "arms": {
+    "normalized": {
+      "source_native_threshold": 0.06257073141512565, "target_native_threshold": 0.06026652662042387,
+      "source_threshold_ci95": [0.059183291536416105, 0.06494522399900558],
+      "target_native_threshold_ci95": [0.05742251069011489, 0.06331653155613345],
+      "transfer_agreement_rate": 0.985, "entropy_auroc": 0.6446375417180312, "entropy_auroc_ci95": [0.6005383598400641, 0.6894480305146012],
+      "transferred_gate": {"routing_rate": 0.09, "tp": 87, "fp": 3, "fn": 755, "tn": 155, "precision": 0.9666666666666667, "recall": 0.10332541567695962, "f1": 0.1866952789699571, "specificity": 0.9810126582278481, "balanced_accuracy": 0.5421690369524038},
+      "native_gate": {"routing_rate": 0.105, "tp": 100, "fp": 5, "fn": 742, "tn": 153, "precision": 0.9523809523809523, "recall": 0.1187648456057007, "f1": 0.21119324181626187, "specificity": 0.9683544303797469, "balanced_accuracy": 0.5435596379927238},
+      "delta_native_minus_transferred": {
+        "routing_rate": [0.015, 0.007, 0.023], "precision": [-0.014285714285714346, -0.04481379912945649, 0.006313504981749984],
+        "recall": [0.015439429928741089, 0.0071001725547180155, 0.024677976466281924], "f1": [0.02449796284630476, 0.010962987514965473, 0.0387708523506101],
+        "specificity": [-0.012658227848101222, -0.033123694386417116, 0.0], "balanced_accuracy": [0.001390601040319961, -0.009846591973100232, 0.009964965213811192],
+        "_format": "[point, ci95_low, ci95_high]"
+      }
+    },
+    "raw": {
+      "source_native_threshold": 0.7358183827043833, "target_native_threshold": 0.6266035951363154,
+      "source_threshold_ci95": [0.7023998759504048, 0.7645418029085917],
+      "target_native_threshold_ci95": [0.5971289686654927, 0.6583151299645306],
+      "transfer_agreement_rate": 0.94, "entropy_auroc": 0.6446375417180312, "entropy_auroc_ci95": [0.596510486630547, 0.6880227919305002],
+      "transferred_gate": {"routing_rate": 0.045, "tp": 45, "fp": 0, "fn": 797, "tn": 158, "precision": 1.0, "recall": 0.05344418052256532, "f1": 0.10146561443066515, "specificity": 1.0, "balanced_accuracy": 0.5267220902612827},
+      "native_gate": {"routing_rate": 0.105, "tp": 100, "fp": 5, "fn": 742, "tn": 153, "precision": 0.9523809523809523, "recall": 0.1187648456057007, "f1": 0.21119324181626187, "specificity": 0.9683544303797469, "balanced_accuracy": 0.5435596379927238},
+      "delta_native_minus_transferred": {
+        "routing_rate": [0.06, 0.045, 0.074], "precision": [-0.04761904761904767, -0.09183673469387754, -0.010413981958762851],
+        "recall": [0.06532066508313539, 0.04836613333800653, 0.08148771367521365], "f1": [0.10972762738559672, 0.08143109063465837, 0.13553342709169397],
+        "specificity": [-0.03164556962025311, -0.060010067114094005, -0.0067102908277404845], "balanced_accuracy": [0.016837547731441083, 0.00034355155310674654, 0.03125647846264153],
+        "_format": "[point, ci95_low, ci95_high]"
+      }
+    }
+  }
+}
