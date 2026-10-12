@@ -180,3 +180,26 @@ def test_run_pair_end_to_end_on_tiny_models_via_halueval_shaped_splits(nli):
     for key in ("ungated_task_accuracy", "ungated_hallucination_rate", "ungated_abstention_rate"):
         assert key in result
     assert result["ungated_abstention_rate"] == 0.0  # RQ1 acts on no routing decision
+
+
+def test_run_pair_n_eval_examples_takes_a_fixed_prefix_of_the_split(nli):
+    from sense_data.halueval import load_halueval
+    from sense_data.splits import PerCheckpointSplitIndices
+
+    examples = load_halueval()[:50]
+    splits = PerCheckpointSplitIndices(
+        development=list(range(40, 50)),
+        test=list(range(30, 40)),
+        calibration={"source": list(range(0, 10)), "target": list(range(10, 20))},
+    )
+    nli_model, nli_tokenizer = nli
+    result = run_pair(
+        {"source": SOURCE_MODEL_CFG, "target": TARGET_MODEL_CFG}, examples, splits, DECODING_CFG, quantile=0.9,
+        eval_split="test", source_name="source", target_name="target",
+        nli_model=nli_model, nli_tokenizer=nli_tokenizer, nli_cfg=NLI_CFG,
+        bootstrap_cfg={"n_resamples": 20, "confidence": 0.95, "seed": 42},
+        n_eval_examples=4,
+    )
+
+    assert result["n_eval_examples"] == 4
+    assert result["eval_split"] == "test"
