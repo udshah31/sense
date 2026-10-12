@@ -1,0 +1,677 @@
+{
+ "NOTE": "Derived from the RQ1 summaries; RQ1 and RQ2 share one experiment (see derive_rq2_from_rq1.py). Development split, binary judge at 0.7. Delta = adaptive minus fixed = RQ1's native minus transferred; intervals are RQ1's paired bootstrap. CAUTION: with precision near 0.96 routing more raises recall and F1 mechanically, so 'fixed better' on the Qwen3 scale-ladder pairs (where the fixed gate routes more, 13-21% vs 8-12%) reflects routing rate, not gate quality; read it with the routing rates and fidelity gaps.",
+ "pairs": [
+  {
+   "source": "llama3",
+   "target": "mistral",
+   "n_eval_examples": 1000,
+   "expected_routing_rate": 0.09999999999999998,
+   "arms": {
+    "normalized": {
+     "fixed_threshold": 0.06257073141512565,
+     "adaptive_threshold": 0.06026652662042387,
+     "fixed_gate": {
+      "routing_rate": 0.09,
+      "tp": 87,
+      "fp": 3,
+      "fn": 755,
+      "tn": 155,
+      "precision": 0.9666666666666667,
+      "recall": 0.10332541567695962,
+      "f1": 0.1866952789699571,
+      "specificity": 0.9810126582278481,
+      "balanced_accuracy": 0.5421690369524038
+     },
+     "adaptive_gate": {
+      "routing_rate": 0.105,
+      "tp": 100,
+      "fp": 5,
+      "fn": 742,
+      "tn": 153,
+      "precision": 0.9523809523809523,
+      "recall": 0.1187648456057007,
+      "f1": 0.21119324181626187,
+      "specificity": 0.9683544303797469,
+      "balanced_accuracy": 0.5435596379927238
+     },
+     "adaptive_minus_fixed": {
+      "routing_rate": [
+       0.015,
+       0.007,
+       0.023
+      ],
+      "precision": [
+       -0.014285714285714346,
+       -0.04481379912945649,
+       0.006313504981749984
+      ],
+      "recall": [
+       0.015439429928741089,
+       0.0071001725547180155,
+       0.024677976466281924
+      ],
+      "f1": [
+       0.02449796284630476,
+       0.010962987514965473,
+       0.0387708523506101
+      ],
+      "specificity": [
+       -0.012658227848101222,
+       -0.033123694386417116,
+       0.0
+      ],
+      "balanced_accuracy": [
+       0.001390601040319961,
+       -0.009846591973100232,
+       0.009964965213811192
+      ],
+      "_format": "[point, ci95_low, ci95_high]"
+     },
+     "fixed_calibration_fidelity_gap": 0.009999999999999981,
+     "adaptive_calibration_fidelity_gap": 0.005000000000000018,
+     "f1_verdict": "adaptive better"
+    },
+    "raw": {
+     "fixed_threshold": 0.7358183827043833,
+     "adaptive_threshold": 0.6266035951363154,
+     "fixed_gate": {
+      "routing_rate": 0.045,
+      "tp": 45,
+      "fp": 0,
+      "fn": 797,
+      "tn": 158,
+      "precision": 1.0,
+      "recall": 0.05344418052256532,
+      "f1": 0.10146561443066515,
+      "specificity": 1.0,
+      "balanced_accuracy": 0.5267220902612827
+     },
+     "adaptive_gate": {
+      "routing_rate": 0.105,
+      "tp": 100,
+      "fp": 5,
+      "fn": 742,
+      "tn": 153,
+      "precision": 0.9523809523809523,
+      "recall": 0.1187648456057007,
+      "f1": 0.21119324181626187,
+      "specificity": 0.9683544303797469,
+      "balanced_accuracy": 0.5435596379927238
+     },
+     "adaptive_minus_fixed": {
+      "routing_rate": [
+       0.06,
+       0.045,
+       0.074
+      ],
+      "precision": [
+       -0.04761904761904767,
+       -0.09183673469387754,
+       -0.010413981958762851
+      ],
+      "recall": [
+       0.06532066508313539,
+       0.04836613333800653,
+       0.08148771367521365
+      ],
+      "f1": [
+       0.10972762738559672,
+       0.08143109063465837,
+       0.13553342709169397
+      ],
+      "specificity": [
+       -0.03164556962025311,
+       -0.060010067114094005,
+       -0.0067102908277404845
+      ],
+      "balanced_accuracy": [
+       0.016837547731441083,
+       0.00034355155310674654,
+       0.03125647846264153
+      ],
+      "_format": "[point, ci95_low, ci95_high]"
+     },
+     "fixed_calibration_fidelity_gap": 0.05499999999999998,
+     "adaptive_calibration_fidelity_gap": 0.005000000000000018,
+     "f1_verdict": "adaptive better"
+    }
+   }
+  },
+  {
+   "source": "llama3",
+   "target": "qwen3_8b",
+   "n_eval_examples": 1000,
+   "expected_routing_rate": 0.09999999999999998,
+   "arms": {
+    "normalized": {
+     "fixed_threshold": 0.06257073141512565,
+     "adaptive_threshold": 0.03432368551357831,
+     "fixed_gate": {
+      "routing_rate": 0.006,
+      "tp": 6,
+      "fp": 0,
+      "fn": 854,
+      "tn": 140,
+      "precision": 1.0,
+      "recall": 0.0069767441860465115,
+      "f1": 0.013856812933025405,
+      "specificity": 1.0,
+      "balanced_accuracy": 0.5034883720930232
+     },
+     "adaptive_gate": {
+      "routing_rate": 0.114,
+      "tp": 112,
+      "fp": 2,
+      "fn": 748,
+      "tn": 138,
+      "precision": 0.9824561403508771,
+      "recall": 0.13023255813953488,
+      "f1": 0.2299794661190965,
+      "specificity": 0.9857142857142858,
+      "balanced_accuracy": 0.5579734219269104
+     },
+     "adaptive_minus_fixed": {
+      "_format": "[point, ci95_low, ci95_high]",
+      "routing_rate": [
+       0.108,
+       0.09,
+       0.127
+      ],
+      "precision": [
+       -0.01754385964912286,
+       -0.04726284214473193,
+       0.0
+      ],
+      "recall": [
+       0.12325581395348836,
+       0.10205891097519539,
+       0.14622711619141632
+      ],
+      "f1": [
+       0.2161226531860711,
+       0.18248996467836717,
+       0.2513549146043587
+      ],
+      "specificity": [
+       -0.014285714285714235,
+       -0.039078000992063475,
+       0.0
+      ],
+      "balanced_accuracy": [
+       0.054485049833887134,
+       0.039032422677112634,
+       0.06800614331538556
+      ]
+     },
+     "fixed_calibration_fidelity_gap": 0.09399999999999997,
+     "adaptive_calibration_fidelity_gap": 0.014000000000000026,
+     "f1_verdict": "adaptive better"
+    },
+    "raw": {
+     "fixed_threshold": 0.7358183827043833,
+     "adaptive_threshold": 0.40945700453898104,
+     "fixed_gate": {
+      "routing_rate": 0.006,
+      "tp": 6,
+      "fp": 0,
+      "fn": 854,
+      "tn": 140,
+      "precision": 1.0,
+      "recall": 0.0069767441860465115,
+      "f1": 0.013856812933025405,
+      "specificity": 1.0,
+      "balanced_accuracy": 0.5034883720930232
+     },
+     "adaptive_gate": {
+      "routing_rate": 0.114,
+      "tp": 112,
+      "fp": 2,
+      "fn": 748,
+      "tn": 138,
+      "precision": 0.9824561403508771,
+      "recall": 0.13023255813953488,
+      "f1": 0.2299794661190965,
+      "specificity": 0.9857142857142858,
+      "balanced_accuracy": 0.5579734219269104
+     },
+     "adaptive_minus_fixed": {
+      "_format": "[point, ci95_low, ci95_high]",
+      "routing_rate": [
+       0.108,
+       0.089,
+       0.128
+      ],
+      "precision": [
+       -0.01754385964912286,
+       -0.04761904761904767,
+       0.0
+      ],
+      "recall": [
+       0.12325581395348836,
+       0.10124954828347721,
+       0.14595966820191525
+      ],
+      "f1": [
+       0.2161226531860711,
+       0.18132810039543948,
+       0.25089221637370396
+      ],
+      "specificity": [
+       -0.014285714285714235,
+       -0.03791221033868086,
+       0.0
+      ],
+      "balanced_accuracy": [
+       0.054485049833887134,
+       0.03765705249732858,
+       0.06874520949339583
+      ]
+     },
+     "fixed_calibration_fidelity_gap": 0.09399999999999997,
+     "adaptive_calibration_fidelity_gap": 0.014000000000000026,
+     "f1_verdict": "adaptive better"
+    }
+   }
+  },
+  {
+   "source": "mistral",
+   "target": "qwen3_8b",
+   "n_eval_examples": 1000,
+   "expected_routing_rate": 0.09999999999999998,
+   "arms": {
+    "normalized": {
+     "fixed_threshold": 0.06026652662042387,
+     "adaptive_threshold": 0.03432368551357831,
+     "fixed_gate": {
+      "routing_rate": 0.008,
+      "tp": 8,
+      "fp": 0,
+      "fn": 852,
+      "tn": 140,
+      "precision": 1.0,
+      "recall": 0.009302325581395349,
+      "f1": 0.018433179723502304,
+      "specificity": 1.0,
+      "balanced_accuracy": 0.5046511627906977
+     },
+     "adaptive_gate": {
+      "routing_rate": 0.114,
+      "tp": 112,
+      "fp": 2,
+      "fn": 748,
+      "tn": 138,
+      "precision": 0.9824561403508771,
+      "recall": 0.13023255813953488,
+      "f1": 0.2299794661190965,
+      "specificity": 0.9857142857142858,
+      "balanced_accuracy": 0.5579734219269104
+     },
+     "adaptive_minus_fixed": {
+      "_format": "[point, ci95_low, ci95_high]",
+      "routing_rate": [
+       0.106,
+       0.088,
+       0.126
+      ],
+      "precision": [
+       -0.0175,
+       -0.0455,
+       0.0
+      ],
+      "recall": [
+       0.1209,
+       0.1007,
+       0.1429
+      ],
+      "f1": [
+       0.2115,
+       0.1789,
+       0.2451
+      ],
+      "specificity": [
+       -0.0143,
+       -0.0385,
+       0.0
+      ],
+      "balanced_accuracy": [
+       0.0533,
+       0.0387,
+       0.0671
+      ]
+     },
+     "fixed_calibration_fidelity_gap": 0.09199999999999997,
+     "adaptive_calibration_fidelity_gap": 0.014000000000000026,
+     "f1_verdict": "adaptive better"
+    },
+    "raw": {
+     "fixed_threshold": 0.6266035951363154,
+     "adaptive_threshold": 0.40945700453898104,
+     "fixed_gate": {
+      "routing_rate": 0.018,
+      "tp": 18,
+      "fp": 0,
+      "fn": 842,
+      "tn": 140,
+      "precision": 1.0,
+      "recall": 0.020930232558139535,
+      "f1": 0.04100227790432802,
+      "specificity": 1.0,
+      "balanced_accuracy": 0.5104651162790698
+     },
+     "adaptive_gate": {
+      "routing_rate": 0.114,
+      "tp": 112,
+      "fp": 2,
+      "fn": 748,
+      "tn": 138,
+      "precision": 0.9824561403508771,
+      "recall": 0.13023255813953488,
+      "f1": 0.2299794661190965,
+      "specificity": 0.9857142857142858,
+      "balanced_accuracy": 0.5579734219269104
+     },
+     "adaptive_minus_fixed": {
+      "_format": "[point, ci95_low, ci95_high]",
+      "routing_rate": [
+       0.096,
+       0.078,
+       0.115
+      ],
+      "precision": [
+       -0.0175,
+       -0.0451,
+       0.0
+      ],
+      "recall": [
+       0.1093,
+       0.0889,
+       0.1314
+      ],
+      "f1": [
+       0.189,
+       0.156,
+       0.2236
+      ],
+      "specificity": [
+       -0.0143,
+       -0.0355,
+       0.0
+      ],
+      "balanced_accuracy": [
+       0.0475,
+       0.0328,
+       0.0615
+      ]
+     },
+     "fixed_calibration_fidelity_gap": 0.08199999999999998,
+     "adaptive_calibration_fidelity_gap": 0.014000000000000026,
+     "f1_verdict": "adaptive better"
+    }
+   }
+  },
+  {
+   "source": "qwen3_8b",
+   "target": "qwen3_1_7b",
+   "n_eval_examples": 1000,
+   "expected_routing_rate": 0.09999999999999998,
+   "arms": {
+    "normalized": {
+     "fixed_threshold": 0.0343,
+     "adaptive_threshold": 0.0467,
+     "fixed_gate": {
+      "routing_rate": 0.214,
+      "tp": 205,
+      "fp": 9,
+      "fn": 684,
+      "tn": 102,
+      "precision": 0.9579,
+      "recall": 0.2306,
+      "f1": 0.3717,
+      "balanced_accuracy": 0.5748
+     },
+     "adaptive_gate": {
+      "routing_rate": 0.075,
+      "tp": 72,
+      "fp": 3,
+      "fn": 817,
+      "tn": 108,
+      "precision": 0.96,
+      "recall": 0.081,
+      "f1": 0.1494,
+      "balanced_accuracy": 0.527
+     },
+     "adaptive_minus_fixed": {
+      "_format": "[point, ci95_low, ci95_high]",
+      "routing_rate": [
+       -0.139,
+       -0.161,
+       -0.118
+      ],
+      "precision": [
+       0.002,
+       -0.033,
+       0.038
+      ],
+      "recall": [
+       -0.15,
+       -0.173,
+       -0.127
+      ],
+      "f1": [
+       -0.222,
+       -0.254,
+       -0.191
+      ],
+      "specificity": [
+       0.054,
+       0.017,
+       0.099
+      ],
+      "balanced_accuracy": [
+       -0.048,
+       -0.069,
+       -0.022
+      ]
+     },
+     "fixed_calibration_fidelity_gap": 0.11400000000000002,
+     "adaptive_calibration_fidelity_gap": 0.02499999999999998,
+     "f1_verdict": "fixed better"
+    },
+    "raw": {
+     "fixed_threshold": 0.4095,
+     "adaptive_threshold": 0.5567,
+     "fixed_gate": {
+      "routing_rate": 0.214,
+      "tp": 205,
+      "fp": 9,
+      "fn": 684,
+      "tn": 102,
+      "precision": 0.9579,
+      "recall": 0.2306,
+      "f1": 0.3717,
+      "balanced_accuracy": 0.5748
+     },
+     "adaptive_gate": {
+      "routing_rate": 0.075,
+      "tp": 72,
+      "fp": 3,
+      "fn": 817,
+      "tn": 108,
+      "precision": 0.96,
+      "recall": 0.081,
+      "f1": 0.1494,
+      "balanced_accuracy": 0.527
+     },
+     "adaptive_minus_fixed": {
+      "_format": "[point, ci95_low, ci95_high]",
+      "routing_rate": [
+       -0.139,
+       -0.16,
+       -0.117
+      ],
+      "precision": [
+       0.002,
+       -0.035,
+       0.037
+      ],
+      "recall": [
+       -0.15,
+       -0.172,
+       -0.125
+      ],
+      "f1": [
+       -0.222,
+       -0.253,
+       -0.188
+      ],
+      "specificity": [
+       0.054,
+       0.018,
+       0.1
+      ],
+      "balanced_accuracy": [
+       -0.048,
+       -0.069,
+       -0.022
+      ]
+     },
+     "fixed_calibration_fidelity_gap": 0.11400000000000002,
+     "adaptive_calibration_fidelity_gap": 0.02499999999999998,
+     "f1_verdict": "fixed better"
+    }
+   }
+  },
+  {
+   "source": "qwen3_8b",
+   "target": "qwen3_4b",
+   "n_eval_examples": 1000,
+   "expected_routing_rate": 0.09999999999999998,
+   "arms": {
+    "normalized": {
+     "fixed_threshold": 0.0343,
+     "adaptive_threshold": 0.0359,
+     "fixed_gate": {
+      "routing_rate": 0.131,
+      "tp": 128,
+      "fp": 3,
+      "fn": 746,
+      "tn": 123,
+      "precision": 0.9771,
+      "recall": 0.1465,
+      "f1": 0.2547,
+      "balanced_accuracy": 0.5613
+     },
+     "adaptive_gate": {
+      "routing_rate": 0.117,
+      "tp": 114,
+      "fp": 3,
+      "fn": 760,
+      "tn": 123,
+      "precision": 0.9744,
+      "recall": 0.1304,
+      "f1": 0.2301,
+      "balanced_accuracy": 0.5533
+     },
+     "adaptive_minus_fixed": {
+      "_format": "[point, ci95_low, ci95_high]",
+      "routing_rate": [
+       -0.014,
+       -0.021,
+       -0.007
+      ],
+      "precision": [
+       -0.0027,
+       -0.0069,
+       0.0
+      ],
+      "recall": [
+       -0.016,
+       -0.0242,
+       -0.0082
+      ],
+      "f1": [
+       -0.0247,
+       -0.0374,
+       -0.0129
+      ],
+      "specificity": [
+       0,
+       0,
+       0
+      ],
+      "balanced_accuracy": [
+       -0.008,
+       -0.0121,
+       -0.0041
+      ]
+     },
+     "fixed_calibration_fidelity_gap": 0.031000000000000028,
+     "adaptive_calibration_fidelity_gap": 0.01700000000000003,
+     "f1_verdict": "fixed better"
+    },
+    "raw": {
+     "fixed_threshold": 0.4095,
+     "adaptive_threshold": 0.4277,
+     "fixed_gate": {
+      "routing_rate": 0.131,
+      "tp": 128,
+      "fp": 3,
+      "fn": 746,
+      "tn": 123,
+      "precision": 0.9771,
+      "recall": 0.1465,
+      "f1": 0.2547,
+      "balanced_accuracy": 0.5613
+     },
+     "adaptive_gate": {
+      "routing_rate": 0.117,
+      "tp": 114,
+      "fp": 3,
+      "fn": 760,
+      "tn": 123,
+      "precision": 0.9744,
+      "recall": 0.1304,
+      "f1": 0.2301,
+      "balanced_accuracy": 0.5533
+     },
+     "adaptive_minus_fixed": {
+      "_format": "[point, ci95_low, ci95_high]",
+      "routing_rate": [
+       -0.014,
+       -0.022,
+       -0.008
+      ],
+      "precision": [
+       -0.003,
+       -0.007,
+       0.0
+      ],
+      "recall": [
+       -0.016,
+       -0.025,
+       -0.009
+      ],
+      "f1": [
+       -0.025,
+       -0.039,
+       -0.014
+      ],
+      "specificity": [
+       0,
+       0,
+       0
+      ],
+      "balanced_accuracy": [
+       -0.008,
+       -0.013,
+       -0.004
+      ]
+     },
+     "fixed_calibration_fidelity_gap": 0.031000000000000028,
+     "adaptive_calibration_fidelity_gap": 0.01700000000000003,
+     "f1_verdict": "fixed better"
+    }
+   }
+  }
+ ]
+}

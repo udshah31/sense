@@ -1,0 +1,156 @@
+{
+ "NOTE": "Headline numbers for RQ3, extracted from the saved cell output of a Colab Pro (T4 High-RAM, 1 GPU) run started 2026-10-09 12:28 CDT, master @ 76cde58, run_metadata_20261009T172854Z. n_eval_examples was reduced from 1000 to 300 (first 300 development-split examples) by a one-line edit on the Colab copy only (sed s/1000/300/ configs/rq3.yaml), not committed: latency means do not need 1,000 examples. All five models completed across three Colab sessions on the same hardware type (Tesla T4, High-RAM): llama3/mistral/qwen3_8b in the first run (started 12:28 CDT; the browser connection dropped ~15:50), qwen3_4b in a second run (~16:25; dropped ~17:17), qwen3_1_7b in a third (~18:00). Latency was therefore measured in three separate sessions, so small cross-model differences (a few percent) include session-to-session variation. Per-example files were lost with the sessions; only these console summaries remain. Latency is Colab-T4, 4-bit, 20 new tokens, hardware-specific. The symbolic round trip uses RQ3's fixed always-resolvable probe triple (configs/rq3.yaml) by design: it measures round-trip cost, not whether an answer was verified. Detection numbers are against the ungated model's own correctness; development split; binary judge at 0.7.",
+ "research_question": "RQ3",
+ "dataset": "halueval",
+ "eval_split": "development",
+ "n_eval_examples": 300,
+ "quantile": 0.9,
+ "factuality_metric": "nli_entailment (cliang1453/deberta-v3-xsmall-mnli @ d1ca70f9ece4d8afd33015893a69df9a6e45a672), binary verdict, threshold 0.7",
+ "models": {
+  "llama3": {
+   "routing_rate": 0.0967,
+   "task_accuracy": 0.1433,
+   "hallucination_rate": 0.8567,
+   "abstention_rate": 0.0,
+   "n_correct": 43,
+   "n_incorrect": 257,
+   "mean_ungated_total_ms": 2343.16,
+   "mean_gated_total_ms": 2358.49,
+   "mean_gate_eval_latency_ms": 0.0012,
+   "mean_symbolic_latency_ms_when_routed": 32.47,
+   "mean_total_pipeline_latency_ms": 2361.63,
+   "detection": {
+    "precision": 0.8621,
+    "recall": 0.0973,
+    "f1": 0.1748,
+    "specificity": 0.907,
+    "balanced_accuracy": 0.5021,
+    "entropy_auroc": 0.5614,
+    "entropy_auroc_ci95": [
+     0.4644,
+     0.6608
+    ],
+    "tp": 25,
+    "fp": 4,
+    "fn": 232,
+    "tn": 39
+   }
+  },
+  "mistral": {
+   "routing_rate": 0.0867,
+   "task_accuracy": 0.1633,
+   "hallucination_rate": 0.8367,
+   "abstention_rate": 0.0,
+   "n_correct": 49,
+   "n_incorrect": 251,
+   "mean_ungated_total_ms": 2279.32,
+   "mean_gated_total_ms": 2288.15,
+   "mean_gate_eval_latency_ms": 0.0012,
+   "mean_symbolic_latency_ms_when_routed": 30.91,
+   "mean_total_pipeline_latency_ms": 2290.83,
+   "detection": {
+    "precision": 1.0,
+    "recall": 0.1036,
+    "f1": 0.1877,
+    "specificity": 1.0,
+    "balanced_accuracy": 0.5518,
+    "entropy_auroc": 0.6244,
+    "entropy_auroc_ci95": [
+     0.5415,
+     0.7007
+    ],
+    "tp": 26,
+    "fp": 0,
+    "fn": 225,
+    "tn": 49
+   }
+  },
+  "qwen3_8b": {
+   "routing_rate": 0.1,
+   "task_accuracy": 0.15,
+   "hallucination_rate": 0.85,
+   "abstention_rate": 0.0,
+   "n_correct": 45,
+   "n_incorrect": 255,
+   "mean_ungated_total_ms": 2425.59,
+   "mean_gated_total_ms": 2433.96,
+   "mean_gate_eval_latency_ms": 0.0011,
+   "mean_symbolic_latency_ms_when_routed": 31.11,
+   "mean_total_pipeline_latency_ms": 2437.08,
+   "detection": {
+    "precision": 0.9667,
+    "recall": 0.1137,
+    "f1": 0.2035,
+    "specificity": 0.9778,
+    "balanced_accuracy": 0.5458,
+    "entropy_auroc": 0.6286,
+    "entropy_auroc_ci95": [
+     0.553,
+     0.7099
+    ],
+    "tp": 29,
+    "fp": 1,
+    "fn": 226,
+    "tn": 44
+   }
+  },
+  "qwen3_4b": {
+   "routing_rate": 0.1,
+   "task_accuracy": 0.1267,
+   "hallucination_rate": 0.8733,
+   "abstention_rate": 0.0,
+   "n_correct": 38,
+   "n_incorrect": 262,
+   "mean_ungated_total_ms": 1935.23,
+   "mean_gated_total_ms": 1943.59,
+   "mean_gate_eval_latency_ms": 0.0011,
+   "mean_symbolic_latency_ms_when_routed": 33.44,
+   "mean_total_pipeline_latency_ms": 1946.94,
+   "detection": {
+    "precision": 0.9667,
+    "recall": 0.1107,
+    "f1": 0.1986,
+    "specificity": 0.9737,
+    "balanced_accuracy": 0.5422,
+    "entropy_auroc": 0.6627,
+    "entropy_auroc_ci95": [
+     0.5667,
+     0.7489
+    ],
+    "tp": 29,
+    "fp": 1,
+    "fn": 233,
+    "tn": 37
+   }
+  },
+  "qwen3_1_7b": {
+   "routing_rate": 0.07,
+   "task_accuracy": 0.11,
+   "hallucination_rate": 0.89,
+   "abstention_rate": 0.0,
+   "n_correct": 33,
+   "n_incorrect": 267,
+   "mean_ungated_total_ms": 1356.76,
+   "mean_gated_total_ms": 1362.35,
+   "mean_gate_eval_latency_ms": 0.0011,
+   "mean_symbolic_latency_ms_when_routed": 35.92,
+   "mean_total_pipeline_latency_ms": 1364.86,
+   "detection": {
+    "precision": 0.9524,
+    "recall": 0.0749,
+    "f1": 0.1389,
+    "specificity": 0.9697,
+    "balanced_accuracy": 0.5223,
+    "entropy_auroc": 0.6535,
+    "entropy_auroc_ci95": [
+     0.5607,
+     0.7437
+    ],
+    "tp": 20,
+    "fp": 1,
+    "fn": 247,
+    "tn": 32
+   }
+  }
+ }
+}

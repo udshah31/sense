@@ -1,0 +1,15 @@
+{
+  "NOTE": "SelfCheckGPT-NLI (post-hoc: 10 sampled continuations per answer, score = mean probability that a sample contradicts the main answer) vs the entropy gate, on the SAME first 300 development examples, same checkpoint, same judge, 20-token greedy main answers. SelfCheck: Kaggle T4 x2 commit run (notebookc_sense version 4, started ~03:30 CDT 2026-10-10), master @ 76cde58, full result files with per_example in selfcheck_baseline_halueval_{llama3,qwen3_1_7b}.json. Entropy gate numbers are from RQ3 (rq3_accuracy_latency_halueval.console_summary.json, Colab T4). Threshold calibration: SelfCheck on 200 calibration examples at quantile 0.9, entropy gate on 1000 calibration examples at quantile 0.9, so flag rates are close but not matched; AUROC is the threshold-free comparison. Two limitations that FAVOR SENSE and must be stated: n_samples=10 (Manakul et al. use 20) and the judge is deberta-v3-xsmall-mnli (the paper used a large DeBERTa); both weaken the baseline. Development split, binary judge at 0.7.",
+  "n_examples": 300,
+  "llama3": {
+    "selfcheck": {"flag_rate": 0.09, "precision": 0.8519, "recall": 0.0895, "f1": 0.162, "specificity": 0.907, "balanced_accuracy": 0.4982, "auroc": 0.5882, "auroc_ci95": [0.4933, 0.6836], "tp": 23, "fp": 4, "fn": 234, "tn": 39},
+    "entropy_gate": {"routing_rate": 0.0967, "precision": 0.8621, "recall": 0.0973, "f1": 0.1748, "specificity": 0.907, "balanced_accuracy": 0.5021, "auroc": 0.5614, "auroc_ci95": [0.4644, 0.6608], "tp": 25, "fp": 4, "fn": 232, "tn": 39},
+    "latency_ms": {"main_answer": 2278.79, "selfcheck_extra_sampling": 22928.75, "selfcheck_overhead_x_main": 10.06, "entropy_gate_pipeline_overhead_pct": 0.8}
+  },
+  "qwen3_1_7b": {
+    "selfcheck": {"flag_rate": 0.1167, "precision": 0.9429, "recall": 0.1236, "f1": 0.2185, "specificity": 0.9394, "balanced_accuracy": 0.5315, "auroc": 0.5161, "auroc_ci95": [0.4164, 0.6144], "tp": 33, "fp": 2, "fn": 234, "tn": 31},
+    "entropy_gate": {"routing_rate": 0.07, "precision": 0.9524, "recall": 0.0749, "f1": 0.1389, "specificity": 0.9697, "balanced_accuracy": 0.5223, "auroc": 0.6535, "auroc_ci95": [0.5607, 0.7437], "tp": 20, "fp": 1, "fn": 247, "tn": 32},
+    "latency_ms": {"main_answer": 1339.23, "selfcheck_extra_sampling": 13521.43, "selfcheck_overhead_x_main": 10.1, "entropy_gate_pipeline_overhead_pct": 0.6}
+  },
+  "reading": "Detection quality is statistically indistinguishable on Llama-3 (AUROC 0.59 vs 0.56, overlapping intervals) and favors the entropy gate on Qwen3-1.7B (0.65 vs 0.52, where SelfCheck is near chance), at about 10x extra latency for SelfCheck (10 extra sampled generations per answer) against ~0.6-0.8% for the gate. Two checkpoints, 300 examples: this supports 'comparable or better detection at a small fraction of the cost', not a general superiority claim."
+}

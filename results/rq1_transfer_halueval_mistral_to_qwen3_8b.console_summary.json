@@ -1,0 +1,26 @@
+{
+  "NOTE": "Headline numbers extracted from run.log of the Kaggle commit run (version 2 of notebookc_sense, 2h13m39s, GPU T4x2, master @ 78b00f0). The full result file (with per_example) is in that notebook version's Output (rq1_transfer_halueval_mistral_to_qwen3_8b.json); per-metric CIs for the individual gates omitted here.",
+  "research_question": "RQ1", "dataset": "halueval", "eval_split": "development", "n_eval_examples": 1000, "quantile": 0.9,
+  "factuality_metric": "nli_entailment (cliang1453/deberta-v3-xsmall-mnli @ d1ca70f9ece4d8afd33015893a69df9a6e45a672), binary verdict, threshold 0.7",
+  "source_model": {"name": "mistral"}, "target_model": {"name": "qwen3_8b"},
+  "ungated": {"n_correct": 140, "n_incorrect": 860, "n_unknown": 0, "task_accuracy": 0.14},
+  "entropy_auroc": 0.6455232558139535,
+  "arms": {
+    "normalized": {
+      "source_native_threshold": 0.06026652662042387, "target_native_threshold": 0.03432368551357831,
+      "target_native_threshold_ci95": [0.0327547594411495, 0.03676535412279115], "source_threshold_ci95": [0.05743484729929721, 0.06331653155613345],
+      "transfer_agreement_rate": 0.894,
+      "transferred_gate": {"routing_rate": 0.008, "tp": 8, "fp": 0, "fn": 852, "tn": 140, "precision": 1.0, "recall": 0.009302325581395349, "f1": 0.018433179723502304, "specificity": 1.0, "balanced_accuracy": 0.5046511627906977},
+      "native_gate": {"routing_rate": 0.114, "tp": 112, "fp": 2, "fn": 748, "tn": 138, "precision": 0.9824561403508771, "recall": 0.13023255813953488, "f1": 0.2299794661190965, "specificity": 0.9857142857142858, "balanced_accuracy": 0.5579734219269104},
+      "delta_native_minus_transferred": {"_format": "[point, ci95_low, ci95_high]", "routing_rate": [0.106, 0.088, 0.126], "precision": [-0.0175, -0.0455, 0.0], "recall": [0.1209, 0.1007, 0.1429], "f1": [0.2115, 0.1789, 0.2451], "specificity": [-0.0143, -0.0385, 0.0], "balanced_accuracy": [0.0533, 0.0387, 0.0671]}
+    },
+    "raw": {
+      "source_native_threshold": 0.6266035951363154, "target_native_threshold": 0.40945700453898104,
+      "target_native_threshold_ci95": [0.3911902862071607, 0.4398979012957643], "source_threshold_ci95": [0.5958048207242139, 0.6595606066678125],
+      "transfer_agreement_rate": 0.904,
+      "transferred_gate": {"routing_rate": 0.018, "tp": 18, "fp": 0, "fn": 842, "tn": 140, "precision": 1.0, "recall": 0.020930232558139535, "f1": 0.04100227790432802, "specificity": 1.0, "balanced_accuracy": 0.5104651162790698},
+      "native_gate": {"routing_rate": 0.114, "tp": 112, "fp": 2, "fn": 748, "tn": 138, "precision": 0.9824561403508771, "recall": 0.13023255813953488, "f1": 0.2299794661190965, "specificity": 0.9857142857142858, "balanced_accuracy": 0.5579734219269104},
+      "delta_native_minus_transferred": {"_format": "[point, ci95_low, ci95_high]", "routing_rate": [0.096, 0.078, 0.115], "precision": [-0.0175, -0.0451, 0.0], "recall": [0.1093, 0.0889, 0.1314], "f1": [0.189, 0.156, 0.2236], "specificity": [-0.0143, -0.0355, 0.0], "balanced_accuracy": [0.0475, 0.0328, 0.0615]}
+    }
+  }
+}
