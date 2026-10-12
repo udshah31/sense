@@ -38,6 +38,8 @@ choosing the more favorable one.
 ## Known limitations carried into the test run
 
 - The judge's 0.7 threshold is supported by 120 labels assigned by an AI assistant (not a
-  human), 19 of them positive; a human spot-check is pending.
+  human), 19 of them positive. A 24-item human spot-check was prepared, but the test run was
+  started without it (author's decision, 2026-10-11); the write-up must say the labels were
+  never human-verified.
 - ~85-89% of answers are incorrect while the gate routes ~10%, so gate recall is capped near
   12% by construction.
