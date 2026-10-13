@@ -469,8 +469,8 @@ keys described above — don't conflate any of the three.
    and `configs/nli_judge.yaml`'s comments. See
    `docs/superpowers/specs/2026-08-16-nli-judge-design.md`.
 
-Not yet built regardless of scope: real-model GPU runs against the reconciled
-current scope).
+Real-model GPU runs against the reconciled scope have since been done: see
+"2026-10-13 — experiments complete" at the end of this file.
 
 ---
 
@@ -675,7 +675,8 @@ silently falling back to the stored mean.
   commit history, with pre-2026-10-04 sessions marked as reconstructed because their
   prompts were not recorded at the time.
 
-**What has and has not run on a GPU.** The *pre-change* pipeline has: commits on
+**What has and has not run on a GPU (as of 2026-10-04; superseded — see the
+2026-10-13 section below).** The *pre-change* pipeline has: commits on
 2026-08-11 and 2026-08-12 record real Llama-3 8B and Mistral 7B runs for RQ1 and RQ2
 (TruthfulQA, since-retired two-model scope), which means 4-bit loading, the entropy
 monitor and the transfer harnesses have all executed against real checkpoints at least
@@ -692,12 +693,84 @@ direction and contradiction-label resolution),
 `experiments/tests/test_characterize_entropy_distributions.py` (34), and
 `experiments/tests/test_selfcheck_baseline_halueval.py` (6). All run without loading a
 model.
-The torch-dependent suites — `services/neural/tests/test_entropy_monitor.py`'s two new
-raw-scale tests and the updated RQ1/RQ2 end-to-end harness tests — **have not been
-run**; they need the macOS dev environment. Run before trusting this branch:
+The torch-dependent suites were not run at the time of that change; they have since been
+(see the 2026-10-13 section). To re-check:
 
 ```bash
 cd services/neural && uv run pytest -q
 cd ../../eval        && uv run pytest -q
 cd ../experiments    && uv run pytest -q
 ```
+
+---
+
+## 2026-10-13 — experiments complete
+
+All experiments the project set out to run have run; what remains is writing. Result files
+are in `results/`; the test-split rules are in `docs/test-split-protocol.md`.
+
+**What ran, and where the numbers are.**
+
+- **RQ1 — all five transfer pairs** (llama3→mistral, llama3→qwen3_8b, mistral→qwen3_8b,
+  qwen3_8b→qwen3_4b, qwen3_8b→qwen3_1_7b), 1,000 examples each, on the development split
+  (`rq1_transfer_halueval_*`) and, once, on the first 1,000 committed test indices
+  (`rq1_transfer_test_halueval_*`).
+- **RQ2** is derived from RQ1's saved results, not re-generated: the adaptive gate is the native
+  gate and the fixed gate is the transferred one (`experiments/derive_rq2_from_rq1.py`, optional
+  `test` argument; `rq2_from_rq1.json`, `rq2_from_rq1_test.json`).
+- **RQ3** on all five checkpoints, 300 development examples (`rq3_accuracy_latency_halueval.console_summary.json`).
+- **Baselines:** SelfCheckGPT-NLI on two checkpoints, first 300 development examples
+  (`selfcheck_vs_entropy_gate.json`); the retrieval-gated condition as a smoke test on one
+  checkpoint, Qwen3-1.7B (`retrieval_gated_halueval.console_summary.json`).
+- **Judge:** binary verdict at `short_answer_entailment_threshold` 0.7, checked against 120
+  generations whose labels were assigned by the AI assistant, not a human (precision 0.76, recall
+  0.68). A 24-item human spot-check was prepared and **waived by the author on 2026-10-11** before
+  the test run; no human has verified the labels. Say so wherever the numbers are reported.
+
+**Reading the results — three guards that must travel with every number.**
+
+1. **Recall is capped by construction.** About 84-90% of answers are incorrect while the gate
+   routes about 10%, so hallucination recall cannot exceed roughly 12%. Report precision, AUROC and
+   the transfer differences, not absolute recall, as the headline.
+2. **Report routing rate and precision beside recall.** On the Qwen3 ladder the transferred gate
+   routes more examples than the native one (8B→1.7B: 22.9% vs 8.5%), which raises recall and F1
+   mechanically; the two "fixed better" rows are a routing-rate effect, not a quality finding.
+3. **RQ3 measures cost, not correction.** Merge-back is annotate-only, so accuracy and
+   hallucination rate are unchanged by routing by construction; RQ3's symbolic round trip uses an
+   always-resolvable probe, so it is a latency measurement, not a verification result.
+
+**The test split's reported numbers come from one completed run.** Earlier attempts lost their
+cloud sessions partway: the first died at model loading, and two others (Colab sessions that
+disappeared) had begun the same test-split generation (at least one had finished the first pair)
+and lost their results with the VM. Generation is greedy and deterministic, no setting was
+changed between attempts, and nothing from the lost attempts was used (one pair's ungated
+accuracy was glanced at in a lost run; it matched the final run). The completed run used branch `rq1-test-split-run`, which sets
+`eval_split: test` and `n_eval_examples: 1000` in `configs/rq1.yaml`; that config change is
+deliberately **not** on master, so master's `rq1.yaml` stays on the development split. To
+reproduce the test run, set those two keys.
+
+**RQ1 harness: models load one at a time.** `run_pair` frees the source model after producing
+its calibration-split signals before loading the target, so a pair fits one 15 GB T4 (both
+resident did not). Greedy decoding makes the signals identical either way.
+
+**How GPU jobs were run.** `scripts/kaggle_run.sh <branch> '<command>'` clones a branch, installs,
+runs a command and copies `results/*.json` to the working directory; Kaggle "Save & Run All"
+commit runs persist their output unattended (a run started from the Kaggle CLI does not receive the
+notebook's `HF_TOKEN` secret). `scripts/colab_job.sh start|tail|fetch|stop` does the same on a
+Colab VM through the official Colab CLI; the VM must be stopped afterwards, and a session lost
+mid-run loses its result files, so prefer Kaggle commit runs for long jobs.
+
+**Test status.** All suites pass as of this date: `services/neural` 13, `eval` 96, `experiments`
+153 (1 skipped).
+
+**Not done (named, not hidden).**
+
+- The entropy-aggregator ablation (mean / max / last / p90): the code supports it, but the
+  `aggregators` list was empty for every run and result files keep only the aggregated entropy per
+  example, not the per-step series, so it cannot be recomputed from them.
+- The always-on RAG baseline, Chain-of-Verification, and gate-on/off and symbolic-on/off ablations.
+- The retrieval-gated condition on the other four checkpoints.
+- Docker image digest pinning (`docker-compose.yml` has no pinned images); the runs used Colab and
+  Kaggle environments with the repository's pinned Python dependencies and model revisions.
+- The proposal's "per domain or query difficulty" adaptation: the adaptive gate recalibrates per
+  checkpoint only.
