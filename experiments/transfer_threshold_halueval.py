@@ -254,8 +254,11 @@ def run_pair(
     source_cfg = models_registry[source_name]
     target_cfg = models_registry[target_name]
 
+    # Models are loaded one at a time: the source is only needed for its calibration-split
+    # signals, and holding both resident does not fit a single 15 GB T4 (it did on 2x T4).
+    # Greedy decoding, so the signals are identical either way.
     source_model, source_tokenizer = load_model(source_cfg)
-    target_model, target_tokenizer = load_model(target_cfg)
+    target_model = None
     try:
         source_view = splits.for_checkpoint(source_name)
         target_view = splits.for_checkpoint(target_name)
@@ -268,6 +271,10 @@ def run_pair(
         source_signals = example_signals(
             source_model, source_tokenizer, examples, source_view.calibration, decoding_cfg, source_cfg
         )
+        del source_model
+        gc.collect()
+        torch.cuda.empty_cache() if torch.cuda.is_available() else None
+        target_model, target_tokenizer = load_model(target_cfg)
         target_cal_signals = example_signals(
             target_model, target_tokenizer, examples, target_view.calibration, decoding_cfg, target_cfg
         )
@@ -364,7 +371,7 @@ def run_pair(
         result.update({f"ungated_{key}": value for key, value in ungated.items()})
         return result
     finally:
-        del source_model, target_model
+        source_model = target_model = None
         gc.collect()
         if torch.cuda.is_available():
             torch.cuda.empty_cache()
