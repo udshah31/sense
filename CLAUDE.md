@@ -10,7 +10,9 @@ Master's Culminating Project (Starred Paper, CSCI699) · Computer Science MS · 
 ## Related documents (external, not in this repo)
 
 Working reference and drafting material live outside the repo, in
-`/Users/udaysah/Documents/files/filess/`:
+`/Users/udaysah/Documents/files/filess/` (organised into numbered subfolders: `01_proposal`,
+`02_reference_and_guide`, `03_literature_review`, `04_paper`, `05_advisor_emails`, `06_ai_use_log`,
+`07_judge_label_check`, `archive`; file names are unchanged):
 
 - **`SENSE_starred_paper_reference.md`** — working reference consolidating the chosen
   direction, adopted title, degree structure (Starred Paper track), reading list, and
@@ -593,7 +595,7 @@ When the proposal's §5 gets its statistical-treatment paragraph (M3, document s
 this is the argument it should make.
 
 **Document side, done 2026-10-04** — in
-`/Users/udaysah/Documents/files/filess/SENSE_starred_paper_proposal_v5.docx` and
+`/Users/udaysah/Documents/files/filess/01_proposal/SENSE_starred_paper_proposal_v5.docx` and
 `SENSE_starred_paper_writing_guide.md`, edited in place under their original
 filenames. The copy in the claude.ai project Files panel is **stale** and must be
 re-uploaded by hand; that store cannot hold binary, so it was left alone rather than
@@ -671,7 +673,7 @@ silently falling back to the stored mean.
   Digital Library.
 - **m9 (partly)** — the question of whether the AI Use Statement requirement applies to
   the Starred Paper is still unresolved (proposal §8.2). The **log itself is started**:
-  `/Users/udaysah/Documents/files/filess/SENSE_ai_use_log.md`, seeded from this repo's
+  `/Users/udaysah/Documents/files/filess/06_ai_use_log/SENSE_ai_use_log.md`, seeded from this repo's
   commit history, with pre-2026-10-04 sessions marked as reconstructed because their
   prompts were not recorded at the time.
 
