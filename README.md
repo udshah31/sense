@@ -11,22 +11,22 @@ See `CLAUDE.md` for full project context, architecture, and constraints.
 
 ## Status
 
-Phase 0. Design decisions are committed (see `CLAUDE.md`). Scope: five 4-bit
-checkpoints (Llama-3 8B, Mistral 7B, Qwen3 8B/4B/1.7B), HaluEval + FActScore,
-and a Z3 symbolic backend with an atomic-claim decomposition front-end.
+Experiments complete (13 October 2026). Scope: five 4-bit checkpoints (Llama-3 8B, Mistral 7B,
+Qwen3 8B/4B/1.7B), HaluEval for the headline results, and a Z3 symbolic backend with an
+atomic-claim decomposition front-end. All RQ1 transfer pairs ran on the development split and,
+once, on the held-out test split; RQ2 is derived from RQ1; RQ3, SelfCheckGPT-NLI (two
+checkpoints) and a retrieval-gated smoke test (one checkpoint) ran on the development split.
+See `results/README.md` for which file holds what, `docs/test-split-protocol.md` for how the test
+split was handled, and the "2026-10-13 — experiments complete" section of `CLAUDE.md` for
+the caveats that must accompany every number (recall ceiling, routing-rate effect, AI-assigned
+judge labels, annotate-only merge-back).
 
-Working end-to-end on CPU against a tiny model, with the model-free and tiny-model test
-suites passing: token entropy monitor (no-op verified; keeps raw and normalized
-series), latency instrumentation, leakage-guarded calibration/development/test splits,
-the entropy-gating policy (refuses to run uncalibrated), truncated-vs-exact entropy
-bounds, the Z3 symbolic service (SPARQL/Wikidata kept as a fallback), the
-gate-to-symbolic router (annotate-only), an NLI judge, and bootstrap confidence
-intervals. Harnesses: RQ1 (fixed-threshold transfer), RQ2 (self-adaptive threshold),
-RQ3 (accuracy-latency), the RAG and SelfCheckGPT-NLI baselines, FActScore symbolic
-verification, and an RQ1 pre-flight entropy characterization.
+Not done, by design or for budget: the entropy-aggregator ablation, the always-on RAG baseline,
+Chain-of-Verification, and Docker image digest pinning (`experiments/Dockerfile.gpu` pins the
+CUDA base image by tag, not digest).
 
-Not yet run: any five-checkpoint HaluEval experiment on a GPU. `results/` holds only
-pilot runs from the retired TruthfulQA scope. Run the `characterize` stage first.
+Model-free and tiny-model test suites pass (`services/neural`, `eval`, `experiments`; run each
+with `uv run pytest -q` from its directory).
 
 ## Layout
 
@@ -41,8 +41,9 @@ sense/
 ├── experiments/              # one script per table/figure; run_gpu_experiments.sh
 ├── eval/                     # routing quality, factuality, NLI judge, bootstrap, SelfCheck
 ├── data/                     # HaluEval/FActScore/TruthfulQA loaders, committed split indices
-├── docs/                     # specs, plans, proposal review, literature review
-└── results/                  # logged runs
+├── scripts/                  # kaggle_run.sh, colab_job.sh (GPU jobs); gpu_setup.sh, runpod_setup.sh
+├── docs/                     # test-split protocol, specs, plans, proposal review, literature review
+└── results/                  # saved runs; see results/README.md
 ```
 
 ## Setup
