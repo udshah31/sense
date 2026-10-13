@@ -11,11 +11,13 @@ as RQ2: fixed vs adaptive, adaptive-minus-fixed, plus the secondary calibration-
 gap (|observed routing rate - designed (1 - quantile)|). The paper should say RQ1 and RQ2
 share one experiment viewed two ways. Not a separate measurement.
 
-Usage (from experiments/):  python derive_rq2_from_rq1.py
+Usage (from experiments/):  python derive_rq2_from_rq1.py [test]
 Reads results/rq1_transfer_halueval_*.console_summary.json; writes results/rq2_from_rq1.json.
+With `test`: reads rq1_transfer_test_halueval_*.console_summary.json; writes rq2_from_rq1_test.json.
 """
 
 import json
+import sys
 from pathlib import Path
 
 RESULTS = Path(__file__).parent.parent / "results"
@@ -55,12 +57,14 @@ def derive(rq1: dict) -> dict:
 
 
 def main() -> None:
-    pairs = [derive(json.loads(p.read_text())) for p in sorted(RESULTS.glob("rq1_transfer_halueval_*.console_summary.json"))]
+    split = "test" if sys.argv[1:] == ["test"] else "development"
+    infix = "_test" if split == "test" else ""
+    pairs = [derive(json.loads(p.read_text())) for p in sorted(RESULTS.glob(f"rq1_transfer{infix}_halueval_*.console_summary.json"))]
     out = {
-        "NOTE": "Derived from the RQ1 summaries; RQ1 and RQ2 share one experiment (see derive_rq2_from_rq1.py). Development split, binary judge at 0.7. Delta = adaptive minus fixed = RQ1's native minus transferred; intervals are RQ1's paired bootstrap. CAUTION: with precision near 0.96 routing more raises recall and F1 mechanically, so 'fixed better' on the Qwen3 scale-ladder pairs (where the fixed gate routes more, 13-21% vs 8-12%) reflects routing rate, not gate quality; read it with the routing rates and fidelity gaps.",
+        "NOTE": f"Derived from the RQ1 summaries; RQ1 and RQ2 share one experiment (see derive_rq2_from_rq1.py). {split.capitalize()} split, binary judge at 0.7. Delta = adaptive minus fixed = RQ1's native minus transferred; intervals are RQ1's paired bootstrap. CAUTION: with precision near 0.96 routing more raises recall and F1 mechanically, so 'fixed better' on the Qwen3 scale-ladder pairs (where the fixed gate routes more, 13-21% vs 8-12%) reflects routing rate, not gate quality; read it with the routing rates and fidelity gaps.",
         "pairs": pairs,
     }
-    (RESULTS / "rq2_from_rq1.json").write_text(json.dumps(out, indent=1))
+    (RESULTS / f"rq2_from_rq1{infix}.json").write_text(json.dumps(out, indent=1))
     print(f"{'pair':28s} {'scale':10s} {'fixed rr':>8s} {'adapt rr':>8s} {'dF1 [95% CI]':>24s}  verdict")
     for p in pairs:
         for scale, a in p["arms"].items():

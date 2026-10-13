@@ -1,0 +1,6494 @@
+{
+  "research_question": "RQ1",
+  "dataset": "halueval",
+  "eval_split": "test",
+  "n_eval_examples": 1000,
+  "quantile": 0.9,
+  "decoding": {
+    "do_sample": false,
+    "max_new_tokens": 20
+  },
+  "bootstrap": {
+    "n_resamples": 1000,
+    "confidence": 0.95,
+    "seed": 42
+  },
+  "factuality_metric": "nli_entailment (cliang1453/deberta-v3-xsmall-mnli @ d1ca70f9ece4d8afd33015893a69df9a6e45a672)",
+  "source_model": {
+    "name": "qwen3_8b",
+    "hf_repo": "Qwen/Qwen3-8B",
+    "revision": "b968826d9c46dd6066d109eabc6255188de91218"
+  },
+  "target_model": {
+    "name": "qwen3_4b",
+    "hf_repo": "Qwen/Qwen3-4B",
+    "revision": "1cfa9a7208912126459214e8b04321603b3df60c"
+  },
+  "arms": {
+    "normalized": {
+      "entropy_scale": "normalized",
+      "aggregator": "mean",
+      "source_native_threshold": 0.03432368551357831,
+      "target_native_threshold": 0.03585480980221921,
+      "transferred_threshold": 0.03432368551357831,
+      "transfer_agreement_rate": 0.981,
+      "source_threshold_ci": {
+        "point": 0.03432368551357831,
+        "ci_low": 0.03275486380661422,
+        "ci_high": 0.0368754644682638,
+        "ci_confidence": 0.95,
+        "n_resamples": 1000,
+        "n_degenerate_resamples": 0
+      },
+      "target_native_threshold_ci": {
+        "point": 0.03585480980221921,
+        "ci_low": 0.03362176120322008,
+        "ci_high": 0.03789655201288445,
+        "ci_confidence": 0.95,
+        "n_resamples": 1000,
+        "n_degenerate_resamples": 0
+      },
+      "transferred_gate": {
+        "routing_rate": 0.13,
+        "n_outcomes": 1000,
+        "n_scored": 1000,
+        "n_unknown_excluded": 0,
+        "n_true_positive": 128,
+        "n_false_positive": 2,
+        "n_false_negative": 756,
+        "n_true_negative": 114,
+        "routed_hallucination_precision": 0.9846153846153847,
+        "hallucination_recall": 0.14479638009049775,
+        "f1": 0.252465483234714,
+        "specificity": 0.9827586206896551,
+        "balanced_accuracy": 0.5637775003900765,
+        "entropy_auroc": 0.7037564362615073,
+        "routing_rate_ci": {
+          "point": 0.13,
+          "ci_low": 0.10997500000000002,
+          "ci_high": 0.151,
+          "ci_confidence": 0.95,
+          "n_resamples": 1000,
+          "n_degenerate_resamples": 0
+        },
+        "routed_hallucination_precision_ci": {
+          "point": 0.9846153846153847,
+          "ci_low": 0.9593412634946021,
+          "ci_high": 1.0,
+          "ci_confidence": 0.95,
+          "n_resamples": 1000,
+          "n_degenerate_resamples": 0
+        },
+        "hallucination_recall_ci": {
+          "point": 0.14479638009049775,
+          "ci_low": 0.1216640033263513,
+          "ci_high": 0.16819221967963388,
+          "ci_confidence": 0.95,
+          "n_resamples": 1000,
+          "n_degenerate_resamples": 0
+        },
+        "f1_ci": {
+          "point": 0.252465483234714,
+          "ci_low": 0.21626508753862,
+          "ci_high": 0.2876712328767123,
+          "ci_confidence": 0.95,
+          "n_resamples": 1000,
+          "n_degenerate_resamples": 0
+        },
+        "specificity_ci": {
+          "point": 0.9827586206896551,
+          "ci_low": 0.9541284403669725,
+          "ci_high": 1.0,
+          "ci_confidence": 0.95,
+          "n_resamples": 1000,
+          "n_degenerate_resamples": 0
+        },
+        "balanced_accuracy_ci": {
+          "point": 0.5637775003900765,
+          "ci_low": 0.5452786445855303,
+          "ci_high": 0.5791041026807721,
+          "ci_confidence": 0.95,
+          "n_resamples": 1000,
+          "n_degenerate_resamples": 0
+        },
+        "entropy_auroc_ci": {
+          "point": 0.7037564362615073,
+          "ci_low": 0.6586106638020769,
+          "ci_high": 0.7445029936747377,
+          "ci_confidence": 0.95,
+          "n_resamples": 1000,
+          "n_degenerate_resamples": 0
+        }
+      },
+      "native_gate": {
+        "routing_rate": 0.111,
+        "n_outcomes": 1000,
+        "n_scored": 1000,
+        "n_unknown_excluded": 0,
+        "n_true_positive": 109,
+        "n_false_positive": 2,
+        "n_false_negative": 775,
+        "n_true_negative": 114,
+        "routed_hallucination_precision": 0.9819819819819819,
+        "hallucination_recall": 0.12330316742081449,
+        "f1": 0.2190954773869347,
+        "specificity": 0.9827586206896551,
+        "balanced_accuracy": 0.5530308940552349,
+        "entropy_auroc": 0.7037564362615073,
+        "routing_rate_ci": {
+          "point": 0.111,
+          "ci_low": 0.091,
+          "ci_high": 0.131,
+          "ci_confidence": 0.95,
+          "n_resamples": 1000,
+          "n_degenerate_resamples": 0
+        },
+        "routed_hallucination_precision_ci": {
+          "point": 0.9819819819819819,
+          "ci_low": 0.9537037037037037,
+          "ci_high": 1.0,
+          "ci_confidence": 0.95,
+          "n_resamples": 1000,
+          "n_degenerate_resamples": 0
+        },
+        "hallucination_recall_ci": {
+          "point": 0.12330316742081449,
+          "ci_low": 0.10136098312279976,
+          "ci_high": 0.1456235899809105,
+          "ci_confidence": 0.95,
+          "n_resamples": 1000,
+          "n_degenerate_resamples": 0
+        },
+        "f1_ci": {
+          "point": 0.2190954773869347,
+          "ci_low": 0.1840554998791212,
+          "ci_high": 0.2534387947635628,
+          "ci_confidence": 0.95,
+          "n_resamples": 1000,
+          "n_degenerate_resamples": 0
+        },
+        "specificity_ci": {
+          "point": 0.9827586206896551,
+          "ci_low": 0.9557390040945715,
+          "ci_high": 1.0,
+          "ci_confidence": 0.95,
+          "n_resamples": 1000,
+          "n_degenerate_resamples": 0
+        },
+        "balanced_accuracy_ci": {
+          "point": 0.5530308940552349,
+          "ci_low": 0.5355734515584534,
+          "ci_high": 0.5681319103194103,
+          "ci_confidence": 0.95,
+          "n_resamples": 1000,
+          "n_degenerate_resamples": 0
+        },
+        "entropy_auroc_ci": {
+          "point": 0.7037564362615073,
+          "ci_low": 0.6602993848163388,
+          "ci_high": 0.7486748480211571,
+          "ci_confidence": 0.95,
+          "n_resamples": 1000,
+          "n_degenerate_resamples": 0
+        }
+      },
+      "routing_quality_delta": {
+        "delta_routed_hallucination_precision": -0.002633402633402726,
+        "delta_hallucination_recall": -0.021493212669683265,
+        "delta_f1": -0.03337000584777933,
+        "delta_specificity": 0.0,
+        "delta_balanced_accuracy": -0.01074660633484159,
+        "delta_routing_rate": -0.019000000000000003
+      },
+      "routing_quality_delta_ci": {
+        "delta_routing_rate_ci": {
+          "point": -0.019000000000000003,
+          "ci_low": -0.02700000000000001,
+          "ci_high": -0.01100000000000001,
+          "ci_confidence": 0.95,
+          "n_resamples": 1000,
+          "n_degenerate_resamples": 0
+        },
+        "delta_routed_hallucination_precision_ci": {
+          "point": -0.002633402633402726,
+          "ci_low": -0.007046495249299023,
+          "ci_high": 0.0,
+          "ci_confidence": 0.95,
+          "n_resamples": 1000,
+          "n_degenerate_resamples": 0
+        },
+        "delta_hallucination_recall_ci": {
+          "point": -0.021493212669683265,
+          "ci_low": -0.030717598171457014,
+          "ci_high": -0.01259986867662209,
+          "ci_confidence": 0.95,
+          "n_resamples": 1000,
+          "n_degenerate_resamples": 0
+        },
+        "delta_f1_ci": {
+          "point": -0.03337000584777933,
+          "ci_low": -0.04744081453399835,
+          "ci_high": -0.020080093351463112,
+          "ci_confidence": 0.95,
+          "n_resamples": 1000,
+          "n_degenerate_resamples": 0
+        },
+        "delta_specificity_ci": {
+          "point": 0.0,
+          "ci_low": 0.0,
+          "ci_high": 0.0,
+          "ci_confidence": 0.95,
+          "n_resamples": 1000,
+          "n_degenerate_resamples": 0
+        },
+        "delta_balanced_accuracy_ci": {
+          "point": -0.01074660633484159,
+          "ci_low": -0.015358799085728509,
+          "ci_high": -0.006299934338311017,
+          "ci_confidence": 0.95,
+          "n_resamples": 1000,
+          "n_degenerate_resamples": 0
+        }
+      }
+    },
+    "raw": {
+      "entropy_scale": "raw",
+      "aggregator": "mean",
+      "source_native_threshold": 0.40945700453898104,
+      "target_native_threshold": 0.4277222215581664,
+      "transferred_threshold": 0.40945700453898104,
+      "transfer_agreement_rate": 0.981,
+      "source_threshold_ci": {
+        "point": 0.40945700453898104,
+        "ci_low": 0.39133592138080187,
+        "ci_high": 0.438610667151934,
+        "ci_confidence": 0.95,
+        "n_resamples": 1000,
+        "n_degenerate_resamples": 0
+      },
+      "target_native_threshold_ci": {
+        "point": 0.4277222215581664,
+        "ci_low": 0.4010828196071546,
+        "ci_high": 0.4502507671508152,
+        "ci_confidence": 0.95,
+        "n_resamples": 1000,
+        "n_degenerate_resamples": 0
+      },
+      "transferred_gate": {
+        "routing_rate": 0.13,
+        "n_outcomes": 1000,
+        "n_scored": 1000,
+        "n_unknown_excluded": 0,
+        "n_true_positive": 128,
+        "n_false_positive": 2,
+        "n_false_negative": 756,
+        "n_true_negative": 114,
+        "routed_hallucination_precision": 0.9846153846153847,
+        "hallucination_recall": 0.14479638009049775,
+        "f1": 0.252465483234714,
+        "specificity": 0.9827586206896551,
+        "balanced_accuracy": 0.5637775003900765,
+        "entropy_auroc": 0.7037564362615073,
+        "routing_rate_ci": {
+          "point": 0.13,
+          "ci_low": 0.11097500000000002,
+          "ci_high": 0.15002499999999996,
+          "ci_confidence": 0.95,
+          "n_resamples": 1000,
+          "n_degenerate_resamples": 0
+        },
+        "routed_hallucination_precision_ci": {
+          "point": 0.9846153846153847,
+          "ci_low": 0.9583333333333334,
+          "ci_high": 1.0,
+          "ci_confidence": 0.95,
+          "n_resamples": 1000,
+          "n_degenerate_resamples": 0
+        },
+        "hallucination_recall_ci": {
+          "point": 0.14479638009049775,
+          "ci_low": 0.12278661404767599,
+          "ci_high": 0.1676170393537095,
+          "ci_confidence": 0.95,
+          "n_resamples": 1000,
+          "n_degenerate_resamples": 0
+        },
+        "f1_ci": {
+          "point": 0.252465483234714,
+          "ci_low": 0.21846255619430552,
+          "ci_high": 0.2862707867957309,
+          "ci_confidence": 0.95,
+          "n_resamples": 1000,
+          "n_degenerate_resamples": 0
+        },
+        "specificity_ci": {
+          "point": 0.9827586206896551,
+          "ci_low": 0.9527465316835395,
+          "ci_high": 1.0,
+          "ci_confidence": 0.95,
+          "n_resamples": 1000,
+          "n_degenerate_resamples": 0
+        },
+        "balanced_accuracy_ci": {
+          "point": 0.5637775003900765,
+          "ci_low": 0.5457547352837214,
+          "ci_high": 0.5782014184163708,
+          "ci_confidence": 0.95,
+          "n_resamples": 1000,
+          "n_degenerate_resamples": 0
+        },
+        "entropy_auroc_ci": {
+          "point": 0.7037564362615073,
+          "ci_low": 0.6581293579246138,
+          "ci_high": 0.744232774859583,
+          "ci_confidence": 0.95,
+          "n_resamples": 1000,
+          "n_degenerate_resamples": 0
+        }
+      },
+      "native_gate": {
+        "routing_rate": 0.111,
+        "n_outcomes": 1000,
+        "n_scored": 1000,
+        "n_unknown_excluded": 0,
+        "n_true_positive": 109,
+        "n_false_positive": 2,
+        "n_false_negative": 775,
+        "n_true_negative": 114,
+        "routed_hallucination_precision": 0.9819819819819819,
+        "hallucination_recall": 0.12330316742081449,
+        "f1": 0.2190954773869347,
+        "specificity": 0.9827586206896551,
+        "balanced_accuracy": 0.5530308940552349,
+        "entropy_auroc": 0.7037564362615073,
+        "routing_rate_ci": {
+          "point": 0.111,
+          "ci_low": 0.091,
+          "ci_high": 0.131,
+          "ci_confidence": 0.95,
+          "n_resamples": 1000,
+          "n_degenerate_resamples": 0
+        },
+        "routed_hallucination_precision_ci": {
+          "point": 0.9819819819819819,
+          "ci_low": 0.9531176297169811,
+          "ci_high": 1.0,
+          "ci_confidence": 0.95,
+          "n_resamples": 1000,
+          "n_degenerate_resamples": 0
+        },
+        "hallucination_recall_ci": {
+          "point": 0.12330316742081449,
+          "ci_low": 0.10123426081255665,
+          "ci_high": 0.14527123662564165,
+          "ci_confidence": 0.95,
+          "n_resamples": 1000,
+          "n_degenerate_resamples": 0
+        },
+        "f1_ci": {
+          "point": 0.2190954773869347,
+          "ci_low": 0.18311348528015195,
+          "ci_high": 0.25292003193451873,
+          "ci_confidence": 0.95,
+          "n_resamples": 1000,
+          "n_degenerate_resamples": 0
+        },
+        "specificity_ci": {
+          "point": 0.9827586206896551,
+          "ci_low": 0.9557522123893806,
+          "ci_high": 1.0,
+          "ci_confidence": 0.95,
+          "n_resamples": 1000,
+          "n_degenerate_resamples": 0
+        },
+        "balanced_accuracy_ci": {
+          "point": 0.5530308940552349,
+          "ci_low": 0.5359746946041077,
+          "ci_high": 0.5672908912804557,
+          "ci_confidence": 0.95,
+          "n_resamples": 1000,
+          "n_degenerate_resamples": 0
+        },
+        "entropy_auroc_ci": {
+          "point": 0.7037564362615073,
+          "ci_low": 0.6616311772325455,
+          "ci_high": 0.7433198916910262,
+          "ci_confidence": 0.95,
+          "n_resamples": 1000,
+          "n_degenerate_resamples": 0
+        }
+      },
+      "routing_quality_delta": {
+        "delta_routed_hallucination_precision": -0.002633402633402726,
+        "delta_hallucination_recall": -0.021493212669683265,
+        "delta_f1": -0.03337000584777933,
+        "delta_specificity": 0.0,
+        "delta_balanced_accuracy": -0.01074660633484159,
+        "delta_routing_rate": -0.019000000000000003
+      },
+      "routing_quality_delta_ci": {
+        "delta_routing_rate_ci": {
+          "point": -0.019000000000000003,
+          "ci_low": -0.027999999999999997,
+          "ci_high": -0.010999999999999996,
+          "ci_confidence": 0.95,
+          "n_resamples": 1000,
+          "n_degenerate_resamples": 0
+        },
+        "delta_routed_hallucination_precision_ci": {
+          "point": -0.002633402633402726,
+          "ci_low": -0.007454518903671699,
+          "ci_high": 0.0,
+          "ci_confidence": 0.95,
+          "n_resamples": 1000,
+          "n_degenerate_resamples": 0
+        },
+        "delta_hallucination_recall_ci": {
+          "point": -0.021493212669683265,
+          "ci_low": -0.0312526245800672,
+          "ci_high": -0.01245508162927711,
+          "ci_confidence": 0.95,
+          "n_resamples": 1000,
+          "n_degenerate_resamples": 0
+        },
+        "delta_f1_ci": {
+          "point": -0.03337000584777933,
+          "ci_low": -0.048557202956046104,
+          "ci_high": -0.019432168012161757,
+          "ci_confidence": 0.95,
+          "n_resamples": 1000,
+          "n_degenerate_resamples": 0
+        },
+        "delta_specificity_ci": {
+          "point": 0.0,
+          "ci_low": 0.0,
+          "ci_high": 0.0,
+          "ci_confidence": 0.95,
+          "n_resamples": 1000,
+          "n_degenerate_resamples": 0
+        },
+        "delta_balanced_accuracy_ci": {
+          "point": -0.01074660633484159,
+          "ci_low": -0.015626312290033594,
+          "ci_high": -0.0062275408146386085,
+          "ci_confidence": 0.95,
+          "n_resamples": 1000,
+          "n_degenerate_resamples": 0
+        }
+      }
+    }
+  },
+  "aggregator": "mean",
+  "aggregator_ablation": {},
+  "per_example": [
+    {
+      "index": 3,
+      "normalized_entropy": 0.04058891596595131,
+      "raw_entropy": 0.48419672014324533,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 13,
+      "normalized_entropy": 0.012003104630664726,
+      "raw_entropy": 0.1431884482596047,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 15,
+      "normalized_entropy": 0.015241342129142433,
+      "raw_entropy": 0.1818183041819227,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 16,
+      "normalized_entropy": 0.06270150830967938,
+      "raw_entropy": 0.7479841219964851,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 23,
+      "normalized_entropy": 0.0041283922053721,
+      "raw_entropy": 0.049248764539140844,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 26,
+      "normalized_entropy": 0.024968388557373287,
+      "raw_entropy": 0.29785500694041345,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 29,
+      "normalized_entropy": 0.0015800134468569806,
+      "raw_entropy": 0.018848429689330416,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 30,
+      "normalized_entropy": 0.012520734703163231,
+      "raw_entropy": 0.1493634045841721,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 34,
+      "normalized_entropy": 0.030098175030061375,
+      "raw_entropy": 0.3590496884439638,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 40,
+      "normalized_entropy": 0.010431554272033556,
+      "raw_entropy": 0.12444097715622562,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 45,
+      "normalized_entropy": 0.0020396313034305993,
+      "raw_entropy": 0.02433134179417452,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 47,
+      "normalized_entropy": 0.04563741891608342,
+      "raw_entropy": 0.5444217473930013,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 50,
+      "normalized_entropy": 0.0068518997907993425,
+      "raw_entropy": 0.08173826096361657,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 56,
+      "normalized_entropy": 0.005819531091768041,
+      "raw_entropy": 0.06942284119559838,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 57,
+      "normalized_entropy": 0.012942435755640663,
+      "raw_entropy": 0.15439399635119075,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 61,
+      "normalized_entropy": 0.00027228526937465777,
+      "raw_entropy": 0.003248168403539657,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 62,
+      "normalized_entropy": 0.000845207080216215,
+      "raw_entropy": 0.010082715597180361,
+      "factuality": "correct"
+    },
+    {
+      "index": 64,
+      "normalized_entropy": 0.008584343260869588,
+      "raw_entropy": 0.10240507174381266,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 71,
+      "normalized_entropy": 0.020699110265670912,
+      "raw_entropy": 0.2469255722160387,
+      "factuality": "correct"
+    },
+    {
+      "index": 83,
+      "normalized_entropy": 0.003589061800805659,
+      "raw_entropy": 0.04281493878277761,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 84,
+      "normalized_entropy": 0.005063849999666475,
+      "raw_entropy": 0.06040810656763286,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 88,
+      "normalized_entropy": 0.0343166084849212,
+      "raw_entropy": 0.4093725806517551,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 99,
+      "normalized_entropy": 0.009504238681453978,
+      "raw_entropy": 0.11337876579110855,
+      "factuality": "correct"
+    },
+    {
+      "index": 102,
+      "normalized_entropy": 0.03225205590790221,
+      "raw_entropy": 0.38474394589850247,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 107,
+      "normalized_entropy": 0.013279883919289063,
+      "raw_entropy": 0.158419511449795,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 108,
+      "normalized_entropy": 0.016681787998000304,
+      "raw_entropy": 0.1990017925468237,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 111,
+      "normalized_entropy": 0.04178077184865048,
+      "raw_entropy": 0.4984147078759179,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 113,
+      "normalized_entropy": 0.02304118313610009,
+      "raw_entropy": 0.27486482546314633,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 114,
+      "normalized_entropy": 0.0005140078011801895,
+      "raw_entropy": 0.006131745220007034,
+      "factuality": "correct"
+    },
+    {
+      "index": 118,
+      "normalized_entropy": 0.00765400115213651,
+      "raw_entropy": 0.09130675618304256,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 119,
+      "normalized_entropy": 0.02926799863218657,
+      "raw_entropy": 0.3491462781304557,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 121,
+      "normalized_entropy": 0.0086216443756209,
+      "raw_entropy": 0.10285004734836989,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 122,
+      "normalized_entropy": 0.03893204074011263,
+      "raw_entropy": 0.4644313844365547,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 124,
+      "normalized_entropy": 0.014053385577209795,
+      "raw_entropy": 0.16764683267475108,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 127,
+      "normalized_entropy": 0.0019299059136965787,
+      "raw_entropy": 0.023022396419279074,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 129,
+      "normalized_entropy": 0.013372596415484422,
+      "raw_entropy": 0.15952550517999822,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 131,
+      "normalized_entropy": 0.003376833990846301,
+      "raw_entropy": 0.040283212890129795,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 134,
+      "normalized_entropy": 0.013551300546581982,
+      "raw_entropy": 0.1616573175749405,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 139,
+      "normalized_entropy": 0.034863783542035606,
+      "raw_entropy": 0.4158999874990146,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 141,
+      "normalized_entropy": 0.007306534434791084,
+      "raw_entropy": 0.08716172690857935,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 142,
+      "normalized_entropy": 0.008961281697521436,
+      "raw_entropy": 0.1069016775382579,
+      "factuality": "correct"
+    },
+    {
+      "index": 144,
+      "normalized_entropy": 0.009137408798545325,
+      "raw_entropy": 0.10900274780866481,
+      "factuality": "correct"
+    },
+    {
+      "index": 149,
+      "normalized_entropy": 0.003304417020789351,
+      "raw_entropy": 0.03941933026232814,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 150,
+      "normalized_entropy": 0.047983301381777414,
+      "raw_entropy": 0.5724064463852933,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 151,
+      "normalized_entropy": 0.03232981921351832,
+      "raw_entropy": 0.3856716064834365,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 154,
+      "normalized_entropy": 0.012952247192012722,
+      "raw_entropy": 0.15451103976558572,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 157,
+      "normalized_entropy": 0.005619216338437335,
+      "raw_entropy": 0.06703322954298874,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 160,
+      "normalized_entropy": 0.024187881198662577,
+      "raw_entropy": 0.2885441127186407,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 167,
+      "normalized_entropy": 0.02708520878994846,
+      "raw_entropy": 0.32310715741926743,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 168,
+      "normalized_entropy": 0.014662715946116314,
+      "raw_entropy": 0.17491570791043626,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 171,
+      "normalized_entropy": 0.03317678711128352,
+      "raw_entropy": 0.3957753273738528,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 172,
+      "normalized_entropy": 0.02566520666336842,
+      "raw_entropy": 0.3061675482692408,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 173,
+      "normalized_entropy": 0.028930607742011265,
+      "raw_entropy": 0.3451214462633979,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 175,
+      "normalized_entropy": 0.01125223586461988,
+      "raw_entropy": 0.13423112123756978,
+      "factuality": "correct"
+    },
+    {
+      "index": 176,
+      "normalized_entropy": 0.021275395317572443,
+      "raw_entropy": 0.253800240468632,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 177,
+      "normalized_entropy": 0.00127506509655575,
+      "raw_entropy": 0.015210614105568282,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 180,
+      "normalized_entropy": 0.0008931775044424761,
+      "raw_entropy": 0.010654968428315838,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 182,
+      "normalized_entropy": 0.007300279662796232,
+      "raw_entropy": 0.08708711195488875,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 184,
+      "normalized_entropy": 0.0028656478410520104,
+      "raw_entropy": 0.034185127951850566,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 187,
+      "normalized_entropy": 0.009096171742214089,
+      "raw_entropy": 0.10851081923780334,
+      "factuality": "correct"
+    },
+    {
+      "index": 191,
+      "normalized_entropy": 0.0387277836953161,
+      "raw_entropy": 0.46199474406804625,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 193,
+      "normalized_entropy": 0.023733166610126966,
+      "raw_entropy": 0.28311969309248164,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 196,
+      "normalized_entropy": 0.018252248422623622,
+      "raw_entropy": 0.21773626151749692,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 197,
+      "normalized_entropy": 0.004870597817974637,
+      "raw_entropy": 0.05810274634036764,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 199,
+      "normalized_entropy": 0.0051005310710093505,
+      "raw_entropy": 0.060845685498059576,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 203,
+      "normalized_entropy": 0.017910457902652367,
+      "raw_entropy": 0.21365894521555476,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 204,
+      "normalized_entropy": 0.005746218138492948,
+      "raw_entropy": 0.06854827012921186,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 205,
+      "normalized_entropy": 0.0002074434793070954,
+      "raw_entropy": 0.002474652251857563,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 206,
+      "normalized_entropy": 0.0021618902395335897,
+      "raw_entropy": 0.02578980340765859,
+      "factuality": "correct"
+    },
+    {
+      "index": 209,
+      "normalized_entropy": 0.024018460266931836,
+      "raw_entropy": 0.286523042248652,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 211,
+      "normalized_entropy": 0.052579789860540814,
+      "raw_entropy": 0.6272392644743607,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 214,
+      "normalized_entropy": 0.008037317387312861,
+      "raw_entropy": 0.09587944454963357,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 216,
+      "normalized_entropy": 0.0260171254922808,
+      "raw_entropy": 0.3103656880485581,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 217,
+      "normalized_entropy": 0.010417393994705246,
+      "raw_entropy": 0.12427205518145698,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 221,
+      "normalized_entropy": 0.002087706946562864,
+      "raw_entropy": 0.02490484981155905,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 222,
+      "normalized_entropy": 0.018829776785597375,
+      "raw_entropy": 0.22462576158141015,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 223,
+      "normalized_entropy": 0.016382764102778148,
+      "raw_entropy": 0.19543465147233724,
+      "factuality": "correct"
+    },
+    {
+      "index": 225,
+      "normalized_entropy": 0.023492455033068994,
+      "raw_entropy": 0.28024817624266607,
+      "factuality": "correct"
+    },
+    {
+      "index": 226,
+      "normalized_entropy": 0.006486961197761617,
+      "raw_entropy": 0.07738480471583734,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 229,
+      "normalized_entropy": 0.02846320568668765,
+      "raw_entropy": 0.3395456742382038,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 230,
+      "normalized_entropy": 0.00673086002546164,
+      "raw_entropy": 0.08029434318486664,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 232,
+      "normalized_entropy": 0.03666109574886331,
+      "raw_entropy": 0.43734063588561883,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 233,
+      "normalized_entropy": 0.010600113008759748,
+      "raw_entropy": 0.1264517622568372,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 238,
+      "normalized_entropy": 0.0063071296140234006,
+      "raw_entropy": 0.07523954261774993,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 244,
+      "normalized_entropy": 0.009870230872108395,
+      "raw_entropy": 0.11774479070445107,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 246,
+      "normalized_entropy": 0.0017519305184289288,
+      "raw_entropy": 0.02089927732127007,
+      "factuality": "correct"
+    },
+    {
+      "index": 247,
+      "normalized_entropy": 0.005909859914959871,
+      "raw_entropy": 0.07050039941273759,
+      "factuality": "correct"
+    },
+    {
+      "index": 248,
+      "normalized_entropy": 0.005983716819774215,
+      "raw_entropy": 0.07138145943171015,
+      "factuality": "correct"
+    },
+    {
+      "index": 249,
+      "normalized_entropy": 0.0010752617995328177,
+      "raw_entropy": 0.012827103760688269,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 256,
+      "normalized_entropy": 0.02264520503176997,
+      "raw_entropy": 0.2701410900589779,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 257,
+      "normalized_entropy": 0.0046018047256918175,
+      "raw_entropy": 0.05489623711036802,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 261,
+      "normalized_entropy": 0.008998705838073275,
+      "raw_entropy": 0.10734812075257238,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 262,
+      "normalized_entropy": 0.013413593903486658,
+      "raw_entropy": 0.16001457587214105,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 268,
+      "normalized_entropy": 0.008659594745920842,
+      "raw_entropy": 0.1033027681069846,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 271,
+      "normalized_entropy": 0.001208101789160616,
+      "raw_entropy": 0.014411789770425487,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 272,
+      "normalized_entropy": 0.013337565613340466,
+      "raw_entropy": 0.15910761278010463,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 278,
+      "normalized_entropy": 0.003224563929383875,
+      "raw_entropy": 0.03846674002847551,
+      "factuality": "correct"
+    },
+    {
+      "index": 279,
+      "normalized_entropy": 0.0023814640464401684,
+      "raw_entropy": 0.02840916178674705,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 280,
+      "normalized_entropy": 0.08169456167912867,
+      "raw_entropy": 0.9745576563748728,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 285,
+      "normalized_entropy": 0.029117744501512322,
+      "raw_entropy": 0.34735385388040985,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 288,
+      "normalized_entropy": 0.015570283333350119,
+      "raw_entropy": 0.18574233734237813,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 291,
+      "normalized_entropy": 0.004142606634825705,
+      "raw_entropy": 0.049418332510010446,
+      "factuality": "correct"
+    },
+    {
+      "index": 294,
+      "normalized_entropy": 0.007880599475256714,
+      "raw_entropy": 0.09400991201348655,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 296,
+      "normalized_entropy": 0.0027122496193864786,
+      "raw_entropy": 0.032355196946337546,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 299,
+      "normalized_entropy": 0.017626459858812532,
+      "raw_entropy": 0.2102710517948559,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 302,
+      "normalized_entropy": 0.038101058077946774,
+      "raw_entropy": 0.45451835596705487,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 303,
+      "normalized_entropy": 0.0021843586425062964,
+      "raw_entropy": 0.026057835375680783,
+      "factuality": "correct"
+    },
+    {
+      "index": 304,
+      "normalized_entropy": 0.0260673229333649,
+      "raw_entropy": 0.31096450759704997,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 308,
+      "normalized_entropy": 0.0012882948112647953,
+      "raw_entropy": 0.015368435134243307,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 312,
+      "normalized_entropy": 0.022065492041839545,
+      "raw_entropy": 0.263225528958893,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 314,
+      "normalized_entropy": 0.007061264418742834,
+      "raw_entropy": 0.08423583114384234,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 315,
+      "normalized_entropy": 0.00446978104511244,
+      "raw_entropy": 0.05332128908338944,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 316,
+      "normalized_entropy": 0.026676194343997577,
+      "raw_entropy": 0.31822790778898025,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 325,
+      "normalized_entropy": 0.02110030026150215,
+      "raw_entropy": 0.2517114817559417,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 328,
+      "normalized_entropy": 0.015083327106215742,
+      "raw_entropy": 0.17993329804136343,
+      "factuality": "correct"
+    },
+    {
+      "index": 334,
+      "normalized_entropy": 0.006686425188444883,
+      "raw_entropy": 0.07976426737890865,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 335,
+      "normalized_entropy": 0.011547243607714613,
+      "raw_entropy": 0.13775035249132278,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 336,
+      "normalized_entropy": 0.028246852929361993,
+      "raw_entropy": 0.33696474067548166,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 337,
+      "normalized_entropy": 0.03453078418156225,
+      "raw_entropy": 0.4119275434385165,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 338,
+      "normalized_entropy": 0.02189346353787158,
+      "raw_entropy": 0.2611733520182151,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 347,
+      "normalized_entropy": 0.008757383842538845,
+      "raw_entropy": 0.10446932204717671,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 351,
+      "normalized_entropy": 0.01663529530817098,
+      "raw_entropy": 0.19844716802950774,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 352,
+      "normalized_entropy": 0.03627980195068953,
+      "raw_entropy": 0.43279207374511774,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 354,
+      "normalized_entropy": 0.03771918857753258,
+      "raw_entropy": 0.4499629261108252,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 356,
+      "normalized_entropy": 0.007496849434573282,
+      "raw_entropy": 0.0894320486576476,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 357,
+      "normalized_entropy": 0.026354144582075772,
+      "raw_entropy": 0.3143860846031563,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 358,
+      "normalized_entropy": 0.048972760985618646,
+      "raw_entropy": 0.5842099913554535,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 367,
+      "normalized_entropy": 0.0004433755036607226,
+      "raw_entropy": 0.005289152458382238,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 368,
+      "normalized_entropy": 0.003357767625710761,
+      "raw_entropy": 0.04005576479884729,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 369,
+      "normalized_entropy": 9.435036025054165e-05,
+      "raw_entropy": 0.0011255322762492304,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 373,
+      "normalized_entropy": 0.00018225436638780794,
+      "raw_entropy": 0.0021741641612402114,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 378,
+      "normalized_entropy": 0.012284605309470821,
+      "raw_entropy": 0.1465465499026825,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 379,
+      "normalized_entropy": 0.024289109194141647,
+      "raw_entropy": 0.2897516902612082,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 382,
+      "normalized_entropy": 0.025497210040749407,
+      "raw_entropy": 0.30416346878765266,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 385,
+      "normalized_entropy": 0.004603134614590009,
+      "raw_entropy": 0.05491210173319262,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 386,
+      "normalized_entropy": 0.014597587773876635,
+      "raw_entropy": 0.17413877542438935,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 391,
+      "normalized_entropy": 0.06975158865635964,
+      "raw_entropy": 0.8320865351644671,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 393,
+      "normalized_entropy": 0.020242151849065963,
+      "raw_entropy": 0.24147438532680096,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 399,
+      "normalized_entropy": 0.0065281715477415545,
+      "raw_entropy": 0.07787641469904012,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 402,
+      "normalized_entropy": 0.02843694113999622,
+      "raw_entropy": 0.3392323569923156,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 407,
+      "normalized_entropy": 0.011984709867483345,
+      "raw_entropy": 0.14296901189900546,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 408,
+      "normalized_entropy": 0.0036528877903329064,
+      "raw_entropy": 0.04357633716096822,
+      "factuality": "correct"
+    },
+    {
+      "index": 413,
+      "normalized_entropy": 0.004632756987044155,
+      "raw_entropy": 0.05526547543741254,
+      "factuality": "correct"
+    },
+    {
+      "index": 417,
+      "normalized_entropy": 0.021123878205647522,
+      "raw_entropy": 0.2519927497561142,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 421,
+      "normalized_entropy": 0.025010297339660776,
+      "raw_entropy": 0.29835494872121443,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 425,
+      "normalized_entropy": 0.01579622920846061,
+      "raw_entropy": 0.1884377099349886,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 427,
+      "normalized_entropy": 0.005192387481964079,
+      "raw_entropy": 0.061941466743996754,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 429,
+      "normalized_entropy": 0.0012957699129484347,
+      "raw_entropy": 0.015457607747796026,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 432,
+      "normalized_entropy": 0.022147091353283778,
+      "raw_entropy": 0.2641989503481311,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 433,
+      "normalized_entropy": 0.03470488074327109,
+      "raw_entropy": 0.41400439082804386,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 435,
+      "normalized_entropy": 0.006818082664135787,
+      "raw_entropy": 0.08133484684364109,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 437,
+      "normalized_entropy": 0.013074428302378219,
+      "raw_entropy": 0.15596857297371725,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 449,
+      "normalized_entropy": 0.02097289081311066,
+      "raw_entropy": 0.2501915782168038,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 451,
+      "normalized_entropy": 0.022406248235045022,
+      "raw_entropy": 0.26729050648273217,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 456,
+      "normalized_entropy": 0.0023945409268764364,
+      "raw_entropy": 0.028565159611923206,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 466,
+      "normalized_entropy": 0.03655628559792217,
+      "raw_entropy": 0.4360903257919472,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 467,
+      "normalized_entropy": 0.038286881082822535,
+      "raw_entropy": 0.4567350914315715,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 468,
+      "normalized_entropy": 0.0021027145154489156,
+      "raw_entropy": 0.025083879368249982,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 476,
+      "normalized_entropy": 0.0572972390632729,
+      "raw_entropy": 0.6835150574352113,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 478,
+      "normalized_entropy": 0.002003758507672736,
+      "raw_entropy": 0.023903405013037116,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 482,
+      "normalized_entropy": 0.020261471871977757,
+      "raw_entropy": 0.24170485937382477,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 483,
+      "normalized_entropy": 0.0038496739718370337,
+      "raw_entropy": 0.04592385547689816,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 492,
+      "normalized_entropy": 0.027930509699493577,
+      "raw_entropy": 0.3331909923331929,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 494,
+      "normalized_entropy": 0.007590621423099101,
+      "raw_entropy": 0.09055068137313081,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 497,
+      "normalized_entropy": 0.006353267848136689,
+      "raw_entropy": 0.07578993873203875,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 498,
+      "normalized_entropy": 0.01061066700197908,
+      "raw_entropy": 0.12657766384301167,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 500,
+      "normalized_entropy": 0.04037827439191455,
+      "raw_entropy": 0.4816839169099694,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 501,
+      "normalized_entropy": 0.06198008666165024,
+      "raw_entropy": 0.7393780780186396,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 506,
+      "normalized_entropy": 0.00415203322295205,
+      "raw_entropy": 0.04953078496024948,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 507,
+      "normalized_entropy": 0.013524057670205456,
+      "raw_entropy": 0.16133232955604768,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 511,
+      "normalized_entropy": 0.0028079457529840155,
+      "raw_entropy": 0.03349678333551794,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 513,
+      "normalized_entropy": 0.004659138331718679,
+      "raw_entropy": 0.055580185999652934,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 515,
+      "normalized_entropy": 0.00010112573657715313,
+      "raw_entropy": 0.0012063576670488631,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 519,
+      "normalized_entropy": 0.025498922148737536,
+      "raw_entropy": 0.30418389301068627,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 521,
+      "normalized_entropy": 0.012235669542515999,
+      "raw_entropy": 0.1459627812236398,
+      "factuality": "correct"
+    },
+    {
+      "index": 529,
+      "normalized_entropy": 0.027722913352292093,
+      "raw_entropy": 0.33071451647675476,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 532,
+      "normalized_entropy": 0.05178846843463266,
+      "raw_entropy": 0.6177993661699759,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 533,
+      "normalized_entropy": 0.006479100610932117,
+      "raw_entropy": 0.07729103354036573,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 535,
+      "normalized_entropy": 0.020718357928165114,
+      "raw_entropy": 0.2471551830550652,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 538,
+      "normalized_entropy": 0.012009841879867322,
+      "raw_entropy": 0.14326881882110037,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 539,
+      "normalized_entropy": 0.02211860994636219,
+      "raw_entropy": 0.2638591875461862,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 540,
+      "normalized_entropy": 0.030357203853613013,
+      "raw_entropy": 0.3621397169357688,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 542,
+      "normalized_entropy": 0.05618350235920107,
+      "raw_entropy": 0.6702289755978176,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 543,
+      "normalized_entropy": 0.026741032916973113,
+      "raw_entropy": 0.3190013855630568,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 545,
+      "normalized_entropy": 0.023185040946321733,
+      "raw_entropy": 0.27658094618769935,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 549,
+      "normalized_entropy": 0.00031712322891228495,
+      "raw_entropy": 0.003783053172678275,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 552,
+      "normalized_entropy": 0.018814491026780837,
+      "raw_entropy": 0.22444341341793428,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 554,
+      "normalized_entropy": 0.04160941267239234,
+      "raw_entropy": 0.496370515535816,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 559,
+      "normalized_entropy": 0.012542729743535031,
+      "raw_entropy": 0.1496257896751259,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 561,
+      "normalized_entropy": 0.012080368883713843,
+      "raw_entropy": 0.14411015550456,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 567,
+      "normalized_entropy": 0.017358267420499042,
+      "raw_entropy": 0.20707170793685425,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 568,
+      "normalized_entropy": 0.006582534839946566,
+      "raw_entropy": 0.07852492987012616,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 569,
+      "normalized_entropy": 0.013542068623429281,
+      "raw_entropy": 0.1615471873385257,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 573,
+      "normalized_entropy": 0.020140466226317853,
+      "raw_entropy": 0.24026134861841336,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 575,
+      "normalized_entropy": 0.007823500786322988,
+      "raw_entropy": 0.09332876551700506,
+      "factuality": "correct"
+    },
+    {
+      "index": 576,
+      "normalized_entropy": 0.013785959027721086,
+      "raw_entropy": 0.16445662532232316,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 578,
+      "normalized_entropy": 0.01555028808577617,
+      "raw_entropy": 0.1855038083483572,
+      "factuality": "correct"
+    },
+    {
+      "index": 579,
+      "normalized_entropy": 0.0034614761812144955,
+      "raw_entropy": 0.041292933647303985,
+      "factuality": "correct"
+    },
+    {
+      "index": 582,
+      "normalized_entropy": 0.012153913727292265,
+      "raw_entropy": 0.14498749285631368,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 586,
+      "normalized_entropy": 0.0072699377762025395,
+      "raw_entropy": 0.0867251549619021,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 587,
+      "normalized_entropy": 0.01406664106057158,
+      "raw_entropy": 0.16780496110501203,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 589,
+      "normalized_entropy": 0.029319146209333548,
+      "raw_entropy": 0.3497564321222158,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 591,
+      "normalized_entropy": 0.018490633767461656,
+      "raw_entropy": 0.2205800280816895,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 593,
+      "normalized_entropy": 0.03883818266360481,
+      "raw_entropy": 0.46331172475305477,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 595,
+      "normalized_entropy": 0.02543278344202752,
+      "raw_entropy": 0.3033949055715941,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 604,
+      "normalized_entropy": 0.008051297297939252,
+      "raw_entropy": 0.09604621487872719,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 612,
+      "normalized_entropy": 0.023956261668254528,
+      "raw_entropy": 0.285781057478664,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 619,
+      "normalized_entropy": 0.021144590437886995,
+      "raw_entropy": 0.25223983186408694,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 620,
+      "normalized_entropy": 0.010542435103527457,
+      "raw_entropy": 0.12576370612442817,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 621,
+      "normalized_entropy": 0.008282415124395344,
+      "raw_entropy": 0.0988032851495999,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 623,
+      "normalized_entropy": 0.0177317279101706,
+      "raw_entropy": 0.21152682431280648,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 624,
+      "normalized_entropy": 0.019981133231477904,
+      "raw_entropy": 0.23836062001613137,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 625,
+      "normalized_entropy": 0.001385188862432473,
+      "raw_entropy": 0.016524311822749535,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 628,
+      "normalized_entropy": 0.014251682537125346,
+      "raw_entropy": 0.1700123734959455,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 629,
+      "normalized_entropy": 0.03514220973049875,
+      "raw_entropy": 0.4192214126725503,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 633,
+      "normalized_entropy": 0.005187284371168288,
+      "raw_entropy": 0.061880590284228223,
+      "factuality": "correct"
+    },
+    {
+      "index": 635,
+      "normalized_entropy": 0.02364053703706987,
+      "raw_entropy": 0.2820146885759743,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 636,
+      "normalized_entropy": 0.08536682088787415,
+      "raw_entropy": 1.0183650806944082,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 643,
+      "normalized_entropy": 0.021100103142481667,
+      "raw_entropy": 0.251709130267095,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 644,
+      "normalized_entropy": 0.012793530334419167,
+      "raw_entropy": 0.15261766123971654,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 649,
+      "normalized_entropy": 0.008993755038484336,
+      "raw_entropy": 0.10728906125650055,
+      "factuality": "correct"
+    },
+    {
+      "index": 650,
+      "normalized_entropy": 0.0002697975528887344,
+      "raw_entropy": 0.003218491726189101,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 652,
+      "normalized_entropy": 0.027309263394748633,
+      "raw_entropy": 0.32577996851055746,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 654,
+      "normalized_entropy": 0.014813484503165521,
+      "raw_entropy": 0.17671426889898784,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 658,
+      "normalized_entropy": 0.04341457649925986,
+      "raw_entropy": 0.5179048281305081,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 663,
+      "normalized_entropy": 0.00023704690539240407,
+      "raw_entropy": 0.0028277999394561593,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 664,
+      "normalized_entropy": 0.0023560467178996227,
+      "raw_entropy": 0.028105951247089877,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 665,
+      "normalized_entropy": 0.012621049333497331,
+      "raw_entropy": 0.15056008633420698,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 667,
+      "normalized_entropy": 0.011772336452388033,
+      "raw_entropy": 0.14043554904128758,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 669,
+      "normalized_entropy": 0.020140547151356346,
+      "raw_entropy": 0.24026231399620884,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 679,
+      "normalized_entropy": 0.029085136123454453,
+      "raw_entropy": 0.3469648592662631,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 683,
+      "normalized_entropy": 0.009202739037963282,
+      "raw_entropy": 0.10978209081153985,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 689,
+      "normalized_entropy": 0.007380033108912988,
+      "raw_entropy": 0.08803851349175779,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 691,
+      "normalized_entropy": 0.0415480801099917,
+      "raw_entropy": 0.49563886195883244,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 692,
+      "normalized_entropy": 0.003873221558823492,
+      "raw_entropy": 0.046204761337889755,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 698,
+      "normalized_entropy": 0.0047094779619376685,
+      "raw_entropy": 0.056180701762766815,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 699,
+      "normalized_entropy": 0.012485641375227115,
+      "raw_entropy": 0.14894476629632442,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 700,
+      "normalized_entropy": 0.0050853105396886505,
+      "raw_entropy": 0.06066411545192918,
+      "factuality": "correct"
+    },
+    {
+      "index": 701,
+      "normalized_entropy": 0.0082003802200391,
+      "raw_entropy": 0.0978246674486522,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 705,
+      "normalized_entropy": 0.029265781683328763,
+      "raw_entropy": 0.34911983151713455,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 714,
+      "normalized_entropy": 0.03084194196554762,
+      "raw_entropy": 0.3679222957098374,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 719,
+      "normalized_entropy": 0.01470887565611464,
+      "raw_entropy": 0.17546636021666445,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 720,
+      "normalized_entropy": 0.0387981413757057,
+      "raw_entropy": 0.4628340608438406,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 723,
+      "normalized_entropy": 0.06192722618117543,
+      "raw_entropy": 0.7387474903160125,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 725,
+      "normalized_entropy": 0.0242291816205236,
+      "raw_entropy": 0.2890367971949252,
+      "factuality": "correct"
+    },
+    {
+      "index": 728,
+      "normalized_entropy": 0.03880541654285353,
+      "raw_entropy": 0.46292084838146363,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 730,
+      "normalized_entropy": 0.013230123007467526,
+      "raw_entropy": 0.15782589938300476,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 736,
+      "normalized_entropy": 0.013340675197359403,
+      "raw_entropy": 0.15914470789208648,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 743,
+      "normalized_entropy": 0.06540373903051798,
+      "raw_entropy": 0.7802198006531398,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 751,
+      "normalized_entropy": 0.03214432289460215,
+      "raw_entropy": 0.3834587681486262,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 752,
+      "normalized_entropy": 0.018187573989252782,
+      "raw_entropy": 0.21696474181143852,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 754,
+      "normalized_entropy": 0.003663261457510217,
+      "raw_entropy": 0.04370008758651112,
+      "factuality": "correct"
+    },
+    {
+      "index": 755,
+      "normalized_entropy": 0.0014246657789570433,
+      "raw_entropy": 0.016995243185356022,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 756,
+      "normalized_entropy": 0.054560142858444814,
+      "raw_entropy": 0.6508634585059366,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 767,
+      "normalized_entropy": 0.010357618863099934,
+      "raw_entropy": 0.12355898063929127,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 770,
+      "normalized_entropy": 0.0121118475959049,
+      "raw_entropy": 0.14448567401335755,
+      "factuality": "correct"
+    },
+    {
+      "index": 772,
+      "normalized_entropy": 0.01706041209151999,
+      "raw_entropy": 0.2035185070213672,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 773,
+      "normalized_entropy": 0.04529776109006709,
+      "raw_entropy": 0.5403698726036856,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 774,
+      "normalized_entropy": 0.02291583669058825,
+      "raw_entropy": 0.27336953207198117,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 776,
+      "normalized_entropy": 0.06599456563649521,
+      "raw_entropy": 0.7872679392392384,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 787,
+      "normalized_entropy": 0.02065134907458371,
+      "raw_entropy": 0.24635581538651516,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 790,
+      "normalized_entropy": 0.022771577889902618,
+      "raw_entropy": 0.27164862781816035,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 791,
+      "normalized_entropy": 0.0009496227916427037,
+      "raw_entropy": 0.011328320309721602,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 795,
+      "normalized_entropy": 0.009346653639422737,
+      "raw_entropy": 0.11149888901491747,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 796,
+      "normalized_entropy": 0.0005717760973139778,
+      "raw_entropy": 0.006820879651182979,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 801,
+      "normalized_entropy": 0.02887228759245316,
+      "raw_entropy": 0.344425728615802,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 805,
+      "normalized_entropy": 0.002803505369020781,
+      "raw_entropy": 0.03344381273258342,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 808,
+      "normalized_entropy": 0.0371926214752897,
+      "raw_entropy": 0.4436813574171648,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 811,
+      "normalized_entropy": 0.04217729804237073,
+      "raw_entropy": 0.5031449815942721,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 812,
+      "normalized_entropy": 0.023568831277489318,
+      "raw_entropy": 0.2811592901801805,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 814,
+      "normalized_entropy": 0.006975582034792829,
+      "raw_entropy": 0.08321370162164843,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 824,
+      "normalized_entropy": 0.0642468905286845,
+      "raw_entropy": 0.7664194259212724,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 831,
+      "normalized_entropy": 0.0003199328104879096,
+      "raw_entropy": 0.003816569470207224,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 836,
+      "normalized_entropy": 0.015661308072920224,
+      "raw_entropy": 0.18682819734387976,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 844,
+      "normalized_entropy": 0.0386437646996453,
+      "raw_entropy": 0.46099245757762464,
+      "factuality": "correct"
+    },
+    {
+      "index": 850,
+      "normalized_entropy": 0.027838134014976847,
+      "raw_entropy": 0.33208901652527756,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 862,
+      "normalized_entropy": 0.02696737956036942,
+      "raw_entropy": 0.32170153903450843,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 863,
+      "normalized_entropy": 0.012726687583518534,
+      "raw_entropy": 0.15182027505727724,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 864,
+      "normalized_entropy": 0.031183873791752463,
+      "raw_entropy": 0.37200129769402096,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 866,
+      "normalized_entropy": 0.03541235418517023,
+      "raw_entropy": 0.4224440426887484,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 868,
+      "normalized_entropy": 0.027351640967044427,
+      "raw_entropy": 0.32628550262066947,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 874,
+      "normalized_entropy": 0.005974614396891113,
+      "raw_entropy": 0.07127287404083518,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 875,
+      "normalized_entropy": 0.02046311076015866,
+      "raw_entropy": 0.24411026700758437,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 881,
+      "normalized_entropy": 0.0027030016343715622,
+      "raw_entropy": 0.032244875103401086,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 883,
+      "normalized_entropy": 0.01649008330374832,
+      "raw_entropy": 0.19671489273726142,
+      "factuality": "correct"
+    },
+    {
+      "index": 884,
+      "normalized_entropy": 0.02467952481365888,
+      "raw_entropy": 0.29440906920233384,
+      "factuality": "correct"
+    },
+    {
+      "index": 886,
+      "normalized_entropy": 0.007515069218061087,
+      "raw_entropy": 0.08964939763572613,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 890,
+      "normalized_entropy": 2.6830681828086126e-05,
+      "raw_entropy": 0.0003200708329156726,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 898,
+      "normalized_entropy": 0.0317507258753794,
+      "raw_entropy": 0.37876343738577256,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 901,
+      "normalized_entropy": 0.0009729433970027729,
+      "raw_entropy": 0.011606518442349062,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 902,
+      "normalized_entropy": 0.008386009589233915,
+      "raw_entropy": 0.10003909297806983,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 903,
+      "normalized_entropy": 0.011996495603140441,
+      "raw_entropy": 0.1431096072909698,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 905,
+      "normalized_entropy": 0.019588196656397317,
+      "raw_entropy": 0.2336731678792489,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 906,
+      "normalized_entropy": 0.020161443215875964,
+      "raw_entropy": 0.2405115890917248,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 909,
+      "normalized_entropy": 0.0037725270975387257,
+      "raw_entropy": 0.04500354847643825,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 910,
+      "normalized_entropy": 0.011867550492079632,
+      "raw_entropy": 0.1415713843951791,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 911,
+      "normalized_entropy": 0.004250399235128914,
+      "raw_entropy": 0.050704221090191015,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 912,
+      "normalized_entropy": 0.020916971914144933,
+      "raw_entropy": 0.24952450577032756,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 929,
+      "normalized_entropy": 0.007685004542007922,
+      "raw_entropy": 0.09167660443672968,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 937,
+      "normalized_entropy": 0.013294629208858664,
+      "raw_entropy": 0.15859541220194007,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 940,
+      "normalized_entropy": 0.010418764975047658,
+      "raw_entropy": 0.12428840999580418,
+      "factuality": "correct"
+    },
+    {
+      "index": 941,
+      "normalized_entropy": 0.01700541035627039,
+      "raw_entropy": 0.202862375681659,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 943,
+      "normalized_entropy": 0.01895114619316938,
+      "raw_entropy": 0.22607361175610788,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 947,
+      "normalized_entropy": 0.004144077374548914,
+      "raw_entropy": 0.04943587738237805,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 951,
+      "normalized_entropy": 0.012773323272078748,
+      "raw_entropy": 0.1523766054471162,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 953,
+      "normalized_entropy": 0.04763124334261169,
+      "raw_entropy": 0.568206645927279,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 954,
+      "normalized_entropy": 0.04138957833216105,
+      "raw_entropy": 0.4937480491806136,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 956,
+      "normalized_entropy": 0.03421205620638434,
+      "raw_entropy": 0.4081253467913209,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 957,
+      "normalized_entropy": 0.007950421813601342,
+      "raw_entropy": 0.09484284254180024,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 963,
+      "normalized_entropy": 0.018933525801479445,
+      "raw_entropy": 0.22586341309322505,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 974,
+      "normalized_entropy": 0.010832787274139118,
+      "raw_entropy": 0.12922739973020397,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 976,
+      "normalized_entropy": 0.03075396901459019,
+      "raw_entropy": 0.36687284136248194,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 979,
+      "normalized_entropy": 0.02080062334527063,
+      "raw_entropy": 0.24813655060814596,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 984,
+      "normalized_entropy": 0.008387701468447153,
+      "raw_entropy": 0.1000592758862957,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 990,
+      "normalized_entropy": 0.024546741322838454,
+      "raw_entropy": 0.29282505718293533,
+      "factuality": "correct"
+    },
+    {
+      "index": 991,
+      "normalized_entropy": 0.010275202520217025,
+      "raw_entropy": 0.12257581264969575,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 995,
+      "normalized_entropy": 0.021208848608289504,
+      "raw_entropy": 0.2530063858508306,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 997,
+      "normalized_entropy": 0.025914275151936877,
+      "raw_entropy": 0.30913875709277894,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1002,
+      "normalized_entropy": 0.007812473047751825,
+      "raw_entropy": 0.09319721248781762,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1004,
+      "normalized_entropy": 0.006071522251402036,
+      "raw_entropy": 0.07242891539334799,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1006,
+      "normalized_entropy": 0.06562417299404809,
+      "raw_entropy": 0.7828494200851785,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1007,
+      "normalized_entropy": 0.038947376614686495,
+      "raw_entropy": 0.46461433044515027,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1010,
+      "normalized_entropy": 0.03488119348234778,
+      "raw_entropy": 0.4161076756275695,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1011,
+      "normalized_entropy": 0.003481595618197046,
+      "raw_entropy": 0.041532944132093776,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1015,
+      "normalized_entropy": 0.007645056163431668,
+      "raw_entropy": 0.09120004886924696,
+      "factuality": "correct"
+    },
+    {
+      "index": 1016,
+      "normalized_entropy": 0.002983144327311664,
+      "raw_entropy": 0.03558677694693593,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1018,
+      "normalized_entropy": 0.00012102338272600025,
+      "raw_entropy": 0.0014437223459164781,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1019,
+      "normalized_entropy": 0.04087115405614758,
+      "raw_entropy": 0.4875636185764819,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1022,
+      "normalized_entropy": 0.013156133366709167,
+      "raw_entropy": 0.1569432559192121,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1023,
+      "normalized_entropy": 0.00257961849519412,
+      "raw_entropy": 0.030773002551771223,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1025,
+      "normalized_entropy": 0.043034873114155145,
+      "raw_entropy": 0.5133752384797468,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1026,
+      "normalized_entropy": 0.010107287180182795,
+      "raw_entropy": 0.12057270281117445,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1031,
+      "normalized_entropy": 0.04472002517569437,
+      "raw_entropy": 0.5334778966001161,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1032,
+      "normalized_entropy": 0.009324820820267556,
+      "raw_entropy": 0.11123843910698479,
+      "factuality": "correct"
+    },
+    {
+      "index": 1034,
+      "normalized_entropy": 0.011336296313483134,
+      "raw_entropy": 0.13523390223491152,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1036,
+      "normalized_entropy": 0.000699316052775022,
+      "raw_entropy": 0.008342340046263668,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1037,
+      "normalized_entropy": 0.07268764110117494,
+      "raw_entropy": 0.8671115396543796,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1042,
+      "normalized_entropy": 0.010735741199781466,
+      "raw_entropy": 0.12806970951383628,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1044,
+      "normalized_entropy": 0.008043889299985197,
+      "raw_entropy": 0.09595784276464583,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1045,
+      "normalized_entropy": 0.029040753926835295,
+      "raw_entropy": 0.3464354114225765,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1046,
+      "normalized_entropy": 0.023157640619813905,
+      "raw_entropy": 0.27625407990141876,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1053,
+      "normalized_entropy": 0.005444011396764498,
+      "raw_entropy": 0.06494315997369941,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1057,
+      "normalized_entropy": 0.0026693873192004795,
+      "raw_entropy": 0.031843880379389414,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1058,
+      "normalized_entropy": 0.03881987590920278,
+      "raw_entropy": 0.46309333827421,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1059,
+      "normalized_entropy": 0.007139296994759304,
+      "raw_entropy": 0.08516670393195026,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1061,
+      "normalized_entropy": 0.004420102644297861,
+      "raw_entropy": 0.05272866131386343,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1064,
+      "normalized_entropy": 0.0056364230571173,
+      "raw_entropy": 0.0672384933829064,
+      "factuality": "correct"
+    },
+    {
+      "index": 1066,
+      "normalized_entropy": 0.00940835199169896,
+      "raw_entropy": 0.11223490620334028,
+      "factuality": "correct"
+    },
+    {
+      "index": 1071,
+      "normalized_entropy": 0.038469448039027465,
+      "raw_entropy": 0.45891298456562596,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1088,
+      "normalized_entropy": 0.015046265574410134,
+      "raw_entropy": 0.17949118048989163,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1091,
+      "normalized_entropy": 0.003734929608291169,
+      "raw_entropy": 0.04455503733624029,
+      "factuality": "correct"
+    },
+    {
+      "index": 1095,
+      "normalized_entropy": 0.0204179939607173,
+      "raw_entropy": 0.24357205587794512,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1105,
+      "normalized_entropy": 0.009890166330099362,
+      "raw_entropy": 0.11798260645153527,
+      "factuality": "correct"
+    },
+    {
+      "index": 1107,
+      "normalized_entropy": 0.0003602329605756815,
+      "raw_entropy": 0.0042973214200781856,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1112,
+      "normalized_entropy": 0.0014537907808771372,
+      "raw_entropy": 0.017342683615046362,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1120,
+      "normalized_entropy": 0.003031170518688933,
+      "raw_entropy": 0.03615969504027335,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1128,
+      "normalized_entropy": 0.026517525372449287,
+      "raw_entropy": 0.3163351005093615,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1130,
+      "normalized_entropy": 0.00134484876274333,
+      "raw_entropy": 0.016043083302724023,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1132,
+      "normalized_entropy": 0.0064028578478640755,
+      "raw_entropy": 0.07638151193985854,
+      "factuality": "correct"
+    },
+    {
+      "index": 1134,
+      "normalized_entropy": 0.0392405161353047,
+      "raw_entropy": 0.4681112751417459,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1135,
+      "normalized_entropy": 0.025562898744837047,
+      "raw_entropy": 0.3049470880175029,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1141,
+      "normalized_entropy": 0.05336186796341615,
+      "raw_entropy": 0.6365688965499192,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1144,
+      "normalized_entropy": 0.010199673043544221,
+      "raw_entropy": 0.1216748000454226,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1148,
+      "normalized_entropy": 0.0351842452551112,
+      "raw_entropy": 0.41972286639858536,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1153,
+      "normalized_entropy": 0.015522398056235686,
+      "raw_entropy": 0.1851711002553515,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1155,
+      "normalized_entropy": 0.047636363533953494,
+      "raw_entropy": 0.5682677261457377,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1156,
+      "normalized_entropy": 0.015660376930066493,
+      "raw_entropy": 0.18681708947600423,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1162,
+      "normalized_entropy": 0.024693787012766907,
+      "raw_entropy": 0.29457920703099444,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1165,
+      "normalized_entropy": 0.004196955650507894,
+      "raw_entropy": 0.05006667737239615,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1167,
+      "normalized_entropy": 0.011507012432920374,
+      "raw_entropy": 0.13727042336734172,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1168,
+      "normalized_entropy": 0.012615010527891077,
+      "raw_entropy": 0.15048804770497667,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1171,
+      "normalized_entropy": 0.0032962046624662525,
+      "raw_entropy": 0.039321362704682075,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1172,
+      "normalized_entropy": 0.0019310286531035114,
+      "raw_entropy": 0.02303578989691884,
+      "factuality": "correct"
+    },
+    {
+      "index": 1174,
+      "normalized_entropy": 0.00867737479473334,
+      "raw_entropy": 0.10351487136508145,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1176,
+      "normalized_entropy": 0.0398107097777699,
+      "raw_entropy": 0.47491327723906185,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1179,
+      "normalized_entropy": 0.0226207935241688,
+      "raw_entropy": 0.26984987824331486,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1184,
+      "normalized_entropy": 0.021550709132231335,
+      "raw_entropy": 0.2570845372500436,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1187,
+      "normalized_entropy": 0.006918979907647399,
+      "raw_entropy": 0.0825384787519384,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1189,
+      "normalized_entropy": 0.019091243467442377,
+      "raw_entropy": 0.2277448719780093,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1191,
+      "normalized_entropy": 0.06214824043837458,
+      "raw_entropy": 0.7413840322362375,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1192,
+      "normalized_entropy": 0.011727610153312308,
+      "raw_entropy": 0.13990199630154998,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1201,
+      "normalized_entropy": 0.0054241387450944135,
+      "raw_entropy": 0.06470609346107623,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1202,
+      "normalized_entropy": 0.0032003259548661614,
+      "raw_entropy": 0.03817759833830972,
+      "factuality": "correct"
+    },
+    {
+      "index": 1205,
+      "normalized_entropy": 0.025166482170988387,
+      "raw_entropy": 0.3002181219857675,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1206,
+      "normalized_entropy": 0.00879186729104996,
+      "raw_entropy": 0.10488068490994244,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1209,
+      "normalized_entropy": 0.0006735701965951591,
+      "raw_entropy": 0.00803521040697922,
+      "factuality": "correct"
+    },
+    {
+      "index": 1212,
+      "normalized_entropy": 0.007399923535623682,
+      "raw_entropy": 0.0882757920478948,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1216,
+      "normalized_entropy": 0.006398131389925138,
+      "raw_entropy": 0.07632512867912182,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1218,
+      "normalized_entropy": 0.020263776511424494,
+      "raw_entropy": 0.24173235207311636,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1223,
+      "normalized_entropy": 0.00043633502858957335,
+      "raw_entropy": 0.005205164629277355,
+      "factuality": "correct"
+    },
+    {
+      "index": 1224,
+      "normalized_entropy": 0.01802035064243069,
+      "raw_entropy": 0.2149698869567152,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1226,
+      "normalized_entropy": 0.026303838134112224,
+      "raw_entropy": 0.31378596468060305,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1231,
+      "normalized_entropy": 0.029655019955338806,
+      "raw_entropy": 0.35376316554506443,
+      "factuality": "correct"
+    },
+    {
+      "index": 1236,
+      "normalized_entropy": 1.1146217154921332e-05,
+      "raw_entropy": 0.00013296639390282354,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1239,
+      "normalized_entropy": 0.009976309873862743,
+      "raw_entropy": 0.11901023728027518,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1242,
+      "normalized_entropy": 0.026845088048666282,
+      "raw_entropy": 0.3202426888174273,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1244,
+      "normalized_entropy": 0.006186306308269908,
+      "raw_entropy": 0.073798207046931,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1247,
+      "normalized_entropy": 0.011792380550153494,
+      "raw_entropy": 0.14067466078313373,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1249,
+      "normalized_entropy": 0.01770420143138705,
+      "raw_entropy": 0.21119845312015703,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1255,
+      "normalized_entropy": 0.006391900316705912,
+      "raw_entropy": 0.07625079643486447,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1256,
+      "normalized_entropy": 0.01481222967030146,
+      "raw_entropy": 0.17669929964093675,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1261,
+      "normalized_entropy": 0.050519451534241165,
+      "raw_entropy": 0.6026609027162744,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1265,
+      "normalized_entropy": 0.021359689936828026,
+      "raw_entropy": 0.2548058149511709,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1266,
+      "normalized_entropy": 0.008960243648182032,
+      "raw_entropy": 0.10688929435251555,
+      "factuality": "correct"
+    },
+    {
+      "index": 1271,
+      "normalized_entropy": 0.0033338432199237515,
+      "raw_entropy": 0.03977036375923432,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1274,
+      "normalized_entropy": 0.027899657273075064,
+      "raw_entropy": 0.3328229449654623,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1276,
+      "normalized_entropy": 0.0009591651539371686,
+      "raw_entropy": 0.011442153862932888,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1278,
+      "normalized_entropy": 0.03346265745799416,
+      "raw_entropy": 0.39918555602789274,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1279,
+      "normalized_entropy": 0.0110612943957602,
+      "raw_entropy": 0.1319533261607378,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1281,
+      "normalized_entropy": 0.011356311199088951,
+      "raw_entropy": 0.1354726654965987,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1283,
+      "normalized_entropy": 0.015641171573290806,
+      "raw_entropy": 0.18658798331392368,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1296,
+      "normalized_entropy": 0.001797996496264086,
+      "raw_entropy": 0.021448811469870776,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1300,
+      "normalized_entropy": 0.0001401650862303755,
+      "raw_entropy": 0.0016720691700235295,
+      "factuality": "correct"
+    },
+    {
+      "index": 1301,
+      "normalized_entropy": 0.013609053135137873,
+      "raw_entropy": 0.16234626462595322,
+      "factuality": "correct"
+    },
+    {
+      "index": 1303,
+      "normalized_entropy": 0.012449989468587733,
+      "raw_entropy": 0.1485194645642919,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1306,
+      "normalized_entropy": 0.0021391438817786397,
+      "raw_entropy": 0.025518455638001702,
+      "factuality": "correct"
+    },
+    {
+      "index": 1310,
+      "normalized_entropy": 0.022694939445961026,
+      "raw_entropy": 0.2707343860279995,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1314,
+      "normalized_entropy": 0.00011881293141329763,
+      "raw_entropy": 0.001417353243658493,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1322,
+      "normalized_entropy": 0.0320465036018726,
+      "raw_entropy": 0.38229185399043303,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1324,
+      "normalized_entropy": 0.015561374560263769,
+      "raw_entropy": 0.18563606205499356,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1326,
+      "normalized_entropy": 0.0047449371849991265,
+      "raw_entropy": 0.05660370491760811,
+      "factuality": "correct"
+    },
+    {
+      "index": 1328,
+      "normalized_entropy": 0.006573333627813545,
+      "raw_entropy": 0.07841516599419784,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1329,
+      "normalized_entropy": 0.009774152377315926,
+      "raw_entropy": 0.1165986430198507,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1340,
+      "normalized_entropy": 0.00012871944623137483,
+      "raw_entropy": 0.00153553087587186,
+      "factuality": "correct"
+    },
+    {
+      "index": 1348,
+      "normalized_entropy": 0.019093980671549375,
+      "raw_entropy": 0.22777752486413422,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1349,
+      "normalized_entropy": 0.06487997002526064,
+      "raw_entropy": 0.7739716112540674,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1357,
+      "normalized_entropy": 0.020767931588057183,
+      "raw_entropy": 0.24774656134034317,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1361,
+      "normalized_entropy": 0.032083835571234794,
+      "raw_entropy": 0.382737197668417,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1363,
+      "normalized_entropy": 0.0043823218044136926,
+      "raw_entropy": 0.05227796293178501,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1364,
+      "normalized_entropy": 0.013384077669706281,
+      "raw_entropy": 0.15966246832634137,
+      "factuality": "correct"
+    },
+    {
+      "index": 1365,
+      "normalized_entropy": 0.007122553024308508,
+      "raw_entropy": 0.08496696034724224,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1380,
+      "normalized_entropy": 0.020965538614358452,
+      "raw_entropy": 0.250103871747268,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1382,
+      "normalized_entropy": 0.019147222966633005,
+      "raw_entropy": 0.22841266734180024,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1383,
+      "normalized_entropy": 0.004286109126385791,
+      "raw_entropy": 0.05113021453721376,
+      "factuality": "correct"
+    },
+    {
+      "index": 1385,
+      "normalized_entropy": 0.010989974108022256,
+      "raw_entropy": 0.1311025261681646,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1387,
+      "normalized_entropy": 0.0025956467733523896,
+      "raw_entropy": 0.030964208439612322,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1390,
+      "normalized_entropy": 0.002719921909553959,
+      "raw_entropy": 0.032446721877385155,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1401,
+      "normalized_entropy": 0.06039146718787756,
+      "raw_entropy": 0.7204269845870812,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1404,
+      "normalized_entropy": 0.006848302094218943,
+      "raw_entropy": 0.08169534301809268,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1406,
+      "normalized_entropy": 0.004004159387415088,
+      "raw_entropy": 0.047766755927740656,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1407,
+      "normalized_entropy": 0.013637531280058577,
+      "raw_entropy": 0.16268598851456204,
+      "factuality": "correct"
+    },
+    {
+      "index": 1408,
+      "normalized_entropy": 0.009080420894560699,
+      "raw_entropy": 0.10832292289734316,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1409,
+      "normalized_entropy": 0.006059788912057819,
+      "raw_entropy": 0.07228894505189902,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1411,
+      "normalized_entropy": 0.00418736323571113,
+      "raw_entropy": 0.04995224672865235,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1414,
+      "normalized_entropy": 0.012581625186025926,
+      "raw_entropy": 0.15008978446864077,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1420,
+      "normalized_entropy": 0.01611955105030092,
+      "raw_entropy": 0.1922947081238803,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1421,
+      "normalized_entropy": 0.013101840459003238,
+      "raw_entropy": 0.1562955803848297,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1425,
+      "normalized_entropy": 0.028820730255060933,
+      "raw_entropy": 0.34381068647755975,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1426,
+      "normalized_entropy": 0.02884472282244932,
+      "raw_entropy": 0.3440969006362975,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1432,
+      "normalized_entropy": 0.03402063813620144,
+      "raw_entropy": 0.4058418662017811,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1441,
+      "normalized_entropy": 0.0057321344310609056,
+      "raw_entropy": 0.0683802615785087,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1444,
+      "normalized_entropy": 0.004824333561789295,
+      "raw_entropy": 0.057550846872946516,
+      "factuality": "correct"
+    },
+    {
+      "index": 1445,
+      "normalized_entropy": 0.015467878883096508,
+      "raw_entropy": 0.18452072553627658,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1449,
+      "normalized_entropy": 0.012029868919528458,
+      "raw_entropy": 0.14350772707196952,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1452,
+      "normalized_entropy": 0.015939196915407978,
+      "raw_entropy": 0.19014321236447912,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1459,
+      "normalized_entropy": 0.009872787498087022,
+      "raw_entropy": 0.11777528942273471,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1461,
+      "normalized_entropy": 0.022881260744843583,
+      "raw_entropy": 0.2729570657834145,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1463,
+      "normalized_entropy": 0.021683049470632938,
+      "raw_entropy": 0.25866326277822616,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1465,
+      "normalized_entropy": 0.008182815438848356,
+      "raw_entropy": 0.09761513217922728,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1470,
+      "normalized_entropy": 0.11152161670456236,
+      "raw_entropy": 1.3303730771898103,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1471,
+      "normalized_entropy": 0.015662429377832646,
+      "raw_entropy": 0.18684157370902663,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1475,
+      "normalized_entropy": 0.007018764017288968,
+      "raw_entropy": 0.08372883176977687,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1478,
+      "normalized_entropy": 0.005777591192071723,
+      "raw_entropy": 0.06892252820637915,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1482,
+      "normalized_entropy": 0.03533999592993851,
+      "raw_entropy": 0.42158086048679255,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1486,
+      "normalized_entropy": 0.03415570190340671,
+      "raw_entropy": 0.4074530802865781,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1488,
+      "normalized_entropy": 0.012459637613275567,
+      "raw_entropy": 0.14863456002575323,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1490,
+      "normalized_entropy": 0.009082224667954868,
+      "raw_entropy": 0.10834444062307085,
+      "factuality": "correct"
+    },
+    {
+      "index": 1492,
+      "normalized_entropy": 0.020915613971648504,
+      "raw_entropy": 0.24950830648815248,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1493,
+      "normalized_entropy": 0.009677346673263485,
+      "raw_entropy": 0.11544382024920394,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1504,
+      "normalized_entropy": 0.027902289682805115,
+      "raw_entropy": 0.33285434772966604,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1508,
+      "normalized_entropy": 0.04032137798940923,
+      "raw_entropy": 0.4810051835458132,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1509,
+      "normalized_entropy": 0.025915842793637588,
+      "raw_entropy": 0.3091574579363906,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1515,
+      "normalized_entropy": 0.0029534402281690565,
+      "raw_entropy": 0.03523242830181012,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1517,
+      "normalized_entropy": 0.04470095275977836,
+      "raw_entropy": 0.5332503763273528,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1518,
+      "normalized_entropy": 0.007515761861817365,
+      "raw_entropy": 0.0896576603800502,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1522,
+      "normalized_entropy": 0.00410838440634139,
+      "raw_entropy": 0.04901008581522317,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1529,
+      "normalized_entropy": 0.023270906088098373,
+      "raw_entropy": 0.277605255879975,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1546,
+      "normalized_entropy": 0.011058348274220644,
+      "raw_entropy": 0.1319181810391535,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1551,
+      "normalized_entropy": 0.009624973026848466,
+      "raw_entropy": 0.11481904012850874,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1558,
+      "normalized_entropy": 0.02685861827561039,
+      "raw_entropy": 0.320404094742006,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1559,
+      "normalized_entropy": 0.029908232075851016,
+      "raw_entropy": 0.3567838049323143,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1563,
+      "normalized_entropy": 0.018634363570132245,
+      "raw_entropy": 0.22229462176776665,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1564,
+      "normalized_entropy": 0.002174108805436703,
+      "raw_entropy": 0.02593556215470432,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1565,
+      "normalized_entropy": 0.024443906851017563,
+      "raw_entropy": 0.2915983155272797,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1566,
+      "normalized_entropy": 0.018727704190244356,
+      "raw_entropy": 0.22340810856678175,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1567,
+      "normalized_entropy": 1.0843801858038588e-06,
+      "raw_entropy": 1.293587958335722e-05,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1568,
+      "normalized_entropy": 0.0025561921640276067,
+      "raw_entropy": 0.030493543185935224,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1569,
+      "normalized_entropy": 0.024194288605273947,
+      "raw_entropy": 0.2886205484940739,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1571,
+      "normalized_entropy": 0.029991274651108298,
+      "raw_entropy": 0.3577744434259748,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1573,
+      "normalized_entropy": 0.03207649150527005,
+      "raw_entropy": 0.3826495882172155,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1576,
+      "normalized_entropy": 0.005196622626630736,
+      "raw_entropy": 0.061991988989001955,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1583,
+      "normalized_entropy": 0.02487624040860006,
+      "raw_entropy": 0.29675574547108285,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1586,
+      "normalized_entropy": 0.019593938158640564,
+      "raw_entropy": 0.23374165989212276,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1597,
+      "normalized_entropy": 0.010641135630631302,
+      "raw_entropy": 0.12694113277805402,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1599,
+      "normalized_entropy": 0.0320244902428094,
+      "raw_entropy": 0.38202925037060054,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1602,
+      "normalized_entropy": 0.020371382951836957,
+      "raw_entropy": 0.24301601989902508,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1605,
+      "normalized_entropy": 0.008516370256900942,
+      "raw_entropy": 0.10159420245113404,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1608,
+      "normalized_entropy": 0.00830802683494335,
+      "raw_entropy": 0.0991088145274972,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1610,
+      "normalized_entropy": 0.05441466120966278,
+      "raw_entropy": 0.6491279665494532,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1611,
+      "normalized_entropy": 0.016118046791816394,
+      "raw_entropy": 0.19227676339667782,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1613,
+      "normalized_entropy": 0.021064318642063214,
+      "raw_entropy": 0.25128224678616845,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1615,
+      "normalized_entropy": 0.003558254077357436,
+      "raw_entropy": 0.04244742468949108,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1618,
+      "normalized_entropy": 0.03271471743170517,
+      "raw_entropy": 0.3902631667752016,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1620,
+      "normalized_entropy": 0.048950554939312094,
+      "raw_entropy": 0.5839450891147038,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1626,
+      "normalized_entropy": 0.02900794855491509,
+      "raw_entropy": 0.34604406681263006,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1628,
+      "normalized_entropy": 0.003250234991643968,
+      "raw_entropy": 0.038772977429823136,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1632,
+      "normalized_entropy": 0.030762570186517395,
+      "raw_entropy": 0.36697544718817177,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1641,
+      "normalized_entropy": 0.030875130132437666,
+      "raw_entropy": 0.368318206789828,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1642,
+      "normalized_entropy": 0.01312880296842974,
+      "raw_entropy": 0.15661722382665247,
+      "factuality": "correct"
+    },
+    {
+      "index": 1658,
+      "normalized_entropy": 0.012529124539025566,
+      "raw_entropy": 0.14946348932185,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1662,
+      "normalized_entropy": 0.007862445316736282,
+      "raw_entropy": 0.09379334589430448,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1666,
+      "normalized_entropy": 0.02828846599963431,
+      "raw_entropy": 0.33746115482356703,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1667,
+      "normalized_entropy": 0.015619327181889853,
+      "raw_entropy": 0.1863273953573806,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1673,
+      "normalized_entropy": 0.03815304154738918,
+      "raw_entropy": 0.45513848155569575,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1676,
+      "normalized_entropy": 0.017783421010491785,
+      "raw_entropy": 0.2121434860056329,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1681,
+      "normalized_entropy": 0.015464074902785707,
+      "raw_entropy": 0.1844753467734753,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1686,
+      "normalized_entropy": 0.03324929785014013,
+      "raw_entropy": 0.39664032859632903,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1687,
+      "normalized_entropy": 0.032179235627364675,
+      "raw_entropy": 0.3838752520652953,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1689,
+      "normalized_entropy": 0.027252275958024187,
+      "raw_entropy": 0.3251001491733153,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1691,
+      "normalized_entropy": 0.06293211110503025,
+      "raw_entropy": 0.7507350483148529,
+      "factuality": "correct"
+    },
+    {
+      "index": 1696,
+      "normalized_entropy": 0.00016260647663409808,
+      "raw_entropy": 0.0019397788974292022,
+      "factuality": "correct"
+    },
+    {
+      "index": 1702,
+      "normalized_entropy": 0.0030105564592794705,
+      "raw_entropy": 0.035913784063905496,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1703,
+      "normalized_entropy": 5.314490771731788e-06,
+      "raw_entropy": 6.339807160808874e-05,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1704,
+      "normalized_entropy": 0.02042246942908617,
+      "raw_entropy": 0.24362544501273078,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1705,
+      "normalized_entropy": 0.005611400205190375,
+      "raw_entropy": 0.06693998866694377,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1706,
+      "normalized_entropy": 0.007087460278691773,
+      "raw_entropy": 0.08454832900604807,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1708,
+      "normalized_entropy": 0.003241771802018484,
+      "raw_entropy": 0.038672017634246256,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1709,
+      "normalized_entropy": 0.019561750815500482,
+      "raw_entropy": 0.23335768792323286,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1714,
+      "normalized_entropy": 0.02859892663299648,
+      "raw_entropy": 0.34116472799939807,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1716,
+      "normalized_entropy": 0.01300542928187538,
+      "raw_entropy": 0.15514546403805124,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1718,
+      "normalized_entropy": 0.020243128939198253,
+      "raw_entropy": 0.24148604131282775,
+      "factuality": "correct"
+    },
+    {
+      "index": 1722,
+      "normalized_entropy": 0.0007158006773386291,
+      "raw_entropy": 0.008538989820137576,
+      "factuality": "correct"
+    },
+    {
+      "index": 1723,
+      "normalized_entropy": 6.595160423865146e-05,
+      "raw_entropy": 0.0007867554405081523,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1737,
+      "normalized_entropy": 0.03255245232284083,
+      "raw_entropy": 0.38832746015096686,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1740,
+      "normalized_entropy": 0.005334812950024152,
+      "raw_entropy": 0.06364050065161339,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1741,
+      "normalized_entropy": 0.00831750250765593,
+      "raw_entropy": 0.0992218525217228,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1744,
+      "normalized_entropy": 0.0054185340227338305,
+      "raw_entropy": 0.06463923313431647,
+      "factuality": "correct"
+    },
+    {
+      "index": 1749,
+      "normalized_entropy": 0.0033795634759210477,
+      "raw_entropy": 0.04031577369372409,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1750,
+      "normalized_entropy": 0.008979148751199751,
+      "raw_entropy": 0.1071148187021392,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1751,
+      "normalized_entropy": 0.030834894992606915,
+      "raw_entropy": 0.3678382303657989,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1754,
+      "normalized_entropy": 0.03642987725410148,
+      "raw_entropy": 0.43458236471390166,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1760,
+      "normalized_entropy": 0.021142389769959354,
+      "raw_entropy": 0.2522135794706113,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1763,
+      "normalized_entropy": 0.011097753360751328,
+      "raw_entropy": 0.13238825552133787,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1764,
+      "normalized_entropy": 0.02308771728475864,
+      "raw_entropy": 0.27541994455462515,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1769,
+      "normalized_entropy": 0.005035897165189812,
+      "raw_entropy": 0.06007464925668469,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1770,
+      "normalized_entropy": 0.0360033853976306,
+      "raw_entropy": 0.429494622083765,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1778,
+      "normalized_entropy": 0.0465136630061981,
+      "raw_entropy": 0.5548747123067315,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1782,
+      "normalized_entropy": 0.02980327896222638,
+      "raw_entropy": 0.35553178939613944,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1783,
+      "normalized_entropy": 0.011079021113459805,
+      "raw_entropy": 0.13216479321682412,
+      "factuality": "correct"
+    },
+    {
+      "index": 1788,
+      "normalized_entropy": 0.040052169727651174,
+      "raw_entropy": 0.4777937216410887,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1793,
+      "normalized_entropy": 0.02553584462429743,
+      "raw_entropy": 0.30462435172066193,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1798,
+      "normalized_entropy": 0.02059105485671275,
+      "raw_entropy": 0.24563654851668276,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1799,
+      "normalized_entropy": 0.028862833779319107,
+      "raw_entropy": 0.34431295139070456,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1800,
+      "normalized_entropy": 0.004861812562656977,
+      "raw_entropy": 0.05799794453156839,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1802,
+      "normalized_entropy": 0.010279025432285812,
+      "raw_entropy": 0.12262141725482137,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1804,
+      "normalized_entropy": 0.029805573461969714,
+      "raw_entropy": 0.3555591611360258,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1811,
+      "normalized_entropy": 0.02221797733692287,
+      "raw_entropy": 0.2650445694036134,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1815,
+      "normalized_entropy": 0.013101856402257367,
+      "raw_entropy": 0.15629577057644176,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1817,
+      "normalized_entropy": 0.01026627646759052,
+      "raw_entropy": 0.12246933122976315,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1822,
+      "normalized_entropy": 0.0030922476456506473,
+      "raw_entropy": 0.036888301455272034,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1823,
+      "normalized_entropy": 0.003339479325504552,
+      "raw_entropy": 0.03983759846535196,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1830,
+      "normalized_entropy": 0.000626628869596056,
+      "raw_entropy": 0.00747523396929353,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1831,
+      "normalized_entropy": 0.006293941169166079,
+      "raw_entropy": 0.0750822139088713,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1835,
+      "normalized_entropy": 0.004935228138309047,
+      "raw_entropy": 0.05887373980947088,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1836,
+      "normalized_entropy": 0.010313568280522944,
+      "raw_entropy": 0.12303348871380922,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1838,
+      "normalized_entropy": 0.009885493706589522,
+      "raw_entropy": 0.11792686539701122,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1843,
+      "normalized_entropy": 0.00341777397303925,
+      "raw_entropy": 0.040771597579121674,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1845,
+      "normalized_entropy": 0.03457758603034329,
+      "raw_entropy": 0.4124858560008778,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1849,
+      "normalized_entropy": 0.01451693585729987,
+      "raw_entropy": 0.17317665577791994,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1851,
+      "normalized_entropy": 0.0062680039517438195,
+      "raw_entropy": 0.07477280146691216,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1855,
+      "normalized_entropy": 0.04322872410172543,
+      "raw_entropy": 0.5156877420326083,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1856,
+      "normalized_entropy": 0.003292048923364629,
+      "raw_entropy": 0.03927178771124138,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1857,
+      "normalized_entropy": 0.003355475884901098,
+      "raw_entropy": 0.04002842597106514,
+      "factuality": "correct"
+    },
+    {
+      "index": 1861,
+      "normalized_entropy": 0.031094852761841995,
+      "raw_entropy": 0.37093934051481026,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1865,
+      "normalized_entropy": 0.007938301651647467,
+      "raw_entropy": 0.09469825768344646,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1866,
+      "normalized_entropy": 0.030770118621782742,
+      "raw_entropy": 0.36706549461887333,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1873,
+      "normalized_entropy": 0.016784480344163653,
+      "raw_entropy": 0.20022683874509664,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1885,
+      "normalized_entropy": 0.000992449707198473,
+      "raw_entropy": 0.011839214763353981,
+      "factuality": "correct"
+    },
+    {
+      "index": 1888,
+      "normalized_entropy": 0.019595707596342403,
+      "raw_entropy": 0.23376276801761314,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1892,
+      "normalized_entropy": 0.010137644313186155,
+      "raw_entropy": 0.12093484168291742,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1900,
+      "normalized_entropy": 0.00014330915219348058,
+      "raw_entropy": 0.001709575626922416,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1910,
+      "normalized_entropy": 0.03293867255947541,
+      "raw_entropy": 0.39293479117671504,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1912,
+      "normalized_entropy": 0.019389133400834587,
+      "raw_entropy": 0.23129848569938077,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1916,
+      "normalized_entropy": 0.03950843947458059,
+      "raw_entropy": 0.47130740884080885,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1920,
+      "normalized_entropy": 0.010365319281416947,
+      "raw_entropy": 0.12365084111903299,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1926,
+      "normalized_entropy": 0.02187268501645253,
+      "raw_entropy": 0.26092547912776964,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1927,
+      "normalized_entropy": 0.0041199064579963,
+      "raw_entropy": 0.049147535645746074,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1928,
+      "normalized_entropy": 0.014629664434460099,
+      "raw_entropy": 0.17452142702958842,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1932,
+      "normalized_entropy": 0.014039603556421773,
+      "raw_entropy": 0.16748242302980998,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1934,
+      "normalized_entropy": 0.007785211817206665,
+      "raw_entropy": 0.09287200551682812,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1938,
+      "normalized_entropy": 0.024904306122983826,
+      "raw_entropy": 0.29709054935854057,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1943,
+      "normalized_entropy": 0.03652922564023932,
+      "raw_entropy": 0.43576751986216467,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1944,
+      "normalized_entropy": 0.0014949052384711987,
+      "raw_entropy": 0.01783314967071074,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1947,
+      "normalized_entropy": 0.0031963487238993093,
+      "raw_entropy": 0.03813015281916805,
+      "factuality": "correct"
+    },
+    {
+      "index": 1948,
+      "normalized_entropy": 0.041190081075351416,
+      "raw_entropy": 0.4913681896764615,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1950,
+      "normalized_entropy": 0.04544392106794882,
+      "raw_entropy": 0.5421134565408842,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1952,
+      "normalized_entropy": 0.0009650414861230429,
+      "raw_entropy": 0.011512254300531646,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1955,
+      "normalized_entropy": 0.02855946579964792,
+      "raw_entropy": 0.34069398849757154,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1957,
+      "normalized_entropy": 0.04882740443703272,
+      "raw_entropy": 0.5824759917547818,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1961,
+      "normalized_entropy": 0.0030176569362448525,
+      "raw_entropy": 0.03599848767266841,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1963,
+      "normalized_entropy": 0.03487848181300219,
+      "raw_entropy": 0.4160753273528742,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1966,
+      "normalized_entropy": 0.01721484216893821,
+      "raw_entropy": 0.20536074732756546,
+      "factuality": "correct"
+    },
+    {
+      "index": 1970,
+      "normalized_entropy": 0.009373159438871043,
+      "raw_entropy": 0.11181508423354343,
+      "factuality": "correct"
+    },
+    {
+      "index": 1978,
+      "normalized_entropy": 0.007323936766572253,
+      "raw_entropy": 0.08736932427280449,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1979,
+      "normalized_entropy": 0.02876604713223015,
+      "raw_entropy": 0.34315835595599403,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1990,
+      "normalized_entropy": 0.01463058968892188,
+      "raw_entropy": 0.174532464653162,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1993,
+      "normalized_entropy": 0.004849771130229869,
+      "raw_entropy": 0.057854298860126385,
+      "factuality": "correct"
+    },
+    {
+      "index": 1994,
+      "normalized_entropy": 0.0033766758556088095,
+      "raw_entropy": 0.040281326449915514,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 1999,
+      "normalized_entropy": 0.02495311786983261,
+      "raw_entropy": 0.2976728385664728,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2000,
+      "normalized_entropy": 0.05298146077116876,
+      "raw_entropy": 0.6320309109836233,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2007,
+      "normalized_entropy": 0.009745621113862327,
+      "raw_entropy": 0.1162582854651586,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2011,
+      "normalized_entropy": 0.0019536370427373226,
+      "raw_entropy": 0.023305491805626993,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2014,
+      "normalized_entropy": 0.028743115688997383,
+      "raw_entropy": 0.34288480024904266,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2015,
+      "normalized_entropy": 0.04852495183847707,
+      "raw_entropy": 0.5788679487032676,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2017,
+      "normalized_entropy": 0.02363204621368057,
+      "raw_entropy": 0.2819133991293711,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2021,
+      "normalized_entropy": 0.009728965924027081,
+      "raw_entropy": 0.11605960096965855,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2022,
+      "normalized_entropy": 0.008729033384078436,
+      "raw_entropy": 0.10413112136666083,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2023,
+      "normalized_entropy": 0.030550515938721906,
+      "raw_entropy": 0.3644457917679297,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2028,
+      "normalized_entropy": 0.023875627494035354,
+      "raw_entropy": 0.28481914948582343,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2031,
+      "normalized_entropy": 0.04716626021599958,
+      "raw_entropy": 0.5626597299905143,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2035,
+      "normalized_entropy": 0.02660942433190492,
+      "raw_entropy": 0.31743138932846476,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2040,
+      "normalized_entropy": 0.03172137380373741,
+      "raw_entropy": 0.37841328817680164,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2056,
+      "normalized_entropy": 0.009341521583089141,
+      "raw_entropy": 0.11143766725559771,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2057,
+      "normalized_entropy": 0.0016409987027225053,
+      "raw_entropy": 0.01957594014789882,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2062,
+      "normalized_entropy": 0.03186287893215356,
+      "raw_entropy": 0.3801013430911045,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2065,
+      "normalized_entropy": 0.008024150311185637,
+      "raw_entropy": 0.09572237075441258,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2080,
+      "normalized_entropy": 0.003041428488501501,
+      "raw_entropy": 0.036282065279053324,
+      "factuality": "correct"
+    },
+    {
+      "index": 2082,
+      "normalized_entropy": 0.016756865381883864,
+      "raw_entropy": 0.19989741200766004,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2086,
+      "normalized_entropy": 0.027615806489755514,
+      "raw_entropy": 0.3294368082573839,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2087,
+      "normalized_entropy": 0.04107505903165369,
+      "raw_entropy": 0.4899960590103129,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2090,
+      "normalized_entropy": 0.012365463358018452,
+      "raw_entropy": 0.1475111285560466,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2094,
+      "normalized_entropy": 0.015197723291087461,
+      "raw_entropy": 0.18129796265961173,
+      "factuality": "correct"
+    },
+    {
+      "index": 2097,
+      "normalized_entropy": 0.010463852870495591,
+      "raw_entropy": 0.12482627632148688,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2098,
+      "normalized_entropy": 0.007710457185750122,
+      "raw_entropy": 0.09198023626146937,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2099,
+      "normalized_entropy": 0.02133198715551669,
+      "raw_entropy": 0.25447534059553534,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2104,
+      "normalized_entropy": 0.013194961314544063,
+      "raw_entropy": 0.1574064455497832,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2105,
+      "normalized_entropy": 0.02072068721365202,
+      "raw_entropy": 0.2471829697639781,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2109,
+      "normalized_entropy": 0.002853669882041234,
+      "raw_entropy": 0.03404223947284084,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2110,
+      "normalized_entropy": 0.006541751647365447,
+      "raw_entropy": 0.0780384155689974,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2113,
+      "normalized_entropy": 0.014275113237171372,
+      "raw_entropy": 0.17029188497938746,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2117,
+      "normalized_entropy": 0.001404495558008079,
+      "raw_entropy": 0.016754626884190313,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2121,
+      "normalized_entropy": 0.029339996751494846,
+      "raw_entropy": 0.3500051641685749,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2122,
+      "normalized_entropy": 0.013275104859279647,
+      "raw_entropy": 0.158362500684002,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2124,
+      "normalized_entropy": 0.019195630910415862,
+      "raw_entropy": 0.22899013946813646,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2132,
+      "normalized_entropy": 0.00988550176155572,
+      "raw_entropy": 0.11792696148699347,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2133,
+      "normalized_entropy": 0.0028547564014242644,
+      "raw_entropy": 0.03405520087151621,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2135,
+      "normalized_entropy": 0.004559483607853976,
+      "raw_entropy": 0.05439137646153795,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2137,
+      "normalized_entropy": 0.031137206617690233,
+      "raw_entropy": 0.3714445917046755,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2141,
+      "normalized_entropy": 0.05624567116792152,
+      "raw_entropy": 0.6709706049949393,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2145,
+      "normalized_entropy": 0.007437871914949555,
+      "raw_entropy": 0.08872848905561369,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2148,
+      "normalized_entropy": 0.010279899642014912,
+      "raw_entropy": 0.12263184595126404,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2151,
+      "normalized_entropy": 0.008620071649618073,
+      "raw_entropy": 0.10283128585267261,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2158,
+      "normalized_entropy": 0.01969332885796974,
+      "raw_entropy": 0.23492731980647724,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2160,
+      "normalized_entropy": 0.016066334799499,
+      "raw_entropy": 0.19165987633585654,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2162,
+      "normalized_entropy": 0.004276584089982877,
+      "raw_entropy": 0.05101658766948945,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2168,
+      "normalized_entropy": 0.0018879575743393343,
+      "raw_entropy": 0.022521982750944795,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2171,
+      "normalized_entropy": 0.019001743317679752,
+      "raw_entropy": 0.22667719924184299,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2176,
+      "normalized_entropy": 0.037725552410191654,
+      "raw_entropy": 0.45003884208019107,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2177,
+      "normalized_entropy": 0.010351406685801767,
+      "raw_entropy": 0.12348487380984938,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2178,
+      "normalized_entropy": 0.0047986706031399404,
+      "raw_entropy": 0.057244706141875656,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2180,
+      "normalized_entropy": 0.006668536533502837,
+      "raw_entropy": 0.07955086852740989,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2181,
+      "normalized_entropy": 0.01204464645026622,
+      "raw_entropy": 0.14368401243817744,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2182,
+      "normalized_entropy": 0.025244415287415056,
+      "raw_entropy": 0.3011478082921471,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2186,
+      "normalized_entropy": 0.0021401866279598804,
+      "raw_entropy": 0.025530894853705872,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2188,
+      "normalized_entropy": 0.006558209055853999,
+      "raw_entropy": 0.078234740674573,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2192,
+      "normalized_entropy": 0.026552140442561066,
+      "raw_entropy": 0.3167480335236286,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2196,
+      "normalized_entropy": 0.03505956472428594,
+      "raw_entropy": 0.41823551689307126,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2203,
+      "normalized_entropy": 0.03481426665795771,
+      "raw_entropy": 0.41530928650856824,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2208,
+      "normalized_entropy": 0.01328767557795143,
+      "raw_entropy": 0.15851246036156094,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2210,
+      "normalized_entropy": 0.003658094260650924,
+      "raw_entropy": 0.043638446625868,
+      "factuality": "correct"
+    },
+    {
+      "index": 2212,
+      "normalized_entropy": 0.02284611446042032,
+      "raw_entropy": 0.2725377957625733,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2214,
+      "normalized_entropy": 0.02550259379864526,
+      "raw_entropy": 0.30422769316648074,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2217,
+      "normalized_entropy": 0.012475926514515477,
+      "raw_entropy": 0.14882887496044422,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2219,
+      "normalized_entropy": 0.005761506366436972,
+      "raw_entropy": 0.06873064774761163,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2224,
+      "normalized_entropy": 0.005722064131402825,
+      "raw_entropy": 0.0682601301103662,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2230,
+      "normalized_entropy": 0.004614071826657946,
+      "raw_entropy": 0.05504257484598156,
+      "factuality": "correct"
+    },
+    {
+      "index": 2232,
+      "normalized_entropy": 0.017302143360329154,
+      "raw_entropy": 0.20640218806403535,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2233,
+      "normalized_entropy": 0.011767646154486567,
+      "raw_entropy": 0.14037959714392007,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2234,
+      "normalized_entropy": 0.05217880784584463,
+      "raw_entropy": 0.6224558360005579,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2237,
+      "normalized_entropy": 0.018204506058058664,
+      "raw_entropy": 0.21716672927491065,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2238,
+      "normalized_entropy": 0.010578138596023745,
+      "raw_entropy": 0.12618962323881633,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2243,
+      "normalized_entropy": 0.03522706794377823,
+      "raw_entropy": 0.42023371042846,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2245,
+      "normalized_entropy": 0.029164366021781112,
+      "raw_entropy": 0.34791001525267157,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2247,
+      "normalized_entropy": 0.0023751715373628137,
+      "raw_entropy": 0.02833409665666862,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2249,
+      "normalized_entropy": 0.01636585996575273,
+      "raw_entropy": 0.19523299721501672,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2259,
+      "normalized_entropy": 0.0021982161378068786,
+      "raw_entropy": 0.026223145377543628,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2272,
+      "normalized_entropy": 0.021087839253497276,
+      "raw_entropy": 0.2515628308481249,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2274,
+      "normalized_entropy": 0.003490148602031244,
+      "raw_entropy": 0.04163497510831967,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2276,
+      "normalized_entropy": 0.03878666777446867,
+      "raw_entropy": 0.4626971889921297,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2277,
+      "normalized_entropy": 0.009401908970910578,
+      "raw_entropy": 0.11215804557626256,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2281,
+      "normalized_entropy": 0.0026031080943352395,
+      "raw_entropy": 0.031053216659266736,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2282,
+      "normalized_entropy": 0.025583599640919268,
+      "raw_entropy": 0.3051940348932324,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2283,
+      "normalized_entropy": 0.02166193465812965,
+      "raw_entropy": 0.2584113781758114,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2284,
+      "normalized_entropy": 0.0012674188773881536,
+      "raw_entropy": 0.015119400182891651,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2288,
+      "normalized_entropy": 0.024487607975990568,
+      "raw_entropy": 0.29211963867363444,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2289,
+      "normalized_entropy": 0.016822253963353243,
+      "raw_entropy": 0.20067745098945622,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2293,
+      "normalized_entropy": 0.012254686551600755,
+      "raw_entropy": 0.14618964053255795,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2299,
+      "normalized_entropy": 0.004541345938335459,
+      "raw_entropy": 0.05417500704434843,
+      "factuality": "correct"
+    },
+    {
+      "index": 2307,
+      "normalized_entropy": 0.032454596609106504,
+      "raw_entropy": 0.38716011151625124,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2308,
+      "normalized_entropy": 0.0005528127612169577,
+      "raw_entropy": 0.006594660622597598,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2310,
+      "normalized_entropy": 0.04548377978695424,
+      "raw_entropy": 0.5425889425338515,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2313,
+      "normalized_entropy": 0.006796897338091977,
+      "raw_entropy": 0.08108212106515067,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2314,
+      "normalized_entropy": 0.0077517889027399825,
+      "raw_entropy": 0.09247329406624463,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2319,
+      "normalized_entropy": 0.02179795665268284,
+      "raw_entropy": 0.2600340232271166,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2325,
+      "normalized_entropy": 0.05484545724055765,
+      "raw_entropy": 0.6542670549001988,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2326,
+      "normalized_entropy": 0.007350044171648115,
+      "raw_entropy": 0.08768076693167685,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2329,
+      "normalized_entropy": 0.02665815649360965,
+      "raw_entropy": 0.31801272914258333,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2333,
+      "normalized_entropy": 0.006211286116787537,
+      "raw_entropy": 0.07409619828582462,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2336,
+      "normalized_entropy": 0.021928748280950105,
+      "raw_entropy": 0.2615942737517261,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2337,
+      "normalized_entropy": 0.01623340109056555,
+      "raw_entropy": 0.19365285762781267,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2341,
+      "normalized_entropy": 0.0016256177691569898,
+      "raw_entropy": 0.019392456617779143,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2350,
+      "normalized_entropy": 0.025633524029129412,
+      "raw_entropy": 0.3057895971163474,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2355,
+      "normalized_entropy": 0.0005013528402215467,
+      "raw_entropy": 0.00598078059225359,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2358,
+      "normalized_entropy": 0.04755438733315357,
+      "raw_entropy": 0.5672898087362059,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2359,
+      "normalized_entropy": 0.016406838847453177,
+      "raw_entropy": 0.1957218459472947,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2360,
+      "normalized_entropy": 0.0312443366328653,
+      "raw_entropy": 0.3727225761184542,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2362,
+      "normalized_entropy": 0.0018984731491531754,
+      "raw_entropy": 0.022647426033035746,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2363,
+      "normalized_entropy": 0.02034484901793125,
+      "raw_entropy": 0.24269948905645666,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2365,
+      "normalized_entropy": 0.02277770240592352,
+      "raw_entropy": 0.271721688911299,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2368,
+      "normalized_entropy": 0.013001482594680985,
+      "raw_entropy": 0.15509838288425642,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2373,
+      "normalized_entropy": 0.02177183416107025,
+      "raw_entropy": 0.25972240059665774,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2376,
+      "normalized_entropy": 0.003458516383768903,
+      "raw_entropy": 0.04125762538194784,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2378,
+      "normalized_entropy": 4.517388255695491e-05,
+      "raw_entropy": 0.0005388920903569413,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2384,
+      "normalized_entropy": 0.016688404794010882,
+      "raw_entropy": 0.19908072618794057,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2395,
+      "normalized_entropy": 0.009224290684658621,
+      "raw_entropy": 0.1100391865332468,
+      "factuality": "correct"
+    },
+    {
+      "index": 2398,
+      "normalized_entropy": 0.0013086604902379142,
+      "raw_entropy": 0.015611383109758261,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2403,
+      "normalized_entropy": 0.0066682545958715676,
+      "raw_entropy": 0.07954750521323663,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2405,
+      "normalized_entropy": 0.0009701756691980907,
+      "raw_entropy": 0.011573501430354936,
+      "factuality": "correct"
+    },
+    {
+      "index": 2411,
+      "normalized_entropy": 0.022680332455342494,
+      "raw_entropy": 0.27056013508336746,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2413,
+      "normalized_entropy": 0.010752459522418295,
+      "raw_entropy": 0.12826914713847845,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2422,
+      "normalized_entropy": 0.0037007927141032965,
+      "raw_entropy": 0.04414780861854036,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2423,
+      "normalized_entropy": 0.028349142584453063,
+      "raw_entropy": 0.33818498305744693,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2424,
+      "normalized_entropy": 0.021172671224022006,
+      "raw_entropy": 0.252574815546751,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2427,
+      "normalized_entropy": 0.04453714644991557,
+      "raw_entropy": 0.5312962842781623,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2431,
+      "normalized_entropy": 0.03488099412904481,
+      "raw_entropy": 0.4161052974853316,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2432,
+      "normalized_entropy": 0.02107979943022264,
+      "raw_entropy": 0.25146692151013283,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2433,
+      "normalized_entropy": 0.0043865750839073795,
+      "raw_entropy": 0.052328701512298535,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2437,
+      "normalized_entropy": 0.024370547140451393,
+      "raw_entropy": 0.29072318667987235,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2439,
+      "normalized_entropy": 0.002601052251967971,
+      "raw_entropy": 0.031028691931082375,
+      "factuality": "correct"
+    },
+    {
+      "index": 2440,
+      "normalized_entropy": 0.0055298378192627316,
+      "raw_entropy": 0.06596700777269296,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2443,
+      "normalized_entropy": 0.009986296654958267,
+      "raw_entropy": 0.11912937243173616,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2450,
+      "normalized_entropy": 0.005818874179446772,
+      "raw_entropy": 0.06941500470172288,
+      "factuality": "correct"
+    },
+    {
+      "index": 2453,
+      "normalized_entropy": 0.01507901301161641,
+      "raw_entropy": 0.1798818339801617,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2458,
+      "normalized_entropy": 0.017454655678235342,
+      "raw_entropy": 0.20822155087169364,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2460,
+      "normalized_entropy": 0.048489562539343646,
+      "raw_entropy": 0.578445779690847,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2462,
+      "normalized_entropy": 0.00533020870596064,
+      "raw_entropy": 0.06358557531494854,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2465,
+      "normalized_entropy": 0.017956576421360584,
+      "raw_entropy": 0.21420910613917035,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2470,
+      "normalized_entropy": 0.02971721981107394,
+      "raw_entropy": 0.35450516531085274,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2474,
+      "normalized_entropy": 0.0009473460552861289,
+      "raw_entropy": 0.011301160474326907,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2476,
+      "normalized_entropy": 0.04326848622952174,
+      "raw_entropy": 0.516162075761576,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2477,
+      "normalized_entropy": 0.02001251679864786,
+      "raw_entropy": 0.23873500351291743,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2479,
+      "normalized_entropy": 0.018730327489114327,
+      "raw_entropy": 0.22343940264494488,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2484,
+      "normalized_entropy": 0.015627760344725537,
+      "raw_entropy": 0.18642799695484374,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2487,
+      "normalized_entropy": 0.012760691323042746,
+      "raw_entropy": 0.15222591533513144,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2490,
+      "normalized_entropy": 0.0014423104630445806,
+      "raw_entropy": 0.01720573163915745,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2493,
+      "normalized_entropy": 0.0003320029968184096,
+      "raw_entropy": 0.0039605581551390556,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2494,
+      "normalized_entropy": 0.02717098470861785,
+      "raw_entropy": 0.3241304027437258,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2497,
+      "normalized_entropy": 0.01739303575694283,
+      "raw_entropy": 0.20748646930877754,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2498,
+      "normalized_entropy": 0.003130698046268852,
+      "raw_entropy": 0.037346987217738464,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2499,
+      "normalized_entropy": 0.008444976797175355,
+      "raw_entropy": 0.10074252956911359,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2505,
+      "normalized_entropy": 0.024005506292001617,
+      "raw_entropy": 0.28636851059820606,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2508,
+      "normalized_entropy": 0.0016887850885435405,
+      "raw_entropy": 0.020145997532566465,
+      "factuality": "correct"
+    },
+    {
+      "index": 2509,
+      "normalized_entropy": 0.024346564763591372,
+      "raw_entropy": 0.29043709408684515,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2510,
+      "normalized_entropy": 0.0062924709013193695,
+      "raw_entropy": 0.07506467466565266,
+      "factuality": "correct"
+    },
+    {
+      "index": 2514,
+      "normalized_entropy": 0.03441999564593051,
+      "raw_entropy": 0.41060591549389824,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2516,
+      "normalized_entropy": 0.006497427182382176,
+      "raw_entropy": 0.07750965642241149,
+      "factuality": "correct"
+    },
+    {
+      "index": 2521,
+      "normalized_entropy": 0.015799328317796606,
+      "raw_entropy": 0.18847468009149917,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2523,
+      "normalized_entropy": 0.01258057814820363,
+      "raw_entropy": 0.1500772940567301,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2528,
+      "normalized_entropy": 0.0063213219430672705,
+      "raw_entropy": 0.07540884694654748,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2530,
+      "normalized_entropy": 0.022661016657496806,
+      "raw_entropy": 0.2703297114383586,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2537,
+      "normalized_entropy": 0.00022509966609511486,
+      "raw_entropy": 0.002685277924643874,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2541,
+      "normalized_entropy": 0.0015468860731534463,
+      "raw_entropy": 0.018453243828548464,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2543,
+      "normalized_entropy": 0.004434862420041758,
+      "raw_entropy": 0.05290473487570084,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2550,
+      "normalized_entropy": 0.01164242713665543,
+      "raw_entropy": 0.13888582387379245,
+      "factuality": "correct"
+    },
+    {
+      "index": 2551,
+      "normalized_entropy": 0.027649749132805233,
+      "raw_entropy": 0.3298417196980209,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2553,
+      "normalized_entropy": 0.0026421661336046604,
+      "raw_entropy": 0.031519151115987486,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2554,
+      "normalized_entropy": 0.033811941425492396,
+      "raw_entropy": 0.40335226379616956,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2557,
+      "normalized_entropy": 0.03846661026589083,
+      "raw_entropy": 0.4588791319629493,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2558,
+      "normalized_entropy": 0.023684951979210566,
+      "raw_entropy": 0.28254452705029853,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2560,
+      "normalized_entropy": 0.03481579215493551,
+      "raw_entropy": 0.4153274845957962,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2562,
+      "normalized_entropy": 0.011768179046911827,
+      "raw_entropy": 0.14038595416919064,
+      "factuality": "correct"
+    },
+    {
+      "index": 2575,
+      "normalized_entropy": 0.032916979482459294,
+      "raw_entropy": 0.3926760082924953,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2582,
+      "normalized_entropy": 0.025280860808440463,
+      "raw_entropy": 0.3015825772758573,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2590,
+      "normalized_entropy": 0.020341108363495904,
+      "raw_entropy": 0.24265486572603062,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2593,
+      "normalized_entropy": 0.03715846991001804,
+      "raw_entropy": 0.4432739536839344,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2596,
+      "normalized_entropy": 0.009684832884287333,
+      "raw_entropy": 0.11553312538923499,
+      "factuality": "correct"
+    },
+    {
+      "index": 2601,
+      "normalized_entropy": 0.014767664551523915,
+      "raw_entropy": 0.17616766966680827,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2616,
+      "normalized_entropy": 0.0018389097003356802,
+      "raw_entropy": 0.02193687671503857,
+      "factuality": "correct"
+    },
+    {
+      "index": 2622,
+      "normalized_entropy": 0.03635460246898667,
+      "raw_entropy": 0.43368439039764606,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2627,
+      "normalized_entropy": 0.02715831244769299,
+      "raw_entropy": 0.323979231739756,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2630,
+      "normalized_entropy": 0.030405248212785802,
+      "raw_entropy": 0.36271285175790496,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2632,
+      "normalized_entropy": 0.0006559513676645168,
+      "raw_entropy": 0.007825030386696385,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2633,
+      "normalized_entropy": 0.03434775997831397,
+      "raw_entropy": 0.4097441956744622,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2635,
+      "normalized_entropy": 0.0023059035329205087,
+      "raw_entropy": 0.02750777893510229,
+      "factuality": "correct"
+    },
+    {
+      "index": 2637,
+      "normalized_entropy": 0.04030489885725265,
+      "raw_entropy": 0.48080859929242453,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2641,
+      "normalized_entropy": 0.02120479201011632,
+      "raw_entropy": 0.25295799353771625,
+      "factuality": "correct"
+    },
+    {
+      "index": 2645,
+      "normalized_entropy": 0.015338226472322525,
+      "raw_entropy": 0.18297406506108455,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2648,
+      "normalized_entropy": 0.03805064184323393,
+      "raw_entropy": 0.4539169263671511,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2649,
+      "normalized_entropy": 0.005995372550202762,
+      "raw_entropy": 0.07152050395433576,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2652,
+      "normalized_entropy": 0.009879801659599455,
+      "raw_entropy": 0.11785896334991534,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2656,
+      "normalized_entropy": 0.008839359513842007,
+      "raw_entropy": 0.10544723314019108,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2659,
+      "normalized_entropy": 0.0002650028394105693,
+      "raw_entropy": 0.0031612942257162715,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2660,
+      "normalized_entropy": 0.03976713771659594,
+      "raw_entropy": 0.47439349373146567,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2661,
+      "normalized_entropy": 0.030275718944462442,
+      "raw_entropy": 0.36116766028402236,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2667,
+      "normalized_entropy": 0.02352003797639442,
+      "raw_entropy": 0.2805772210168914,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2675,
+      "normalized_entropy": 0.003187390857675037,
+      "raw_entropy": 0.03802329188578138,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2680,
+      "normalized_entropy": 0.0028287343181361254,
+      "raw_entropy": 0.033744776040511085,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2684,
+      "normalized_entropy": 0.013945577561447788,
+      "raw_entropy": 0.1663607601991791,
+      "factuality": "correct"
+    },
+    {
+      "index": 2690,
+      "normalized_entropy": 0.0022648541693904367,
+      "raw_entropy": 0.027018089405036937,
+      "factuality": "correct"
+    },
+    {
+      "index": 2691,
+      "normalized_entropy": 0.00022767261379687343,
+      "raw_entropy": 0.002715971349403891,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2693,
+      "normalized_entropy": 0.054196355495919904,
+      "raw_entropy": 0.6465237356143007,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2701,
+      "normalized_entropy": 0.005804414088494777,
+      "raw_entropy": 0.0692425061649844,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2703,
+      "normalized_entropy": 0.00434813425959729,
+      "raw_entropy": 0.051870129988334665,
+      "factuality": "correct"
+    },
+    {
+      "index": 2706,
+      "normalized_entropy": 0.008747778684850781,
+      "raw_entropy": 0.10435473938985913,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2709,
+      "normalized_entropy": 0.0037429237619614752,
+      "raw_entropy": 0.04465040186853602,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2722,
+      "normalized_entropy": 0.025649630080336754,
+      "raw_entropy": 0.3059817307810059,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2723,
+      "normalized_entropy": 0.03687720044812416,
+      "raw_entropy": 0.4399186102931498,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2726,
+      "normalized_entropy": 0.00398136191280892,
+      "raw_entropy": 0.047494798370630364,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2732,
+      "normalized_entropy": 0.007742415909743399,
+      "raw_entropy": 0.09236148096754845,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2735,
+      "normalized_entropy": 0.030408770847981288,
+      "raw_entropy": 0.3627548742748242,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2737,
+      "normalized_entropy": 0.010850100904572725,
+      "raw_entropy": 0.12943393895083155,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2746,
+      "normalized_entropy": 0.004488039594530926,
+      "raw_entropy": 0.053539100511278304,
+      "factuality": "correct"
+    },
+    {
+      "index": 2747,
+      "normalized_entropy": 0.04254663290683882,
+      "raw_entropy": 0.5075508822140378,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2748,
+      "normalized_entropy": 0.004773431181536773,
+      "raw_entropy": 0.05694361790466289,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2751,
+      "normalized_entropy": 0.00019955973869458708,
+      "raw_entropy": 0.0023806048683246094,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2752,
+      "normalized_entropy": 0.0034711721397341086,
+      "raw_entropy": 0.041408599493560634,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2753,
+      "normalized_entropy": 0.004576820791390636,
+      "raw_entropy": 0.054598196653829235,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2758,
+      "normalized_entropy": 0.0184272634633312,
+      "raw_entropy": 0.2198240657041728,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2759,
+      "normalized_entropy": 0.006217528441267164,
+      "raw_entropy": 0.0741706647495666,
+      "factuality": "correct"
+    },
+    {
+      "index": 2760,
+      "normalized_entropy": 0.004188641901777225,
+      "raw_entropy": 0.0499675002997475,
+      "factuality": "correct"
+    },
+    {
+      "index": 2764,
+      "normalized_entropy": 0.02645514539551968,
+      "raw_entropy": 0.31559095202662635,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2769,
+      "normalized_entropy": 0.002435855611723759,
+      "raw_entropy": 0.029058014235426987,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2770,
+      "normalized_entropy": 0.04941546093187128,
+      "raw_entropy": 0.5894910848974177,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2774,
+      "normalized_entropy": 0.017649325438643865,
+      "raw_entropy": 0.21054382179856307,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2776,
+      "normalized_entropy": 0.011476316847884296,
+      "raw_entropy": 0.1369042470050606,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2778,
+      "normalized_entropy": 0.00045313053256534793,
+      "raw_entropy": 0.005405522972058542,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2779,
+      "normalized_entropy": 0.007751505476569111,
+      "raw_entropy": 0.09246991299485915,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2783,
+      "normalized_entropy": 0.004753525518768817,
+      "raw_entropy": 0.056706157593266374,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2784,
+      "normalized_entropy": 0.005017724924766572,
+      "raw_entropy": 0.05985786743334236,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2786,
+      "normalized_entropy": 0.013389396526740302,
+      "raw_entropy": 0.15972591848433387,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2788,
+      "normalized_entropy": 0.006812883428726771,
+      "raw_entropy": 0.08127282368602806,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2793,
+      "normalized_entropy": 0.00609867193450891,
+      "raw_entropy": 0.07275279168322735,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2795,
+      "normalized_entropy": 1.3463241238924985e-05,
+      "raw_entropy": 0.00016060683305396022,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2797,
+      "normalized_entropy": 0.008472631464625062,
+      "raw_entropy": 0.10107242996081248,
+      "factuality": "correct"
+    },
+    {
+      "index": 2799,
+      "normalized_entropy": 0.008498313500873812,
+      "raw_entropy": 0.10137879827399128,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2802,
+      "normalized_entropy": 0.003200179276737228,
+      "raw_entropy": 0.03817584857320129,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2805,
+      "normalized_entropy": 0.02361031428152667,
+      "raw_entropy": 0.28165415273116423,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2806,
+      "normalized_entropy": 0.011369064704781244,
+      "raw_entropy": 0.13562480569250138,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2809,
+      "normalized_entropy": 0.03314295108485261,
+      "raw_entropy": 0.3953716877931783,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2812,
+      "normalized_entropy": 0.003120604439528389,
+      "raw_entropy": 0.03722657771278279,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2813,
+      "normalized_entropy": 0.0005842798591868218,
+      "raw_entropy": 0.006970040582047994,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2823,
+      "normalized_entropy": 0.04891429508085125,
+      "raw_entropy": 0.58351253495252,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2824,
+      "normalized_entropy": 0.0025198390704693897,
+      "raw_entropy": 0.03005987679576322,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2830,
+      "normalized_entropy": 0.0089999727052243,
+      "raw_entropy": 0.1073632335710546,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2831,
+      "normalized_entropy": 0.0074549686819813665,
+      "raw_entropy": 0.08893244125105544,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2836,
+      "normalized_entropy": 0.030457346887643795,
+      "raw_entropy": 0.36333435166470734,
+      "factuality": "correct"
+    },
+    {
+      "index": 2838,
+      "normalized_entropy": 0.00032536480958073147,
+      "raw_entropy": 0.0038813693319914556,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2843,
+      "normalized_entropy": 0.005941286554618548,
+      "raw_entropy": 0.07087529673348938,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2849,
+      "normalized_entropy": 0.0030505349492905244,
+      "raw_entropy": 0.03639069883925623,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2860,
+      "normalized_entropy": 0.020070811250531936,
+      "raw_entropy": 0.23943041460565256,
+      "factuality": "correct"
+    },
+    {
+      "index": 2861,
+      "normalized_entropy": 0.019790784255414695,
+      "raw_entropy": 0.2360898929543457,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2863,
+      "normalized_entropy": 0.004255316613441186,
+      "raw_entropy": 0.050762881894350034,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2864,
+      "normalized_entropy": 0.014496062755822617,
+      "raw_entropy": 0.172927654615066,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2866,
+      "normalized_entropy": 0.034987039660393585,
+      "raw_entropy": 0.4173703447831702,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2867,
+      "normalized_entropy": 0.025078620663376395,
+      "raw_entropy": 0.29916999707776915,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2874,
+      "normalized_entropy": 0.006099119442295733,
+      "raw_entropy": 0.07275813013086659,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2875,
+      "normalized_entropy": 0.0035570842777779485,
+      "raw_entropy": 0.042433469817671196,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2882,
+      "normalized_entropy": 0.0023567396045863346,
+      "raw_entropy": 0.028114216889400162,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2884,
+      "normalized_entropy": 0.004480391906099001,
+      "raw_entropy": 0.0534478690613297,
+      "factuality": "correct"
+    },
+    {
+      "index": 2886,
+      "normalized_entropy": 0.026160334226200815,
+      "raw_entropy": 0.3120740657573421,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2887,
+      "normalized_entropy": 0.013969127072372564,
+      "raw_entropy": 0.16664168901137794,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2888,
+      "normalized_entropy": 0.013618410949022594,
+      "raw_entropy": 0.16245789664870774,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2891,
+      "normalized_entropy": 0.050602309337124764,
+      "raw_entropy": 0.6036493370077487,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2894,
+      "normalized_entropy": 0.017001498009990592,
+      "raw_entropy": 0.20281570419039938,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2895,
+      "normalized_entropy": 0.001943249849148281,
+      "raw_entropy": 0.023181580019672278,
+      "factuality": "correct"
+    },
+    {
+      "index": 2897,
+      "normalized_entropy": 0.04117149316295658,
+      "raw_entropy": 0.4911464491839723,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2898,
+      "normalized_entropy": 0.005889124272594906,
+      "raw_entropy": 0.07025303803872104,
+      "factuality": "correct"
+    },
+    {
+      "index": 2901,
+      "normalized_entropy": 0.002379778066570612,
+      "raw_entropy": 0.02838904925346945,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2904,
+      "normalized_entropy": 0.029771179184376766,
+      "raw_entropy": 0.35514886201849893,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2905,
+      "normalized_entropy": 0.004953384574892363,
+      "raw_entropy": 0.05909033310431289,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2907,
+      "normalized_entropy": 0.023205817425981923,
+      "raw_entropy": 0.2768287947214228,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2911,
+      "normalized_entropy": 0.0008409604757170124,
+      "raw_entropy": 0.010032056644574081,
+      "factuality": "correct"
+    },
+    {
+      "index": 2913,
+      "normalized_entropy": 0.003330228926330287,
+      "raw_entropy": 0.03972724782322217,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2915,
+      "normalized_entropy": 0.015640674233600597,
+      "raw_entropy": 0.18658205040733913,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2917,
+      "normalized_entropy": 0.004517606995211184,
+      "raw_entropy": 0.0538918184415761,
+      "factuality": "correct"
+    },
+    {
+      "index": 2918,
+      "normalized_entropy": 0.008394508258917003,
+      "raw_entropy": 0.10014047602534273,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2920,
+      "normalized_entropy": 0.05922324967982828,
+      "raw_entropy": 0.7064909857472532,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2921,
+      "normalized_entropy": 0.028803623613209928,
+      "raw_entropy": 0.3436066164825919,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2922,
+      "normalized_entropy": 0.0010843477656790822,
+      "raw_entropy": 0.012935492834469996,
+      "factuality": "correct"
+    },
+    {
+      "index": 2926,
+      "normalized_entropy": 0.018080101667010216,
+      "raw_entropy": 0.2156826739193154,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2929,
+      "normalized_entropy": 0.0004443376551976731,
+      "raw_entropy": 0.005300630237657322,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2947,
+      "normalized_entropy": 0.009770235564213237,
+      "raw_entropy": 0.11655191824259067,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2949,
+      "normalized_entropy": 0.029039744272264058,
+      "raw_entropy": 0.34642336696609777,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2961,
+      "normalized_entropy": 0.0023166031741588314,
+      "raw_entropy": 0.02763541799791075,
+      "factuality": "correct"
+    },
+    {
+      "index": 2964,
+      "normalized_entropy": 0.039904351920387396,
+      "raw_entropy": 0.4760303609857825,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2965,
+      "normalized_entropy": 0.003243509711713015,
+      "raw_entropy": 0.038692749653172376,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2968,
+      "normalized_entropy": 0.018035157926923704,
+      "raw_entropy": 0.21514652726393008,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2970,
+      "normalized_entropy": 0.008801062712377027,
+      "raw_entropy": 0.10499037970569987,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2974,
+      "normalized_entropy": 0.017801314199304644,
+      "raw_entropy": 0.21235693894296576,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2978,
+      "normalized_entropy": 0.06324820748023773,
+      "raw_entropy": 0.7545058518576975,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2983,
+      "normalized_entropy": 0.01880126190329723,
+      "raw_entropy": 0.22428559944215562,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2984,
+      "normalized_entropy": 0.07084977675179374,
+      "raw_entropy": 0.8451871332281258,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2987,
+      "normalized_entropy": 0.02207535276600612,
+      "raw_entropy": 0.26334316034140387,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2988,
+      "normalized_entropy": 0.017936623931464765,
+      "raw_entropy": 0.21397108721365013,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2991,
+      "normalized_entropy": 0.0037099310389368902,
+      "raw_entropy": 0.044256822293991596,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 2994,
+      "normalized_entropy": 0.03417057237128015,
+      "raw_entropy": 0.4076304743263045,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 3000,
+      "normalized_entropy": 0.006598254240385304,
+      "raw_entropy": 0.07871245106782063,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 3001,
+      "normalized_entropy": 0.002482947181386356,
+      "raw_entropy": 0.02961978296056747,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 3007,
+      "normalized_entropy": 0.02787912233424613,
+      "raw_entropy": 0.3325779778409978,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 3008,
+      "normalized_entropy": 0.03475638834624133,
+      "raw_entropy": 0.4146188396702243,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 3009,
+      "normalized_entropy": 0.002008814785521203,
+      "raw_entropy": 0.023963722789259928,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 3013,
+      "normalized_entropy": 0.005158465700352524,
+      "raw_entropy": 0.06153680416538765,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 3018,
+      "normalized_entropy": 0.008802939585316128,
+      "raw_entropy": 0.1050127694566851,
+      "factuality": "correct"
+    },
+    {
+      "index": 3019,
+      "normalized_entropy": 0.004053988649257796,
+      "raw_entropy": 0.048361183361369034,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 3021,
+      "normalized_entropy": 0.007684272692144112,
+      "raw_entropy": 0.09166787399160048,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 3024,
+      "normalized_entropy": 0.06612307953756333,
+      "raw_entropy": 0.7888010181084105,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 3025,
+      "normalized_entropy": 0.02105007919545061,
+      "raw_entropy": 0.2511123803784955,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 3027,
+      "normalized_entropy": 0.009805585558400687,
+      "raw_entropy": 0.11697361837513436,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 3029,
+      "normalized_entropy": 0.0011775330141619912,
+      "raw_entropy": 0.014047126161139956,
+      "factuality": "correct"
+    },
+    {
+      "index": 3030,
+      "normalized_entropy": 0.02893485378773881,
+      "raw_entropy": 0.3451720985502582,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 3031,
+      "normalized_entropy": 0.026397861470898593,
+      "raw_entropy": 0.31490759580095806,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 3041,
+      "normalized_entropy": 0.0020443134369251123,
+      "raw_entropy": 0.024387196296009897,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 3043,
+      "normalized_entropy": 0.01418153088055366,
+      "raw_entropy": 0.16917551443685852,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 3045,
+      "normalized_entropy": 0.00020928213181566063,
+      "raw_entropy": 0.0024965860604588387,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 3050,
+      "normalized_entropy": 0.01926108775299311,
+      "raw_entropy": 0.2297709927560987,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 3059,
+      "normalized_entropy": 0.011657050972183391,
+      "raw_entropy": 0.13906027576613894,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 3061,
+      "normalized_entropy": 0.03604464010152474,
+      "raw_entropy": 0.4299867611774225,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 3069,
+      "normalized_entropy": 0.010350727688873447,
+      "raw_entropy": 0.12347677386241654,
+      "factuality": "correct"
+    },
+    {
+      "index": 3070,
+      "normalized_entropy": 0.03752815299118426,
+      "raw_entropy": 0.44768400827970856,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 3076,
+      "normalized_entropy": 0.013346762884444353,
+      "raw_entropy": 0.15921732964237573,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 3078,
+      "normalized_entropy": 0.006880261212445174,
+      "raw_entropy": 0.08207659242708878,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 3087,
+      "normalized_entropy": 0.012936161894675247,
+      "raw_entropy": 0.1543191536797423,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 3091,
+      "normalized_entropy": 0.012336969062461806,
+      "raw_entropy": 0.14717121200190916,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 3097,
+      "normalized_entropy": 0.009732520294882753,
+      "raw_entropy": 0.11610200207029234,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 3103,
+      "normalized_entropy": 0.010860347660397347,
+      "raw_entropy": 0.12955617541476058,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 3104,
+      "normalized_entropy": 0.012809316792482723,
+      "raw_entropy": 0.15280598238688547,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 3105,
+      "normalized_entropy": 0.002237168174035032,
+      "raw_entropy": 0.026687815293842808,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 3129,
+      "normalized_entropy": 0.03152531778285078,
+      "raw_entropy": 0.3760744801545014,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 3132,
+      "normalized_entropy": 0.014253157555522557,
+      "raw_entropy": 0.17002996940983195,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 3141,
+      "normalized_entropy": 0.0014143301428465919,
+      "raw_entropy": 0.01687194644322394,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 3147,
+      "normalized_entropy": 0.0016951058304080532,
+      "raw_entropy": 0.020221399459590988,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 3149,
+      "normalized_entropy": 0.015839539296669092,
+      "raw_entropy": 0.18895436829258686,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 3154,
+      "normalized_entropy": 0.031206404568068946,
+      "raw_entropy": 0.37227007373139703,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 3158,
+      "normalized_entropy": 0.049583358150681774,
+      "raw_entropy": 0.5914939785627082,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 3160,
+      "normalized_entropy": 0.013524641848521318,
+      "raw_entropy": 0.16133929838529057,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 3163,
+      "normalized_entropy": 0.005904229616277987,
+      "raw_entropy": 0.07043323397876833,
+      "factuality": "correct"
+    },
+    {
+      "index": 3165,
+      "normalized_entropy": 0.0022724869177252324,
+      "raw_entropy": 0.027109142630318623,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 3167,
+      "normalized_entropy": 0.006423679111032102,
+      "raw_entropy": 0.07662989470878132,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 3169,
+      "normalized_entropy": 0.020013354960160445,
+      "raw_entropy": 0.23874500217993488,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 3170,
+      "normalized_entropy": 0.01685636160125154,
+      "raw_entropy": 0.20108433070055867,
+      "factuality": "correct"
+    },
+    {
+      "index": 3172,
+      "normalized_entropy": 0.030474579262963493,
+      "raw_entropy": 0.363539921569976,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 3175,
+      "normalized_entropy": 0.001721885114359408,
+      "raw_entropy": 0.020540857152619985,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 3184,
+      "normalized_entropy": 0.0142532553912196,
+      "raw_entropy": 0.1700311365196818,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 3189,
+      "normalized_entropy": 0.008933418321558605,
+      "raw_entropy": 0.10656928740335903,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 3194,
+      "normalized_entropy": 3.0031982899596855e-05,
+      "raw_entropy": 0.0003582600636977129,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 3195,
+      "normalized_entropy": 0.03282482465278223,
+      "raw_entropy": 0.39157666712476313,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 3196,
+      "normalized_entropy": 0.014834247962517491,
+      "raw_entropy": 0.17696196210975218,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 3199,
+      "normalized_entropy": 0.001243516855031296,
+      "raw_entropy": 0.014834266161581757,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 3201,
+      "normalized_entropy": 0.03845217269274653,
+      "raw_entropy": 0.45870690204754183,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 3202,
+      "normalized_entropy": 0.006319298155997835,
+      "raw_entropy": 0.07538470461512599,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 3208,
+      "normalized_entropy": 0.007841602219213836,
+      "raw_entropy": 0.09354470265715913,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 3210,
+      "normalized_entropy": 0.027510399570771542,
+      "raw_entropy": 0.3281793791480365,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 3211,
+      "normalized_entropy": 0.007319613405355585,
+      "raw_entropy": 0.08731774966748954,
+      "factuality": "correct"
+    },
+    {
+      "index": 3212,
+      "normalized_entropy": 0.017499108798842016,
+      "raw_entropy": 0.20875184478779474,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 3213,
+      "normalized_entropy": 0.01553443934504982,
+      "raw_entropy": 0.18531474421359348,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 3220,
+      "normalized_entropy": 0.0022467292602825423,
+      "raw_entropy": 0.026801872210414183,
+      "factuality": "correct"
+    },
+    {
+      "index": 3223,
+      "normalized_entropy": 0.0018309533857406284,
+      "raw_entropy": 0.021841963575831222,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 3224,
+      "normalized_entropy": 0.003420818048522755,
+      "raw_entropy": 0.04080791122115681,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 3227,
+      "normalized_entropy": 0.010256859247500635,
+      "raw_entropy": 0.12235699053349487,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 3231,
+      "normalized_entropy": 0.0050225244326657596,
+      "raw_entropy": 0.05991512212782689,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 3238,
+      "normalized_entropy": 0.0164848423626085,
+      "raw_entropy": 0.19665237206012642,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 3244,
+      "normalized_entropy": 0.012702069334092703,
+      "raw_entropy": 0.15152659695960016,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 3245,
+      "normalized_entropy": 0.012485940549115884,
+      "raw_entropy": 0.1489483352267146,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 3247,
+      "normalized_entropy": 0.004761979064485028,
+      "raw_entropy": 0.05680700234390725,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 3254,
+      "normalized_entropy": 0.005701806388438759,
+      "raw_entropy": 0.06801846973419517,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 3264,
+      "normalized_entropy": 0.011174815095045473,
+      "raw_entropy": 0.13330754686247828,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 3265,
+      "normalized_entropy": 0.0023952750193053747,
+      "raw_entropy": 0.028573916809249495,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 3267,
+      "normalized_entropy": 0.0042603577922816485,
+      "raw_entropy": 0.050823019550212914,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 3270,
+      "normalized_entropy": 0.0038871921745434143,
+      "raw_entropy": 0.04637142078540105,
+      "factuality": "correct"
+    },
+    {
+      "index": 3274,
+      "normalized_entropy": 0.008815981054896668,
+      "raw_entropy": 0.10516834485569408,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 3275,
+      "normalized_entropy": 0.005885106933833359,
+      "raw_entropy": 0.07020511406229168,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 3277,
+      "normalized_entropy": 0.03728433368143916,
+      "raw_entropy": 0.44477541840297474,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 3280,
+      "normalized_entropy": 0.01638004708068628,
+      "raw_entropy": 0.1954022393432096,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 3287,
+      "normalized_entropy": 0.011371723763457848,
+      "raw_entropy": 0.13565652635956624,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 3291,
+      "normalized_entropy": 0.008425672545000406,
+      "raw_entropy": 0.10051224365569407,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 3294,
+      "normalized_entropy": 0.03164486020481251,
+      "raw_entropy": 0.37750053569834496,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 3296,
+      "normalized_entropy": 0.0007374304253705921,
+      "raw_entropy": 0.008797017234897475,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 3297,
+      "normalized_entropy": 0.034135292130208994,
+      "raw_entropy": 0.40720960629851966,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 3298,
+      "normalized_entropy": 0.005562052075904411,
+      "raw_entropy": 0.06635130080039635,
+      "factuality": "correct"
+    },
+    {
+      "index": 3299,
+      "normalized_entropy": 0.017114549702031558,
+      "raw_entropy": 0.20416432997135886,
+      "factuality": "correct"
+    },
+    {
+      "index": 3306,
+      "normalized_entropy": 0.004513006077010497,
+      "raw_entropy": 0.0538369327800746,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 3307,
+      "normalized_entropy": 0.00918925210563597,
+      "raw_entropy": 0.1096212013607559,
+      "factuality": "correct"
+    },
+    {
+      "index": 3308,
+      "normalized_entropy": 0.008017793711331548,
+      "raw_entropy": 0.09564654106723407,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 3319,
+      "normalized_entropy": 0.00630804513216931,
+      "raw_entropy": 0.07525046409404293,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 3322,
+      "normalized_entropy": 0.013677175731268523,
+      "raw_entropy": 0.1631589184460694,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 3323,
+      "normalized_entropy": 0.015291331964975683,
+      "raw_entropy": 0.18241464714834396,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 3325,
+      "normalized_entropy": 0.017665653523539823,
+      "raw_entropy": 0.21073860416622908,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 3328,
+      "normalized_entropy": 0.04935758246645559,
+      "raw_entropy": 0.588800636225551,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 3329,
+      "normalized_entropy": 0.00018198243558380445,
+      "raw_entropy": 0.002170920221354878,
+      "factuality": "incorrect"
+    },
+    {
+      "index": 3331,
+      "normalized_entropy": 0.02566421639749584,
+      "raw_entropy": 0.30615573510606153,
+      "factuality": "incorrect"
+    }
+  ],
+  "ungated_n_examples": 1000,
+  "ungated_n_abstained": 0,
+  "ungated_n_correct": 116,
+  "ungated_n_incorrect": 884,
+  "ungated_n_unknown": 0,
+  "ungated_task_accuracy": 0.116,
+  "ungated_hallucination_rate": 0.884,
+  "ungated_abstention_rate": 0.0,
+  "seed": 42
+}
