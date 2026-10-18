@@ -13,7 +13,7 @@ from sense_eval.nli_judge import load_nli_model
 from sense_data.splits import generate_splits
 from sense_data.truthful_qa import load_truthful_qa
 from sense_orchestrator.gate import GatePolicy
-from transfer_threshold_halueval import run_pair
+from transfer_threshold_halueval import eval_settings, run_pair
 
 SOURCE_MODEL = "sshleifer/tiny-gpt2"
 TARGET_MODEL = "hf-internal-testing/tiny-random-GPTNeoXForCausalLM"
@@ -203,3 +203,12 @@ def test_run_pair_n_eval_examples_takes_a_fixed_prefix_of_the_split(nli):
 
     assert result["n_eval_examples"] == 4
     assert result["eval_split"] == "test"
+
+
+def test_eval_settings_split_override_and_result_infix():
+    cfg = {"eval_split": "development", "test_n_eval_examples": 1000}
+    assert eval_settings(cfg) == ("development", None, "")
+    assert eval_settings({**cfg, "n_eval_examples": 200}) == ("development", 200, "")
+    assert eval_settings(cfg, "test") == ("test", 1000, "_test")
+    # a config that already says test still gets the _test infix
+    assert eval_settings({**cfg, "eval_split": "test"}) == ("test", None, "_test")

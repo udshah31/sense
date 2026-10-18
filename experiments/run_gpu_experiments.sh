@@ -6,7 +6,7 @@
 # on CPU with a tiny model, but the five real checkpoints only ever run here.
 #
 # Usage:
-#   HF_TOKEN=... ./run_gpu_experiments.sh [characterize|rq1|rq2|rq3|rag|selfcheck|retrieval|all]
+#   HF_TOKEN=... ./run_gpu_experiments.sh [characterize|rq1|rq1-test|rq2|rq3|rag|selfcheck|retrieval|all]
 #
 # RUN `characterize` FIRST, on its own, before paying for `all`. It is the RQ1
 # pre-flight diagnostic (experiments/characterize_entropy_distributions.py): it
@@ -103,8 +103,9 @@ log "run metadata written to $METADATA_FILE"
 
 run_stage() {
     local name="$1" script="$2"
-    log "=== starting $name ($script) ==="
-    if uv run python "$script"; then
+    shift 2
+    log "=== starting $name ($script $*) ==="
+    if uv run python "$script" "$@"; then
         log "=== $name complete ==="
     else
         fail "$name failed — see output above. Results already written by earlier stages are untouched."
@@ -118,6 +119,9 @@ case "$STAGE" in
         ;;
     rq1)
         run_stage "RQ1 (fixed-threshold transfer)" transfer_threshold_halueval.py
+        ;;
+    rq1-test)
+        run_stage "RQ1 on the held-out test split (docs/test-split-protocol.md)" transfer_threshold_halueval.py --split test
         ;;
     rq2)
         run_stage "RQ2 (self-adaptive threshold)" adaptive_threshold_halueval.py
@@ -145,7 +149,7 @@ case "$STAGE" in
         run_stage "Retrieval-gated condition (same gate, routes to retrieval)" retrieval_gated_halueval.py
         ;;
     *)
-        fail "unknown stage '$STAGE' — expected one of: characterize, rq1, rq2, rq3, rag, selfcheck, retrieval, all"
+        fail "unknown stage '$STAGE' — expected one of: characterize, rq1, rq1-test, rq2, rq3, rag, selfcheck, retrieval, all"
         ;;
 esac
 

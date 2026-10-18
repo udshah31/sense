@@ -377,13 +377,27 @@ def run_pair(
             torch.cuda.empty_cache()
 
 
-def run() -> list[dict]:
+def eval_settings(rq1_cfg: dict, split: str | None = None) -> tuple[str, int | None, str]:
+    """(eval split, fixed-prefix length, result-file infix) for a run.
+
+    `split="test"` applies the test-split protocol without editing configs/rq1.yaml: the
+    first `test_n_eval_examples` committed test indices. Test-split results get a `_test`
+    infix so they can never overwrite development-split files of the same pair.
+    """
+    if split == "test":
+        eval_split, n_eval_examples = "test", rq1_cfg["test_n_eval_examples"]
+    else:
+        eval_split, n_eval_examples = split or rq1_cfg["eval_split"], rq1_cfg.get("n_eval_examples")
+    return eval_split, n_eval_examples, "_test" if eval_split == "test" else ""
+
+
+def run(split: str | None = None) -> list[dict]:
     seed_everything()
     config = load_config()
     examples, splits = load_halueval_examples_and_splits()
     decoding_cfg = config["gate"]["decoding"]
     quantile = config["gate"]["quantile"]
-    eval_split = config["rq1"]["eval_split"]
+    eval_split, n_eval_examples, infix = eval_settings(config["rq1"], split)
     extra_aggregators = tuple(config["rq1"].get("aggregators", ()))
     nli_cfg = config["nli_judge"]
     nli_model, nli_tokenizer = load_nli_model(nli_cfg["hf_repo"], nli_cfg["revision"])
@@ -406,10 +420,10 @@ def run() -> list[dict]:
             nli_cfg,
             bootstrap_cfg,
             extra_aggregators,
-            config["rq1"].get("n_eval_examples"),
+            n_eval_examples,
         )
         write_results(
-            f"rq1_transfer_halueval_{source_name}_to_{target_name}.json",
+            f"rq1_transfer{infix}_halueval_{source_name}_to_{target_name}.json",
             result,
             print_exclude_keys=frozenset({"per_example"}),
         )
@@ -418,4 +432,12 @@ def run() -> list[dict]:
 
 
 if __name__ == "__main__":
-    run()
+    import argparse
+
+    parser = argparse.ArgumentParser(description="RQ1: fixed-threshold transfer on HaluEval.")
+    parser.add_argument(
+        "--split",
+        choices=("development", "test"),
+        help="override configs/rq1.yaml's eval_split; 'test' also applies test_n_eval_examples",
+    )
+    run(parser.parse_args().split)

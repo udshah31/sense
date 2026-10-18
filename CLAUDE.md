@@ -749,7 +749,9 @@ changed between attempts, and nothing from the lost attempts was used (one pair'
 accuracy was glanced at in a lost run; it matched the final run). The completed run used branch `rq1-test-split-run`, which sets
 `eval_split: test` and `n_eval_examples: 1000` in `configs/rq1.yaml`; that config change is
 deliberately **not** on master, so master's `rq1.yaml` stays on the development split. To
-reproduce the test run, set those two keys.
+reproduce the test run, use `./experiments/run_gpu_experiments.sh rq1-test` (or
+`transfer_threshold_halueval.py --split test`), which applies `test_n_eval_examples: 1000` from
+`configs/rq1.yaml` and writes `rq1_transfer_test_halueval_*` files, without editing the config.
 
 **RQ1 harness: models load one at a time.** `run_pair` frees the source model after producing
 its calibration-split signals before loading the target, so a pair fits one 15 GB T4 (both

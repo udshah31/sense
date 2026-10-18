@@ -26,6 +26,12 @@ eval_split: development
 # eval_split: test takes the first 1,000 of the committed test indices.
 # n_eval_examples: 1000
 
+# The test-split protocol's frozen prefix (docs/test-split-protocol.md): `--split test` on
+# transfer_threshold_halueval.py (or the `rq1-test` stage) evaluates the first this-many committed
+# test indices, without editing this file. Calibration is unaffected; it always uses each
+# checkpoint's own calibration split.
+test_n_eval_examples: 1000
+
 # Each pair runs TWO transfer arms (added 2026-10-04, proposal-v5 review issue C3).
 # Not configurable on purpose: both are always reported, because reporting only one
 # is what made the earlier runs hard to interpret.
