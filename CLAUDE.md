@@ -772,7 +772,8 @@ mid-run loses its result files, so prefer Kaggle commit runs for long jobs.
   example, not the per-step series, so it cannot be recomputed from them.
 - The always-on RAG baseline, Chain-of-Verification, and gate-on/off and symbolic-on/off ablations.
 - The retrieval-gated condition on the other four checkpoints.
-- Docker image digest pinning (`docker-compose.yml` has no pinned images); the runs used Colab and
-  Kaggle environments with the repository's pinned Python dependencies and model revisions.
+- Docker: the CUDA base image in `experiments/Dockerfile.gpu` is now pinned by digest (2026-10-18),
+  but the reported runs used Colab and Kaggle environments (pinned Python dependencies and model
+  revisions), not this image, so no run recorded an image digest.
 - The proposal's "per domain or query difficulty" adaptation: the adaptive gate recalibrates per
   checkpoint only.

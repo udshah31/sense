@@ -20,7 +20,9 @@
 # neural/orchestrator that don't exist and the current architecture doesn't
 # call for.
 
-FROM nvidia/cuda:12.4.1-runtime-ubuntu22.04
+# Pinned by digest (CLAUDE.md reproducibility rule); the tag is kept for readability.
+# Digest of the multi-arch index for this tag, read from Docker Hub on 2026-10-18.
+FROM nvidia/cuda:12.4.1-runtime-ubuntu22.04@sha256:517da2300c184c9999ec203c2665244bdebd3578d12fcc7065e83667932643d9
 
 # Python 3.13 via deadsnakes — Ubuntu 22.04's default python3 is 3.10, and
 # every pyproject.toml in this repo pins requires-python = ">=3.13.5".

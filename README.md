@@ -21,9 +21,9 @@ split was handled, and the "2026-10-13 — experiments complete" section of `CLA
 the caveats that must accompany every number (recall ceiling, routing-rate effect, AI-assigned
 judge labels, annotate-only merge-back).
 
-Not done, by design or for budget: the entropy-aggregator ablation, the always-on RAG baseline,
-Chain-of-Verification, and Docker image digest pinning (`experiments/Dockerfile.gpu` pins the
-CUDA base image by tag, not digest).
+Not done, by design or for budget: the entropy-aggregator ablation, the always-on RAG baseline
+and Chain-of-Verification. The CUDA base image in `experiments/Dockerfile.gpu` is pinned by digest (2026-10-18); the
+reported runs themselves used Colab and Kaggle environments, not this image.
 
 Model-free and tiny-model test suites pass (`services/neural`, `eval`, `experiments`; run each
 with `uv run pytest -q` from its directory).
