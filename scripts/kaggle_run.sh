@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # One-shot Kaggle runner: pick the biggest disk, clone a branch, install, run a command,
 # copy results to /kaggle/working/sense-results. Replaces the step-by-step notebook cells
-# (docs/kaggle-characterize.ipynb) and the broken Kaggle path of gpu_setup.sh.
+# (formerly docs/kaggle-characterize.ipynb, since removed) and the broken Kaggle path of gpu_setup.sh.
 #
 # Needs HF_TOKEN in the environment (read it from Kaggle Secrets in the calling cell).
 # Usage:  kaggle_run.sh <branch> '<shell command, run from the repo root>'
