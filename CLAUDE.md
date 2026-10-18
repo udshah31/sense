@@ -726,8 +726,11 @@ are in `results/`; the test-split rules are in `docs/test-split-protocol.md`.
   checkpoint, Qwen3-1.7B (`retrieval_gated_halueval.console_summary.json`).
 - **Judge:** binary verdict at `short_answer_entailment_threshold` 0.7, checked against 120
   generations whose labels were assigned by the AI assistant, not a human (precision 0.76, recall
-  0.68). A 24-item human spot-check was prepared and **waived by the author on 2026-10-11** before
-  the test run; no human has verified the labels. Say so wherever the numbers are reported.
+  0.68). A 24-item human spot-check was waived before the test run (2026-10-11) and **completed by
+  the author on 2026-10-18**, blind to the AI labels, after the advisor recommended it: 22 of 24
+  agree (Cohen's kappa 0.83); the judge vs the author's labels has precision 0.82, recall 0.75. The
+  subsample was balanced 12/12 by the AI labels, not drawn at the 19-in-120 base rate, so report the
+  agreement, not the judge's precision/recall on it. Labels: the sheet in `07_judge_label_check/`.
 
 **Reading the results — three guards that must travel with every number.**
 
