@@ -1,10 +1,11 @@
 {
- "NOTE": "Derived from the RQ1 summaries; RQ1 and RQ2 share one experiment (see derive_rq2_from_rq1.py). Development split, binary judge at 0.7. Delta = adaptive minus fixed = RQ1's native minus transferred; intervals are RQ1's paired bootstrap. CAUTION: with precision near 0.96 routing more raises recall and F1 mechanically, so 'fixed better' on the Qwen3 scale-ladder pairs (where the fixed gate routes more, 13-21% vs 8-12%) reflects routing rate, not gate quality; read it with the routing rates and fidelity gaps.",
+ "NOTE": "Derived from the RQ1 saved results (source_file recorded per pair); RQ1 and RQ2 share one experiment (see derive_rq2_from_rq1.py). Development split, binary judge at 0.7. Delta = adaptive minus fixed = RQ1's native minus transferred; intervals are RQ1's paired bootstrap. CAUTION: with precision near 0.96 routing more raises recall and F1 mechanically, so 'fixed better' on the Qwen3 scale-ladder pairs (where the fixed gate routes more, 13-21% vs 8-12%) reflects routing rate, not gate quality; read it with the routing rates and fidelity gaps.",
  "pairs": [
   {
    "source": "llama3",
    "target": "mistral",
    "n_eval_examples": 1000,
+   "eval_split": "development",
    "expected_routing_rate": 0.09999999999999998,
    "arms": {
     "normalized": {
@@ -135,12 +136,14 @@
      "adaptive_calibration_fidelity_gap": 0.005000000000000018,
      "f1_verdict": "adaptive better"
     }
-   }
+   },
+   "source_file": "rq1_transfer_halueval_llama3_to_mistral.console_summary.json"
   },
   {
    "source": "llama3",
    "target": "qwen3_8b",
    "n_eval_examples": 1000,
+   "eval_split": "development",
    "expected_routing_rate": 0.09999999999999998,
    "arms": {
     "normalized": {
@@ -271,12 +274,14 @@
      "adaptive_calibration_fidelity_gap": 0.014000000000000026,
      "f1_verdict": "adaptive better"
     }
-   }
+   },
+   "source_file": "rq1_transfer_halueval_llama3_to_qwen3_8b.console_summary.json"
   },
   {
    "source": "mistral",
    "target": "qwen3_8b",
    "n_eval_examples": 1000,
+   "eval_split": "development",
    "expected_routing_rate": 0.09999999999999998,
    "arms": {
     "normalized": {
@@ -407,12 +412,14 @@
      "adaptive_calibration_fidelity_gap": 0.014000000000000026,
      "f1_verdict": "adaptive better"
     }
-   }
+   },
+   "source_file": "rq1_transfer_halueval_mistral_to_qwen3_8b.console_summary.json"
   },
   {
    "source": "qwen3_8b",
    "target": "qwen3_1_7b",
    "n_eval_examples": 1000,
+   "eval_split": "development",
    "expected_routing_rate": 0.09999999999999998,
    "arms": {
     "normalized": {
@@ -539,12 +546,14 @@
      "adaptive_calibration_fidelity_gap": 0.02499999999999998,
      "f1_verdict": "fixed better"
     }
-   }
+   },
+   "source_file": "rq1_transfer_halueval_qwen3_8b_to_qwen3_1_7b.console_summary.json"
   },
   {
    "source": "qwen3_8b",
    "target": "qwen3_4b",
    "n_eval_examples": 1000,
+   "eval_split": "development",
    "expected_routing_rate": 0.09999999999999998,
    "arms": {
     "normalized": {
@@ -671,7 +680,8 @@
      "adaptive_calibration_fidelity_gap": 0.01700000000000003,
      "f1_verdict": "fixed better"
     }
-   }
+   },
+   "source_file": "rq1_transfer_halueval_qwen3_8b_to_qwen3_4b.console_summary.json"
   }
  ]
 }

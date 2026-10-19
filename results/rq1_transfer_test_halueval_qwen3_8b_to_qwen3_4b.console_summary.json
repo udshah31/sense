@@ -1,169 +1,201 @@
 {
- "NOTE": "Headline numbers extracted from run.log of the Kaggle commit run (version 3 of notebookc_sense, 3h44m, GPU T4x2, master @ 76cde58, run_metadata_20261009T130642Z). Full result files with per_example are in that version's Output (rq1_transfer_halueval_<src>_to_<tgt>.json, ~173 kB each). Per-metric CIs of the individual gates omitted. Deltas are native minus transferred: NEGATIVE means the transferred gate scored higher.",
  "research_question": "RQ1",
  "dataset": "halueval",
- "eval_split": "development",
+ "eval_split": "test",
  "n_eval_examples": 1000,
  "quantile": 0.9,
- "factuality_metric": "nli_entailment (cliang1453/deberta-v3-xsmall-mnli @ d1ca70f9ece4d8afd33015893a69df9a6e45a672), binary verdict, threshold 0.7",
+ "decoding": {
+  "do_sample": false,
+  "max_new_tokens": 20
+ },
+ "bootstrap": {
+  "n_resamples": 1000,
+  "confidence": 0.95,
+  "seed": 42
+ },
+ "factuality_metric": "nli_entailment (cliang1453/deberta-v3-xsmall-mnli @ d1ca70f9ece4d8afd33015893a69df9a6e45a672)",
  "source_model": {
-  "name": "qwen3_8b"
+  "name": "qwen3_8b",
+  "hf_repo": "Qwen/Qwen3-8B",
+  "revision": "b968826d9c46dd6066d109eabc6255188de91218"
  },
  "target_model": {
-  "name": "qwen3_4b"
+  "name": "qwen3_4b",
+  "hf_repo": "Qwen/Qwen3-4B",
+  "revision": "1cfa9a7208912126459214e8b04321603b3df60c"
  },
- "ungated": {
-  "n_correct": 126,
-  "n_incorrect": 874,
-  "n_unknown": 0,
-  "task_accuracy": 0.126
- },
- "entropy_auroc_norm": [
-  0.683,
-  0.6383,
-  0.7293
- ],
- "entropy_auroc_raw": [
-  0.683,
-  0.6379,
-  0.7281
- ],
+ "aggregator": "mean",
+ "aggregator_ablation": {},
+ "ungated_n_examples": 1000,
+ "ungated_n_abstained": 0,
+ "ungated_n_correct": 116,
+ "ungated_n_incorrect": 884,
+ "ungated_n_unknown": 0,
+ "ungated_task_accuracy": 0.116,
+ "ungated_hallucination_rate": 0.884,
+ "ungated_abstention_rate": 0.0,
+ "seed": 42,
  "arms": {
   "normalized": {
-   "source_native_threshold": 0.0343,
-   "target_native_threshold": 0.0359,
-   "source_threshold_ci95": [
-    0.0328,
-    0.0369
-   ],
-   "target_native_threshold_ci95": [
-    0.0336,
-    0.0379
-   ],
-   "transfer_agreement_rate": 0.986,
+   "entropy_scale": "normalized",
+   "aggregator": "mean",
+   "source_native_threshold": 0.03432368551357831,
+   "target_native_threshold": 0.03585480980221921,
+   "transferred_threshold": 0.03432368551357831,
+   "transfer_agreement_rate": 0.981,
+   "source_threshold_ci": {
+    "point": 0.03432368551357831,
+    "ci_low": 0.03275486380661422,
+    "ci_high": 0.0368754644682638,
+    "ci_confidence": 0.95,
+    "n_resamples": 1000,
+    "n_degenerate_resamples": 0
+   },
+   "target_native_threshold_ci": {
+    "point": 0.03585480980221921,
+    "ci_low": 0.03362176120322008,
+    "ci_high": 0.03789655201288445,
+    "ci_confidence": 0.95,
+    "n_resamples": 1000,
+    "n_degenerate_resamples": 0
+   },
    "transferred_gate": {
-    "routing_rate": 0.131,
+    "routing_rate": 0.13,
+    "precision": 0.9846153846153847,
+    "recall": 0.14479638009049775,
+    "f1": 0.252465483234714,
+    "specificity": 0.9827586206896551,
+    "balanced_accuracy": 0.5637775003900765,
     "tp": 128,
-    "fp": 3,
-    "fn": 746,
-    "tn": 123,
-    "precision": 0.9771,
-    "recall": 0.1465,
-    "f1": 0.2547,
-    "balanced_accuracy": 0.5613
+    "fp": 2,
+    "fn": 756,
+    "tn": 114
    },
    "native_gate": {
-    "routing_rate": 0.117,
-    "tp": 114,
-    "fp": 3,
-    "fn": 760,
-    "tn": 123,
-    "precision": 0.9744,
-    "recall": 0.1304,
-    "f1": 0.2301,
-    "balanced_accuracy": 0.5533
+    "routing_rate": 0.111,
+    "precision": 0.9819819819819819,
+    "recall": 0.12330316742081449,
+    "f1": 0.2190954773869347,
+    "specificity": 0.9827586206896551,
+    "balanced_accuracy": 0.5530308940552349,
+    "tp": 109,
+    "fp": 2,
+    "fn": 775,
+    "tn": 114
    },
    "delta_native_minus_transferred": {
-    "_format": "[point, ci95_low, ci95_high]",
     "routing_rate": [
-     -0.014,
-     -0.021,
-     -0.007
+     -0.019000000000000003,
+     -0.02700000000000001,
+     -0.01100000000000001
     ],
     "precision": [
-     -0.0027,
-     -0.0069,
+     -0.002633402633402726,
+     -0.007046495249299023,
      0.0
     ],
     "recall": [
-     -0.016,
-     -0.0242,
-     -0.0082
+     -0.021493212669683265,
+     -0.030717598171457014,
+     -0.01259986867662209
     ],
     "f1": [
-     -0.0247,
-     -0.0374,
-     -0.0129
+     -0.03337000584777933,
+     -0.04744081453399835,
+     -0.020080093351463112
     ],
     "specificity": [
-     0,
-     0,
-     0
+     0.0,
+     0.0,
+     0.0
     ],
     "balanced_accuracy": [
-     -0.008,
-     -0.0121,
-     -0.0041
+     -0.01074660633484159,
+     -0.015358799085728509,
+     -0.006299934338311017
     ]
    }
   },
   "raw": {
-   "source_native_threshold": 0.4095,
-   "target_native_threshold": 0.4277,
-   "source_threshold_ci95": [
-    0.3913,
-    0.4386
-   ],
-   "target_native_threshold_ci95": [
-    0.4011,
-    0.4503
-   ],
-   "transfer_agreement_rate": 0.986,
+   "entropy_scale": "raw",
+   "aggregator": "mean",
+   "source_native_threshold": 0.40945700453898104,
+   "target_native_threshold": 0.4277222215581664,
+   "transferred_threshold": 0.40945700453898104,
+   "transfer_agreement_rate": 0.981,
+   "source_threshold_ci": {
+    "point": 0.40945700453898104,
+    "ci_low": 0.39133592138080187,
+    "ci_high": 0.438610667151934,
+    "ci_confidence": 0.95,
+    "n_resamples": 1000,
+    "n_degenerate_resamples": 0
+   },
+   "target_native_threshold_ci": {
+    "point": 0.4277222215581664,
+    "ci_low": 0.4010828196071546,
+    "ci_high": 0.4502507671508152,
+    "ci_confidence": 0.95,
+    "n_resamples": 1000,
+    "n_degenerate_resamples": 0
+   },
    "transferred_gate": {
-    "routing_rate": 0.131,
+    "routing_rate": 0.13,
+    "precision": 0.9846153846153847,
+    "recall": 0.14479638009049775,
+    "f1": 0.252465483234714,
+    "specificity": 0.9827586206896551,
+    "balanced_accuracy": 0.5637775003900765,
     "tp": 128,
-    "fp": 3,
-    "fn": 746,
-    "tn": 123,
-    "precision": 0.9771,
-    "recall": 0.1465,
-    "f1": 0.2547,
-    "balanced_accuracy": 0.5613
+    "fp": 2,
+    "fn": 756,
+    "tn": 114
    },
    "native_gate": {
-    "routing_rate": 0.117,
-    "tp": 114,
-    "fp": 3,
-    "fn": 760,
-    "tn": 123,
-    "precision": 0.9744,
-    "recall": 0.1304,
-    "f1": 0.2301,
-    "balanced_accuracy": 0.5533
+    "routing_rate": 0.111,
+    "precision": 0.9819819819819819,
+    "recall": 0.12330316742081449,
+    "f1": 0.2190954773869347,
+    "specificity": 0.9827586206896551,
+    "balanced_accuracy": 0.5530308940552349,
+    "tp": 109,
+    "fp": 2,
+    "fn": 775,
+    "tn": 114
    },
    "delta_native_minus_transferred": {
-    "_format": "[point, ci95_low, ci95_high]",
     "routing_rate": [
-     -0.014,
-     -0.022,
-     -0.008
+     -0.019000000000000003,
+     -0.027999999999999997,
+     -0.010999999999999996
     ],
     "precision": [
-     -0.003,
-     -0.007,
+     -0.002633402633402726,
+     -0.007454518903671699,
      0.0
     ],
     "recall": [
-     -0.016,
-     -0.025,
-     -0.009
+     -0.021493212669683265,
+     -0.0312526245800672,
+     -0.01245508162927711
     ],
     "f1": [
-     -0.025,
-     -0.039,
-     -0.014
+     -0.03337000584777933,
+     -0.048557202956046104,
+     -0.019432168012161757
     ],
     "specificity": [
-     0,
-     0,
-     0
+     0.0,
+     0.0,
+     0.0
     ],
     "balanced_accuracy": [
-     -0.008,
-     -0.013,
-     -0.004
+     -0.01074660633484159,
+     -0.015626312290033594,
+     -0.0062275408146386085
     ]
    }
   }
- }
+ },
+ "NOTE": "Regenerated 2026-10-19 directly from rq1_transfer_test_halueval_qwen3_8b_to_qwen3_4b.json; supersedes the incorrectly copied development summary. No new generation or metric estimation."
 }
