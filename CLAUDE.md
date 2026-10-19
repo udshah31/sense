@@ -741,8 +741,13 @@ are in `results/`; the test-split rules are in `docs/test-split-protocol.md`.
    routes more examples than the native one (8B→1.7B: 22.9% vs 8.5%), which raises recall and F1
    mechanically; the two "fixed better" rows are a routing-rate effect, not a quality finding.
 3. **RQ3 measures cost, not correction.** Merge-back is annotate-only, so accuracy and
-   hallucination rate are unchanged by routing by construction; RQ3's symbolic round trip uses an
-   always-resolvable probe, so it is a latency measurement, not a verification result.
+   hallucination rate are unchanged by routing by construction. RQ3's "symbolic round trip" sends
+   one fixed triple (Albert Einstein, P106 occupation, physicist; `configs/rq3.yaml`) whose
+   occupation check is **Python set membership, not Z3** (`services/symbolic/.../domain.py`: only
+   numerical relations such as years use Z3). It measures service-call overhead, not solver cost
+   and not verification of generated answers. Routing also happens after generation completes,
+   and no abstention policy is implemented in the reported path. Do not describe RQ3 as timing a
+   Z3 round trip (corrected 2026-10-19).
 
 **The test split's reported numbers come from one completed run.** Earlier attempts lost their
 cloud sessions partway: the first died at model loading, and two others (Colab sessions that
@@ -782,3 +787,24 @@ mid-run loses its result files, so prefer Kaggle commit runs for long jobs.
   revisions), not this image, so no run recorded an image digest.
 - The proposal's "per domain or query difficulty" adaptation: the adaptive gate recalibrates per
   checkpoint only.
+
+## 2026-10-19 — test-split summaries regenerated; paper master moved
+
+**A data-labelling error, now fixed (branch `fix-test-summaries`).** The
+`results/rq1_transfer_test_halueval_*.console_summary.json` files committed in #16 were copies of
+the *development* summaries (the Kaggle output folder held the repo's committed dev summaries), so
+`rq2_from_rq1_test.json` reported development numbers under a test name. They are regenerated from
+the full test results, and `derive_rq2_from_rq1.py` now reads full results and refuses inputs whose
+`eval_split` does not match. **Test-split RQ2 (adaptive minus fixed F1, normalized):** +0.017,
++0.196, +0.196, −0.033, −0.225 — i.e. 0.17–0.20 F1 where transfer fails, not the 0.19–0.22 that is
+the *development* figure. The RQ1 tables were always built from the full test files and are
+unaffected. Lesson: check `eval_split` inside a file, never trust its name.
+
+**Paper master.** The paper's master text is now
+`/Users/udaysah/Documents/files/filess/04_paper/SENSE_paper_master_2026-10-19.md` and its LaTeX
+`04_paper/latex_skeleton/SENSE_paper_full_revised_2026-10-19.tex` (IEEEtran; regenerated from the
+master; test-built clean with a stand-in class because IEEEtran is not installed locally). Earlier
+drafts in that folder are superseded. A Codex (OpenAI) review on 2026-10-19 corrected several
+overclaims, verified here against the code: the RQ3 probe is a membership check (above), the gate
+has no conformal coverage guarantee, and transfer agreement equals one minus the routing-rate
+difference because both gates threshold the same score.
