@@ -18,3 +18,11 @@ headline numbers, the same-named file without it holds the full result with per-
 
 Reading guards for every number here are in `CLAUDE.md` ("2026-10-13 — experiments complete").
 Development-split and test-split files must never be mixed in one table without saying so.
+
+## Summary correction — 19 October 2026
+
+The five test console summaries were rebuilt from their full test-result JSON files;
+the previous summaries contained development-split data. RQ2 now reads full test
+results directly and validates `eval_split`. Development uses full results when
+available, otherwise the archived console summaries. Each RQ2 pair records its
+source file and split. No model generations or bootstrap estimates were rerun.
